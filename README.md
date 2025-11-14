@@ -1,6 +1,6 @@
-# H Programmer Langguage
+# H Programmer Language
 
-Do you know when C file compile to binary it threw Assembly Language before compiling into binary?. So, this is my own CPU Emulator that inspired me from Intel x86 Architecture and Assembly Langguage.
+Do you know when C file compile to binary it threw Assembly Language before compiling into binary?. So, this is my own CPU Emulator that inspired me from Intel x86 Architecture and Assembly Language.
 
 H Programmer Language is the Emulator machine that running the H code to binary code. 
 
@@ -24,7 +24,7 @@ For this format:
 
 # Inspire
 - This project inspire with:
-    - Intel x86 Documentation
+    - Intel x86 Documentation: [(Link Documentation)](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html)
 
 # Conclusion
 The H Programmer Language is based on Assembly Language but different scheme to run the code. This project should be imporved with collaboration with you to make this language is useful for future.
