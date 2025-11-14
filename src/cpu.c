@@ -42,6 +42,7 @@ void cpu_execute() {
         call_instruction_set(ARGS_INSTRUCTION_SET);
         ret_instruction_set(ARGS_INSTRUCTION_SET);
         go_instruction_set(ARGS_INSTRUCTION_SET);
+        not_instruction_set(ARGS_INSTRUCTION_SET);
     }
 }
 void cpu_output() {

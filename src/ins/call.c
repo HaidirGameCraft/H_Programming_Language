@@ -13,7 +13,7 @@ uint32_t create_instruction_call_reg(CREATE_INSTRUCTION_ARGS) {
 
     uint8_t prefix = PREFIX_RM_INC;
     uint8_t op = OPCODE_CALL_1;
-    uint8_t reg = regbytext(rReg);
+    uint8_t reg = regbytext(lReg);
 
     return instruction_reg(memory, pc, prefix, op, reg);
 }
@@ -49,7 +49,7 @@ void instruction_call_reg(INSTRUCTION_SET_ARGS) {
     memset( &__regmem, read8(memory, pc), 1);
     if( prefix & PREFIX_32BITS )
     {
-        r32 = reg32( reg, __regmem.sreg );
+        r32 = reg32( reg, __regmem.dreg );
         if( pre.m )
         {
             offset = read32( memory, pc );
@@ -63,7 +63,7 @@ void instruction_call_reg(INSTRUCTION_SET_ARGS) {
         reg->pc32 = value;
     } else if ( prefix & PREFIX_16BITS )
     {
-        r16 = reg16( reg, __regmem.sreg );
+        r16 = reg16( reg, __regmem.dreg );
         if( pre.m )
         {
             offset = read16( memory, pc );
@@ -76,7 +76,7 @@ void instruction_call_reg(INSTRUCTION_SET_ARGS) {
         write32( memory,  reg->r32s, reg->pc32 );
         reg->pc32 = value;
     } else {
-        r8 = reg8( reg, __regmem.sreg );
+        r8 = reg8( reg, __regmem.dreg );
         if( pre.m )
         {
             offset = read8( memory, pc );

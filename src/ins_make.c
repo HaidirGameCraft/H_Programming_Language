@@ -285,10 +285,10 @@ int create_instruction(uint8_t* memory, uint32_t pc, const char* instruction ) {
         pc = create_instruction_mul_value_reg(opcode, NULL, rReg, NULL, &value, memory, pc );
         pc = create_instruction_sub_value_reg(opcode, NULL, rReg, NULL, &value, memory, pc );
 
-        pc = create_instruction_or_value_reg(opcode, lReg, rReg, NULL, &value, memory, pc );
-        pc = create_instruction_nand_value_reg(opcode, lReg, rReg, NULL, &value, memory, pc );
-        pc = create_instruction_nor_value_reg(opcode, lReg, rReg, NULL, &value, memory, pc );
-        pc = create_instruction_xor_value_reg(opcode, lReg, rReg, NULL, &value, memory, pc );
+        pc = create_instruction_or_value_reg(opcode, NULL, rReg, NULL, &value, memory, pc );
+        pc = create_instruction_nand_value_reg(opcode, NULL, rReg, NULL, &value, memory, pc );
+        pc = create_instruction_nor_value_reg(opcode, NULL, rReg, NULL, &value, memory, pc );
+        pc = create_instruction_xor_value_reg(opcode, NULL, rReg, NULL, &value, memory, pc );
     } else if ( match_regex(PATTERN_OPCODE_LABEL_REG, instruction, 4, &regmatch) == 0 ) {
         // Opcode label32 -> reg32
         for(int i = 1; i < 4; i++) {
@@ -344,6 +344,7 @@ int create_instruction(uint8_t* memory, uint32_t pc, const char* instruction ) {
         pc = create_instruction_pop_reg(opcode, lReg, NULL, NULL, NULL, memory, pc );
         pc = create_instruction_call_reg(opcode, lReg, NULL, NULL, NULL, memory, pc );
         pc = create_instruction_go_regmem(opcode, lReg, NULL, NULL, NULL, memory, pc );
+        pc = create_instruction_not_reg(opcode, lReg, NULL, NULL, NULL, memory, pc );
     }
     else if ( match_regex(PATTERN_OPCODE_REG_MEMORY, instruction, 4, &regmatch) == 0 ) {
         // Opcode mem8/16/32
