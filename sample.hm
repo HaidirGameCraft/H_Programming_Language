@@ -1,0 +1,19 @@
+mov 0x1000 -> r32s
+mov r32s -> r32bp
+go $run
+stp
+
+main:
+    push 0x1234DEAD
+    pop r32a
+    mov r32a -> r32b
+    and 0xF000 -> r32a
+    ret
+run:
+    mov $main -> r32c
+    mov $run -> r32d
+    or 0xF -> r32d
+    xor r32b -> r32b
+    call $main
+    mov 0xABCD1234 -> r32f
+    stp
