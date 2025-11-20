@@ -1,7 +1,10 @@
 #pragma once
 
 #include <inst.h>
+#ifdef __cpluplus
+#include <cpp/ins_make.hpp>
+#else
 #include <ins_make.h>
+#endif
 
-uint32_t create_instruction_not_reg(CREATE_INSTRUCTION_ARGS);
 void instruction_not_reg(INSTRUCTION_SET_ARGS);

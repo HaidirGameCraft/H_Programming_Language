@@ -1,10 +1,12 @@
 #pragma once
 
 #include <inst.h>
+
+#ifdef __cpluplus
+#include <cpp/ins_make.hpp>
+#else
 #include <ins_make.h>
+#endif
 
-uint32_t create_instruction_add_regmem_reg(CREATE_INSTRUCTION_ARGS);
-uint32_t create_instruction_add_value_regmem(CREATE_INSTRUCTION_ARGS);
-
-void instruction_add_regmem_reg(INSTRUCTION_SET_ARGS);
+void instruction_add_reg_reg(INSTRUCTION_SET_ARGS);
 void instruction_add_value_reg(INSTRUCTION_SET_ARGS);

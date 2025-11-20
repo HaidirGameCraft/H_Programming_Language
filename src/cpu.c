@@ -24,8 +24,12 @@ void cpu_execute() {
     while( reg.pc32 < size_memory && is_program_running )
     {
         uint8_t prefix = read8(memory, &reg.pc32);
+        uint8_t ext_prefix = 0;
+        if( prefix & PREFIX_EXT_INC )
+            ext_prefix = read8( memory, &reg.pc32 );
+
         uint8_t opcode = read8(memory, &reg.pc32);
-#define ARGS_INSTRUCTION_SET prefix, opcode, memory, &reg, &reg.pc32
+#define ARGS_INSTRUCTION_SET prefix, ext_prefix, opcode, memory, &reg, &reg.pc32
         mov_instruction_set(ARGS_INSTRUCTION_SET);
         add_instruction_set(ARGS_INSTRUCTION_SET);
         and_instruction_set(ARGS_INSTRUCTION_SET);
@@ -43,6 +47,9 @@ void cpu_execute() {
         ret_instruction_set(ARGS_INSTRUCTION_SET);
         go_instruction_set(ARGS_INSTRUCTION_SET);
         not_instruction_set(ARGS_INSTRUCTION_SET);
+        cnd_instruction_set(ARGS_INSTRUCTION_SET);
+        lod_instruction_set(ARGS_INSTRUCTION_SET);
+        str_instruction_set(ARGS_INSTRUCTION_SET);
     }
 }
 void cpu_output() {
@@ -56,5 +63,5 @@ void cpu_output() {
     printf("R8S: %2x, R16S: %4x, R32S: %8x\n", reg.r8s, reg.r16s, reg.r32s);
     printf("R8BP: %2x, R16BP: %4x, R32BP: %8x\n", reg.r8bp, reg.r16bp, reg.r32bp);
     printf("\n");
-    printf("FLAGS: %4x, PC32: %8x", reg.flags, reg.pc32);
+    printf("FLAGS: %16b (%4x), PC32: %8x", reg.flags, reg.flags, reg.pc32);
 }

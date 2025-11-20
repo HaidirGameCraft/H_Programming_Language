@@ -117,24 +117,61 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named emulator
+# Target rules for targets named h
 
 # Build rule for target.
-emulator: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 emulator
-.PHONY : emulator
+h : cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 h
+.PHONY : h
 
 # fast build rule for target.
-emulator/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/build
-.PHONY : emulator/fast
+h/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/build
+.PHONY : h/fast
+
+#=============================================================================
+# Target rules for targets named hc
+
+# Build rule for target.
+hc: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 hc
+.PHONY : hc
+
+# fast build rule for target.
+hc/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/build
+.PHONY : hc/fast
+
+hcompiler.o: hcompiler.cpp.o
+.PHONY : hcompiler.o
+
+# target to build an object file
+hcompiler.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/hcompiler.cpp.o
+.PHONY : hcompiler.cpp.o
+
+hcompiler.i: hcompiler.cpp.i
+.PHONY : hcompiler.i
+
+# target to preprocess a source file
+hcompiler.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/hcompiler.cpp.i
+.PHONY : hcompiler.cpp.i
+
+hcompiler.s: hcompiler.cpp.s
+.PHONY : hcompiler.s
+
+# target to generate assembly for a file
+hcompiler.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/hcompiler.cpp.s
+.PHONY : hcompiler.cpp.s
 
 main.o: main.c.o
 .PHONY : main.o
 
 # target to build an object file
 main.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/main.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/main.c.o
 .PHONY : main.c.o
 
 main.i: main.c.i
@@ -142,7 +179,7 @@ main.i: main.c.i
 
 # target to preprocess a source file
 main.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/main.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/main.c.i
 .PHONY : main.c.i
 
 main.s: main.c.s
@@ -150,15 +187,135 @@ main.s: main.c.s
 
 # target to generate assembly for a file
 main.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/main.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/main.c.s
 .PHONY : main.c.s
+
+src/cpp/file_reader.o: src/cpp/file_reader.cpp.o
+.PHONY : src/cpp/file_reader.o
+
+# target to build an object file
+src/cpp/file_reader.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/file_reader.cpp.o
+.PHONY : src/cpp/file_reader.cpp.o
+
+src/cpp/file_reader.i: src/cpp/file_reader.cpp.i
+.PHONY : src/cpp/file_reader.i
+
+# target to preprocess a source file
+src/cpp/file_reader.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/file_reader.cpp.i
+.PHONY : src/cpp/file_reader.cpp.i
+
+src/cpp/file_reader.s: src/cpp/file_reader.cpp.s
+.PHONY : src/cpp/file_reader.s
+
+# target to generate assembly for a file
+src/cpp/file_reader.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/file_reader.cpp.s
+.PHONY : src/cpp/file_reader.cpp.s
+
+src/cpp/ins.compiler.o: src/cpp/ins.compiler.cpp.o
+.PHONY : src/cpp/ins.compiler.o
+
+# target to build an object file
+src/cpp/ins.compiler.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/ins.compiler.cpp.o
+.PHONY : src/cpp/ins.compiler.cpp.o
+
+src/cpp/ins.compiler.i: src/cpp/ins.compiler.cpp.i
+.PHONY : src/cpp/ins.compiler.i
+
+# target to preprocess a source file
+src/cpp/ins.compiler.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/ins.compiler.cpp.i
+.PHONY : src/cpp/ins.compiler.cpp.i
+
+src/cpp/ins.compiler.s: src/cpp/ins.compiler.cpp.s
+.PHONY : src/cpp/ins.compiler.s
+
+# target to generate assembly for a file
+src/cpp/ins.compiler.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/ins.compiler.cpp.s
+.PHONY : src/cpp/ins.compiler.cpp.s
+
+src/cpp/ins_make.o: src/cpp/ins_make.cpp.o
+.PHONY : src/cpp/ins_make.o
+
+# target to build an object file
+src/cpp/ins_make.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/ins_make.cpp.o
+.PHONY : src/cpp/ins_make.cpp.o
+
+src/cpp/ins_make.i: src/cpp/ins_make.cpp.i
+.PHONY : src/cpp/ins_make.i
+
+# target to preprocess a source file
+src/cpp/ins_make.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/ins_make.cpp.i
+.PHONY : src/cpp/ins_make.cpp.i
+
+src/cpp/ins_make.s: src/cpp/ins_make.cpp.s
+.PHONY : src/cpp/ins_make.s
+
+# target to generate assembly for a file
+src/cpp/ins_make.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/ins_make.cpp.s
+.PHONY : src/cpp/ins_make.cpp.s
+
+src/cpp/ins_tools.o: src/cpp/ins_tools.cpp.o
+.PHONY : src/cpp/ins_tools.o
+
+# target to build an object file
+src/cpp/ins_tools.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/ins_tools.cpp.o
+.PHONY : src/cpp/ins_tools.cpp.o
+
+src/cpp/ins_tools.i: src/cpp/ins_tools.cpp.i
+.PHONY : src/cpp/ins_tools.i
+
+# target to preprocess a source file
+src/cpp/ins_tools.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/ins_tools.cpp.i
+.PHONY : src/cpp/ins_tools.cpp.i
+
+src/cpp/ins_tools.s: src/cpp/ins_tools.cpp.s
+.PHONY : src/cpp/ins_tools.s
+
+# target to generate assembly for a file
+src/cpp/ins_tools.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/ins_tools.cpp.s
+.PHONY : src/cpp/ins_tools.cpp.s
+
+src/cpp/instruction.o: src/cpp/instruction.cpp.o
+.PHONY : src/cpp/instruction.o
+
+# target to build an object file
+src/cpp/instruction.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/instruction.cpp.o
+.PHONY : src/cpp/instruction.cpp.o
+
+src/cpp/instruction.i: src/cpp/instruction.cpp.i
+.PHONY : src/cpp/instruction.i
+
+# target to preprocess a source file
+src/cpp/instruction.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/instruction.cpp.i
+.PHONY : src/cpp/instruction.cpp.i
+
+src/cpp/instruction.s: src/cpp/instruction.cpp.s
+.PHONY : src/cpp/instruction.s
+
+# target to generate assembly for a file
+src/cpp/instruction.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/instruction.cpp.s
+.PHONY : src/cpp/instruction.cpp.s
 
 src/cpu.o: src/cpu.c.o
 .PHONY : src/cpu.o
 
 # target to build an object file
 src/cpu.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/cpu.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/cpu.c.o
 .PHONY : src/cpu.c.o
 
 src/cpu.i: src/cpu.c.i
@@ -166,7 +323,7 @@ src/cpu.i: src/cpu.c.i
 
 # target to preprocess a source file
 src/cpu.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/cpu.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/cpu.c.i
 .PHONY : src/cpu.c.i
 
 src/cpu.s: src/cpu.c.s
@@ -174,15 +331,63 @@ src/cpu.s: src/cpu.c.s
 
 # target to generate assembly for a file
 src/cpu.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/cpu.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/cpu.c.s
 .PHONY : src/cpu.c.s
+
+src/data/ascii.o: src/data/ascii.cpp.o
+.PHONY : src/data/ascii.o
+
+# target to build an object file
+src/data/ascii.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/data/ascii.cpp.o
+.PHONY : src/data/ascii.cpp.o
+
+src/data/ascii.i: src/data/ascii.cpp.i
+.PHONY : src/data/ascii.i
+
+# target to preprocess a source file
+src/data/ascii.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/data/ascii.cpp.i
+.PHONY : src/data/ascii.cpp.i
+
+src/data/ascii.s: src/data/ascii.cpp.s
+.PHONY : src/data/ascii.s
+
+# target to generate assembly for a file
+src/data/ascii.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/data/ascii.cpp.s
+.PHONY : src/data/ascii.cpp.s
+
+src/data/datatype.o: src/data/datatype.cpp.o
+.PHONY : src/data/datatype.o
+
+# target to build an object file
+src/data/datatype.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/data/datatype.cpp.o
+.PHONY : src/data/datatype.cpp.o
+
+src/data/datatype.i: src/data/datatype.cpp.i
+.PHONY : src/data/datatype.i
+
+# target to preprocess a source file
+src/data/datatype.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/data/datatype.cpp.i
+.PHONY : src/data/datatype.cpp.i
+
+src/data/datatype.s: src/data/datatype.cpp.s
+.PHONY : src/data/datatype.s
+
+# target to generate assembly for a file
+src/data/datatype.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/data/datatype.cpp.s
+.PHONY : src/data/datatype.cpp.s
 
 src/file_reader.o: src/file_reader.c.o
 .PHONY : src/file_reader.o
 
 # target to build an object file
 src/file_reader.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/file_reader.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/file_reader.c.o
 .PHONY : src/file_reader.c.o
 
 src/file_reader.i: src/file_reader.c.i
@@ -190,7 +395,7 @@ src/file_reader.i: src/file_reader.c.i
 
 # target to preprocess a source file
 src/file_reader.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/file_reader.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/file_reader.c.i
 .PHONY : src/file_reader.c.i
 
 src/file_reader.s: src/file_reader.c.s
@@ -198,7 +403,7 @@ src/file_reader.s: src/file_reader.c.s
 
 # target to generate assembly for a file
 src/file_reader.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/file_reader.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/file_reader.c.s
 .PHONY : src/file_reader.c.s
 
 src/ins/add.o: src/ins/add.c.o
@@ -206,7 +411,7 @@ src/ins/add.o: src/ins/add.c.o
 
 # target to build an object file
 src/ins/add.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/add.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/add.c.o
 .PHONY : src/ins/add.c.o
 
 src/ins/add.i: src/ins/add.c.i
@@ -214,7 +419,7 @@ src/ins/add.i: src/ins/add.c.i
 
 # target to preprocess a source file
 src/ins/add.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/add.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/add.c.i
 .PHONY : src/ins/add.c.i
 
 src/ins/add.s: src/ins/add.c.s
@@ -222,7 +427,7 @@ src/ins/add.s: src/ins/add.c.s
 
 # target to generate assembly for a file
 src/ins/add.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/add.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/add.c.s
 .PHONY : src/ins/add.c.s
 
 src/ins/and.o: src/ins/and.c.o
@@ -230,7 +435,7 @@ src/ins/and.o: src/ins/and.c.o
 
 # target to build an object file
 src/ins/and.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/and.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/and.c.o
 .PHONY : src/ins/and.c.o
 
 src/ins/and.i: src/ins/and.c.i
@@ -238,7 +443,7 @@ src/ins/and.i: src/ins/and.c.i
 
 # target to preprocess a source file
 src/ins/and.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/and.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/and.c.i
 .PHONY : src/ins/and.c.i
 
 src/ins/and.s: src/ins/and.c.s
@@ -246,7 +451,7 @@ src/ins/and.s: src/ins/and.c.s
 
 # target to generate assembly for a file
 src/ins/and.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/and.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/and.c.s
 .PHONY : src/ins/and.c.s
 
 src/ins/call.o: src/ins/call.c.o
@@ -254,7 +459,7 @@ src/ins/call.o: src/ins/call.c.o
 
 # target to build an object file
 src/ins/call.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/call.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/call.c.o
 .PHONY : src/ins/call.c.o
 
 src/ins/call.i: src/ins/call.c.i
@@ -262,7 +467,7 @@ src/ins/call.i: src/ins/call.c.i
 
 # target to preprocess a source file
 src/ins/call.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/call.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/call.c.i
 .PHONY : src/ins/call.c.i
 
 src/ins/call.s: src/ins/call.c.s
@@ -270,15 +475,39 @@ src/ins/call.s: src/ins/call.c.s
 
 # target to generate assembly for a file
 src/ins/call.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/call.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/call.c.s
 .PHONY : src/ins/call.c.s
+
+src/ins/cnd.o: src/ins/cnd.c.o
+.PHONY : src/ins/cnd.o
+
+# target to build an object file
+src/ins/cnd.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/cnd.c.o
+.PHONY : src/ins/cnd.c.o
+
+src/ins/cnd.i: src/ins/cnd.c.i
+.PHONY : src/ins/cnd.i
+
+# target to preprocess a source file
+src/ins/cnd.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/cnd.c.i
+.PHONY : src/ins/cnd.c.i
+
+src/ins/cnd.s: src/ins/cnd.c.s
+.PHONY : src/ins/cnd.s
+
+# target to generate assembly for a file
+src/ins/cnd.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/cnd.c.s
+.PHONY : src/ins/cnd.c.s
 
 src/ins/div.o: src/ins/div.c.o
 .PHONY : src/ins/div.o
 
 # target to build an object file
 src/ins/div.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/div.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/div.c.o
 .PHONY : src/ins/div.c.o
 
 src/ins/div.i: src/ins/div.c.i
@@ -286,7 +515,7 @@ src/ins/div.i: src/ins/div.c.i
 
 # target to preprocess a source file
 src/ins/div.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/div.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/div.c.i
 .PHONY : src/ins/div.c.i
 
 src/ins/div.s: src/ins/div.c.s
@@ -294,7 +523,7 @@ src/ins/div.s: src/ins/div.c.s
 
 # target to generate assembly for a file
 src/ins/div.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/div.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/div.c.s
 .PHONY : src/ins/div.c.s
 
 src/ins/go.o: src/ins/go.c.o
@@ -302,7 +531,7 @@ src/ins/go.o: src/ins/go.c.o
 
 # target to build an object file
 src/ins/go.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/go.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/go.c.o
 .PHONY : src/ins/go.c.o
 
 src/ins/go.i: src/ins/go.c.i
@@ -310,7 +539,7 @@ src/ins/go.i: src/ins/go.c.i
 
 # target to preprocess a source file
 src/ins/go.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/go.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/go.c.i
 .PHONY : src/ins/go.c.i
 
 src/ins/go.s: src/ins/go.c.s
@@ -318,15 +547,39 @@ src/ins/go.s: src/ins/go.c.s
 
 # target to generate assembly for a file
 src/ins/go.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/go.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/go.c.s
 .PHONY : src/ins/go.c.s
+
+src/ins/lod.o: src/ins/lod.c.o
+.PHONY : src/ins/lod.o
+
+# target to build an object file
+src/ins/lod.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/lod.c.o
+.PHONY : src/ins/lod.c.o
+
+src/ins/lod.i: src/ins/lod.c.i
+.PHONY : src/ins/lod.i
+
+# target to preprocess a source file
+src/ins/lod.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/lod.c.i
+.PHONY : src/ins/lod.c.i
+
+src/ins/lod.s: src/ins/lod.c.s
+.PHONY : src/ins/lod.s
+
+# target to generate assembly for a file
+src/ins/lod.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/lod.c.s
+.PHONY : src/ins/lod.c.s
 
 src/ins/mov.o: src/ins/mov.c.o
 .PHONY : src/ins/mov.o
 
 # target to build an object file
 src/ins/mov.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/mov.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/mov.c.o
 .PHONY : src/ins/mov.c.o
 
 src/ins/mov.i: src/ins/mov.c.i
@@ -334,7 +587,7 @@ src/ins/mov.i: src/ins/mov.c.i
 
 # target to preprocess a source file
 src/ins/mov.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/mov.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/mov.c.i
 .PHONY : src/ins/mov.c.i
 
 src/ins/mov.s: src/ins/mov.c.s
@@ -342,7 +595,7 @@ src/ins/mov.s: src/ins/mov.c.s
 
 # target to generate assembly for a file
 src/ins/mov.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/mov.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/mov.c.s
 .PHONY : src/ins/mov.c.s
 
 src/ins/mul.o: src/ins/mul.c.o
@@ -350,7 +603,7 @@ src/ins/mul.o: src/ins/mul.c.o
 
 # target to build an object file
 src/ins/mul.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/mul.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/mul.c.o
 .PHONY : src/ins/mul.c.o
 
 src/ins/mul.i: src/ins/mul.c.i
@@ -358,7 +611,7 @@ src/ins/mul.i: src/ins/mul.c.i
 
 # target to preprocess a source file
 src/ins/mul.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/mul.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/mul.c.i
 .PHONY : src/ins/mul.c.i
 
 src/ins/mul.s: src/ins/mul.c.s
@@ -366,7 +619,7 @@ src/ins/mul.s: src/ins/mul.c.s
 
 # target to generate assembly for a file
 src/ins/mul.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/mul.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/mul.c.s
 .PHONY : src/ins/mul.c.s
 
 src/ins/nand.o: src/ins/nand.c.o
@@ -374,7 +627,7 @@ src/ins/nand.o: src/ins/nand.c.o
 
 # target to build an object file
 src/ins/nand.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/nand.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/nand.c.o
 .PHONY : src/ins/nand.c.o
 
 src/ins/nand.i: src/ins/nand.c.i
@@ -382,7 +635,7 @@ src/ins/nand.i: src/ins/nand.c.i
 
 # target to preprocess a source file
 src/ins/nand.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/nand.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/nand.c.i
 .PHONY : src/ins/nand.c.i
 
 src/ins/nand.s: src/ins/nand.c.s
@@ -390,7 +643,7 @@ src/ins/nand.s: src/ins/nand.c.s
 
 # target to generate assembly for a file
 src/ins/nand.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/nand.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/nand.c.s
 .PHONY : src/ins/nand.c.s
 
 src/ins/nor.o: src/ins/nor.c.o
@@ -398,7 +651,7 @@ src/ins/nor.o: src/ins/nor.c.o
 
 # target to build an object file
 src/ins/nor.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/nor.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/nor.c.o
 .PHONY : src/ins/nor.c.o
 
 src/ins/nor.i: src/ins/nor.c.i
@@ -406,7 +659,7 @@ src/ins/nor.i: src/ins/nor.c.i
 
 # target to preprocess a source file
 src/ins/nor.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/nor.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/nor.c.i
 .PHONY : src/ins/nor.c.i
 
 src/ins/nor.s: src/ins/nor.c.s
@@ -414,7 +667,7 @@ src/ins/nor.s: src/ins/nor.c.s
 
 # target to generate assembly for a file
 src/ins/nor.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/nor.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/nor.c.s
 .PHONY : src/ins/nor.c.s
 
 src/ins/not.o: src/ins/not.c.o
@@ -422,7 +675,7 @@ src/ins/not.o: src/ins/not.c.o
 
 # target to build an object file
 src/ins/not.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/not.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/not.c.o
 .PHONY : src/ins/not.c.o
 
 src/ins/not.i: src/ins/not.c.i
@@ -430,7 +683,7 @@ src/ins/not.i: src/ins/not.c.i
 
 # target to preprocess a source file
 src/ins/not.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/not.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/not.c.i
 .PHONY : src/ins/not.c.i
 
 src/ins/not.s: src/ins/not.c.s
@@ -438,7 +691,7 @@ src/ins/not.s: src/ins/not.c.s
 
 # target to generate assembly for a file
 src/ins/not.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/not.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/not.c.s
 .PHONY : src/ins/not.c.s
 
 src/ins/or.o: src/ins/or.c.o
@@ -446,7 +699,7 @@ src/ins/or.o: src/ins/or.c.o
 
 # target to build an object file
 src/ins/or.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/or.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/or.c.o
 .PHONY : src/ins/or.c.o
 
 src/ins/or.i: src/ins/or.c.i
@@ -454,7 +707,7 @@ src/ins/or.i: src/ins/or.c.i
 
 # target to preprocess a source file
 src/ins/or.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/or.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/or.c.i
 .PHONY : src/ins/or.c.i
 
 src/ins/or.s: src/ins/or.c.s
@@ -462,7 +715,7 @@ src/ins/or.s: src/ins/or.c.s
 
 # target to generate assembly for a file
 src/ins/or.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/or.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/or.c.s
 .PHONY : src/ins/or.c.s
 
 src/ins/pop.o: src/ins/pop.c.o
@@ -470,7 +723,7 @@ src/ins/pop.o: src/ins/pop.c.o
 
 # target to build an object file
 src/ins/pop.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/pop.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/pop.c.o
 .PHONY : src/ins/pop.c.o
 
 src/ins/pop.i: src/ins/pop.c.i
@@ -478,7 +731,7 @@ src/ins/pop.i: src/ins/pop.c.i
 
 # target to preprocess a source file
 src/ins/pop.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/pop.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/pop.c.i
 .PHONY : src/ins/pop.c.i
 
 src/ins/pop.s: src/ins/pop.c.s
@@ -486,7 +739,7 @@ src/ins/pop.s: src/ins/pop.c.s
 
 # target to generate assembly for a file
 src/ins/pop.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/pop.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/pop.c.s
 .PHONY : src/ins/pop.c.s
 
 src/ins/push.o: src/ins/push.c.o
@@ -494,7 +747,7 @@ src/ins/push.o: src/ins/push.c.o
 
 # target to build an object file
 src/ins/push.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/push.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/push.c.o
 .PHONY : src/ins/push.c.o
 
 src/ins/push.i: src/ins/push.c.i
@@ -502,7 +755,7 @@ src/ins/push.i: src/ins/push.c.i
 
 # target to preprocess a source file
 src/ins/push.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/push.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/push.c.i
 .PHONY : src/ins/push.c.i
 
 src/ins/push.s: src/ins/push.c.s
@@ -510,7 +763,7 @@ src/ins/push.s: src/ins/push.c.s
 
 # target to generate assembly for a file
 src/ins/push.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/push.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/push.c.s
 .PHONY : src/ins/push.c.s
 
 src/ins/ret.o: src/ins/ret.c.o
@@ -518,7 +771,7 @@ src/ins/ret.o: src/ins/ret.c.o
 
 # target to build an object file
 src/ins/ret.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/ret.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/ret.c.o
 .PHONY : src/ins/ret.c.o
 
 src/ins/ret.i: src/ins/ret.c.i
@@ -526,7 +779,7 @@ src/ins/ret.i: src/ins/ret.c.i
 
 # target to preprocess a source file
 src/ins/ret.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/ret.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/ret.c.i
 .PHONY : src/ins/ret.c.i
 
 src/ins/ret.s: src/ins/ret.c.s
@@ -534,7 +787,7 @@ src/ins/ret.s: src/ins/ret.c.s
 
 # target to generate assembly for a file
 src/ins/ret.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/ret.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/ret.c.s
 .PHONY : src/ins/ret.c.s
 
 src/ins/stp.o: src/ins/stp.c.o
@@ -542,7 +795,7 @@ src/ins/stp.o: src/ins/stp.c.o
 
 # target to build an object file
 src/ins/stp.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/stp.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/stp.c.o
 .PHONY : src/ins/stp.c.o
 
 src/ins/stp.i: src/ins/stp.c.i
@@ -550,7 +803,7 @@ src/ins/stp.i: src/ins/stp.c.i
 
 # target to preprocess a source file
 src/ins/stp.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/stp.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/stp.c.i
 .PHONY : src/ins/stp.c.i
 
 src/ins/stp.s: src/ins/stp.c.s
@@ -558,15 +811,39 @@ src/ins/stp.s: src/ins/stp.c.s
 
 # target to generate assembly for a file
 src/ins/stp.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/stp.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/stp.c.s
 .PHONY : src/ins/stp.c.s
+
+src/ins/str.o: src/ins/str.c.o
+.PHONY : src/ins/str.o
+
+# target to build an object file
+src/ins/str.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/str.c.o
+.PHONY : src/ins/str.c.o
+
+src/ins/str.i: src/ins/str.c.i
+.PHONY : src/ins/str.i
+
+# target to preprocess a source file
+src/ins/str.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/str.c.i
+.PHONY : src/ins/str.c.i
+
+src/ins/str.s: src/ins/str.c.s
+.PHONY : src/ins/str.s
+
+# target to generate assembly for a file
+src/ins/str.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/str.c.s
+.PHONY : src/ins/str.c.s
 
 src/ins/sub.o: src/ins/sub.c.o
 .PHONY : src/ins/sub.o
 
 # target to build an object file
 src/ins/sub.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/sub.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/sub.c.o
 .PHONY : src/ins/sub.c.o
 
 src/ins/sub.i: src/ins/sub.c.i
@@ -574,7 +851,7 @@ src/ins/sub.i: src/ins/sub.c.i
 
 # target to preprocess a source file
 src/ins/sub.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/sub.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/sub.c.i
 .PHONY : src/ins/sub.c.i
 
 src/ins/sub.s: src/ins/sub.c.s
@@ -582,7 +859,7 @@ src/ins/sub.s: src/ins/sub.c.s
 
 # target to generate assembly for a file
 src/ins/sub.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/sub.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/sub.c.s
 .PHONY : src/ins/sub.c.s
 
 src/ins/xor.o: src/ins/xor.c.o
@@ -590,7 +867,7 @@ src/ins/xor.o: src/ins/xor.c.o
 
 # target to build an object file
 src/ins/xor.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/xor.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/xor.c.o
 .PHONY : src/ins/xor.c.o
 
 src/ins/xor.i: src/ins/xor.c.i
@@ -598,7 +875,7 @@ src/ins/xor.i: src/ins/xor.c.i
 
 # target to preprocess a source file
 src/ins/xor.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/xor.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/xor.c.i
 .PHONY : src/ins/xor.c.i
 
 src/ins/xor.s: src/ins/xor.c.s
@@ -606,7 +883,7 @@ src/ins/xor.s: src/ins/xor.c.s
 
 # target to generate assembly for a file
 src/ins/xor.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins/xor.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/xor.c.s
 .PHONY : src/ins/xor.c.s
 
 src/ins_make.o: src/ins_make.c.o
@@ -614,7 +891,7 @@ src/ins_make.o: src/ins_make.c.o
 
 # target to build an object file
 src/ins_make.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins_make.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins_make.c.o
 .PHONY : src/ins_make.c.o
 
 src/ins_make.i: src/ins_make.c.i
@@ -622,7 +899,7 @@ src/ins_make.i: src/ins_make.c.i
 
 # target to preprocess a source file
 src/ins_make.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins_make.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins_make.c.i
 .PHONY : src/ins_make.c.i
 
 src/ins_make.s: src/ins_make.c.s
@@ -630,7 +907,7 @@ src/ins_make.s: src/ins_make.c.s
 
 # target to generate assembly for a file
 src/ins_make.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins_make.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins_make.c.s
 .PHONY : src/ins_make.c.s
 
 src/ins_tools.o: src/ins_tools.c.o
@@ -638,7 +915,7 @@ src/ins_tools.o: src/ins_tools.c.o
 
 # target to build an object file
 src/ins_tools.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins_tools.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins_tools.c.o
 .PHONY : src/ins_tools.c.o
 
 src/ins_tools.i: src/ins_tools.c.i
@@ -646,7 +923,7 @@ src/ins_tools.i: src/ins_tools.c.i
 
 # target to preprocess a source file
 src/ins_tools.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins_tools.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins_tools.c.i
 .PHONY : src/ins_tools.c.i
 
 src/ins_tools.s: src/ins_tools.c.s
@@ -654,7 +931,7 @@ src/ins_tools.s: src/ins_tools.c.s
 
 # target to generate assembly for a file
 src/ins_tools.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/emulator.dir/build.make CMakeFiles/emulator.dir/src/ins_tools.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins_tools.c.s
 .PHONY : src/ins_tools.c.s
 
 # Help Target
@@ -665,13 +942,38 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... emulator"
+	@echo "... h"
+	@echo "... hc"
+	@echo "... hcompiler.o"
+	@echo "... hcompiler.i"
+	@echo "... hcompiler.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... src/cpp/file_reader.o"
+	@echo "... src/cpp/file_reader.i"
+	@echo "... src/cpp/file_reader.s"
+	@echo "... src/cpp/ins.compiler.o"
+	@echo "... src/cpp/ins.compiler.i"
+	@echo "... src/cpp/ins.compiler.s"
+	@echo "... src/cpp/ins_make.o"
+	@echo "... src/cpp/ins_make.i"
+	@echo "... src/cpp/ins_make.s"
+	@echo "... src/cpp/ins_tools.o"
+	@echo "... src/cpp/ins_tools.i"
+	@echo "... src/cpp/ins_tools.s"
+	@echo "... src/cpp/instruction.o"
+	@echo "... src/cpp/instruction.i"
+	@echo "... src/cpp/instruction.s"
 	@echo "... src/cpu.o"
 	@echo "... src/cpu.i"
 	@echo "... src/cpu.s"
+	@echo "... src/data/ascii.o"
+	@echo "... src/data/ascii.i"
+	@echo "... src/data/ascii.s"
+	@echo "... src/data/datatype.o"
+	@echo "... src/data/datatype.i"
+	@echo "... src/data/datatype.s"
 	@echo "... src/file_reader.o"
 	@echo "... src/file_reader.i"
 	@echo "... src/file_reader.s"
@@ -684,12 +986,18 @@ help:
 	@echo "... src/ins/call.o"
 	@echo "... src/ins/call.i"
 	@echo "... src/ins/call.s"
+	@echo "... src/ins/cnd.o"
+	@echo "... src/ins/cnd.i"
+	@echo "... src/ins/cnd.s"
 	@echo "... src/ins/div.o"
 	@echo "... src/ins/div.i"
 	@echo "... src/ins/div.s"
 	@echo "... src/ins/go.o"
 	@echo "... src/ins/go.i"
 	@echo "... src/ins/go.s"
+	@echo "... src/ins/lod.o"
+	@echo "... src/ins/lod.i"
+	@echo "... src/ins/lod.s"
 	@echo "... src/ins/mov.o"
 	@echo "... src/ins/mov.i"
 	@echo "... src/ins/mov.s"
@@ -720,6 +1028,9 @@ help:
 	@echo "... src/ins/stp.o"
 	@echo "... src/ins/stp.i"
 	@echo "... src/ins/stp.s"
+	@echo "... src/ins/str.o"
+	@echo "... src/ins/str.i"
+	@echo "... src/ins/str.s"
 	@echo "... src/ins/sub.o"
 	@echo "... src/ins/sub.i"
 	@echo "... src/ins/sub.s"

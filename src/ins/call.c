@@ -2,46 +2,9 @@
 
 SIGN_INSTRUCTION_SET(call) {
     if( opcode == OPCODE_CALL_1 )
-        instruction_call_reg(prefix, opcode, memory, reg, pc );
+        instruction_call_reg(prefix, ext_prefix, opcode, memory, reg, pc );
     else if ( opcode == OPCODE_CALL_2 )
-        instruction_call_value( prefix, opcode, memory, reg, pc );
-}
-
-uint32_t create_instruction_call_reg(CREATE_INSTRUCTION_ARGS) {
-    if( strcmp("call", opcode) != 0 )
-        return pc;
-
-    uint8_t prefix = PREFIX_RM_INC;
-    uint8_t op = OPCODE_CALL_1;
-    uint8_t reg = regbytext(lReg);
-
-    return instruction_reg(memory, pc, prefix, op, reg);
-}
-
-uint32_t create_instruction_call_regmem(CREATE_INSTRUCTION_ARGS) {
-    if( strcmp("call", opcode) != 0 )
-        return pc;
-
-    uint8_t prefix = PREFIX_RM_INC;
-    uint8_t op = OPCODE_CALL_1;
-    uint8_t reg = regbytext( lReg );
-    return instruction_regmem(memory, pc, prefix,  op, reg, *offset);
-}
-
-uint32_t create_instruction_call_value(CREATE_INSTRUCTION_ARGS) {
-    if( strcmp("call", opcode) != 0 ) return  pc;
-
-    uint8_t prefix = PREFIX_32BITS;
-    uint8_t op = OPCODE_CALL_2;
-    return instruction_value(memory, pc, prefix, op, *value );
-}
-
-uint32_t create_instruction_call_label(CREATE_INSTRUCTION_ARGS) {
-    if( strcmp("call", opcode) != 0 ) return pc;
-
-    uint8_t prefix = PREFIX_32BITS;
-    uint8_t op = OPCODE_CALL_2;
-    return instruction_label(memory, pc, prefix, op);
+        instruction_call_value( prefix, ext_prefix, opcode, memory, reg, pc );
 }
 
 void instruction_call_reg(INSTRUCTION_SET_ARGS) {
@@ -92,7 +55,7 @@ void instruction_call_reg(INSTRUCTION_SET_ARGS) {
 }
 
 void instruction_call_regmem(INSTRUCTION_SET_ARGS) {
-    instruction_call_reg(prefix, opcode, memory, reg, pc );
+    instruction_call_reg(prefix, ext_prefix, opcode, memory, reg, pc );
 }
 
 void instruction_call_value(INSTRUCTION_SET_ARGS) {

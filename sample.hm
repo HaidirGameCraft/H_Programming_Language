@@ -1,19 +1,35 @@
 mov 0x1000 -> r32s
 mov r32s -> r32bp
-go $run
-stp
 
 main:
-    push 0x1234DEAD
-    pop r32a
-    mov r32a -> r32b
-    and 0xF000 -> r32a
-    ret
-run:
-    mov $main -> r32c
-    mov $run -> r32d
-    or 0xF -> r32d
-    xor r32b -> r32b
-    call r32c
-    mov 0xABCD1234 -> r32f
+    push 0x5000
+    push $text
+    call $memcpy
     stp
+
+memcpy:
+    lod r32s -> r32a
+    lod r32s(4) -> r32e
+    lod r32s(8) -> r32f
+    xor r32a -> r32a
+    xor r32b -> r32b
+loop:
+    lod r32e -> r32a
+    and 0xFF -> r32a
+    cnd r8b == r8a
+    goc $done
+
+    str r8a -> r32f
+    add 1 -> r32e
+    add 1 -> r32f
+    go $loop
+done:
+    ret
+    
+
+text:
+=ascii "Hello, World"
+=single 0
+value:
+=quad 0x1234DEAD
+saved_text:

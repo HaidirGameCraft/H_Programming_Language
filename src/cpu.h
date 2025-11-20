@@ -6,19 +6,7 @@
 
 #include <stdint.h>
 
-#define eflags_carry_flags 1 << 0
-#define eflags_parity_flags 1 << 2
-#define eflags_auxiliary_flags 1 << 4
-#define eflags_zero_flags 1 << 6
-#define eflags_sign_flags 1 << 7
-#define eflags_trap_flags 1 << 8
-#define eflags_interrupt_enable 1 << 9
-#define eflags_direction_flags 1 << 10
-#define eflags_overflow 1 << 11
-#define eflags_io_privilege_level 1 << 12
-#define eflags_nested_task_flags 1 << 13
-#define eflags_resume_flags 1 << 15
-#define eflags_v8086_flags 1 << 16
+#define flags_condition 1 << 2
 
 typedef struct {
     union {

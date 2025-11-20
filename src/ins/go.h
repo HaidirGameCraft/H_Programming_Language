@@ -1,19 +1,22 @@
 #pragma once
 
 /**
- * GO Instruction Set
+ * GO and GOC (GO when Condition) Instruction Set
  * Created By: Haidir
  * - go to destination address
  */
 
 #include <inst.h>
+#ifdef __cpluplus
+#include <cpp/ins_make.hpp>
+#else
 #include <ins_make.h>
-
-uint32_t create_instruction_go_regmem(CREATE_INSTRUCTION_ARGS);
-uint32_t create_instruction_go_value(CREATE_INSTRUCTION_ARGS);
-uint32_t create_instruction_go_label(CREATE_INSTRUCTION_ARGS);
+#endif
 
 void instruction_go_reg(INSTRUCTION_SET_ARGS);
-void instruction_go_regmem(INSTRUCTION_SET_ARGS);
 void instruction_go_value(INSTRUCTION_SET_ARGS);
-void instruction_go_label(INSTRUCTION_SET_ARGS);
+void instruction_go_addr(INSTRUCTION_SET_ARGS);
+
+void instruction_goc_reg(INSTRUCTION_SET_ARGS);
+void instruction_goc_value(INSTRUCTION_SET_ARGS);
+void instruction_goc_addr(INSTRUCTION_SET_ARGS);

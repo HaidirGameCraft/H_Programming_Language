@@ -20,11 +20,17 @@
 */
 
 #define PREFIX_MEMORY       1 << 1
+
 #define PREFIX_16BITS       1 << 2
 #define PREFIX_32BITS       1 << 3
+
+
 #define PREFIX_RM_INC       1 << 4
 #define PREFIX_OFF_INC      1 << 5
 #define PREFIX_VAL_INC      1 << 6
+#define PREFIX_EXT_INC      1 << 7
+
+#define EXT_PREFIX_ADDRSIZE 1 << 0
 
 typedef struct {
     uint8_t _0: 1;
@@ -34,14 +40,29 @@ typedef struct {
     uint8_t regmem: 1;  // When set, RM include
     uint8_t o: 1;   // When set, Offset include
     uint8_t v: 1;   // When set, Value include
-    uint8_t _4: 1;
+    uint8_t ext: 1; // When set, Prefix Extended included ( it has 2 bytes of prefix )
 } ins_prefix_t;
 
 typedef struct {
+    uint8_t addr_size: 1; // When set the addr is 32 bits, otherwise 16 bits
+} ins_ext_prefix_t;
+
+typedef struct {
     uint8_t dreg: 3;     // 3 bits represent destination register
-    uint8_t bits: 2;    // 2 bits represent 8, 16 and 32 bits ( or reserved )
+    /**
+     * FLAGS - 2 bits represent the flags
+     * 0| -> when set the Extended RegMem will required ( providing the type of bits of each source and destination register )
+     * 1| -> reserved;
+     */
+    uint8_t flags: 2;
     uint8_t sreg: 3;     // 3 bits represent source register
 } ins_regmem_t;
+
+typedef struct {
+    uint8_t dbit: 2;
+    uint8_t sbit: 2;
+    uint8_t _0: 4;
+} ins_ext_regmem_t;
 
 uint8_t read8(uint8_t* memory, uint32_t* pc);
 uint16_t read16(uint8_t* memory, uint32_t* pc);
@@ -50,9 +71,9 @@ uint8_t gread8(uint8_t* memory, uint32_t pc);
 uint16_t gread16(uint8_t* memory, uint32_t pc);
 uint32_t gread32(uint8_t* memory, uint32_t pc);
 
-void write8(uint8_t* memory, uint32_t pc, uint8_t data);
-void write16(uint8_t* memory, uint32_t pc, uint16_t data);
-void write32( uint8_t* memory, uint32_t pc, uint32_t data);
+uint32_t write8(uint8_t* memory, uint32_t pc, uint8_t data);
+uint32_t write16(uint8_t* memory, uint32_t pc, uint16_t data);
+uint32_t write32( uint8_t* memory, uint32_t pc, uint32_t data);
 
 uint8_t* reg8(cpu_register_t* reg, uint8_t r);
 uint16_t* reg16(cpu_register_t* reg, uint8_t r);
@@ -63,10 +84,10 @@ char* str_uppercase(const char* str);
 
 uint8_t regbytext(const char* reg_text);
 uint8_t regmem_set(uint8_t bit, uint8_t sreg, uint8_t dreg);
-int create_instruction(uint8_t* memory, uint32_t pc, const char* instruction );
+uint32_t create_instruction(uint8_t* memory, uint32_t pc, const char* instruction );
 
-#define INSTRUCTION_SET_ARGS uint8_t prefix, uint8_t opcode, uint8_t* memory, cpu_register_t* reg, uint32_t* pc
-#define SIGN_INSTRUCTION_SET(name) void name##_instruction_set(uint8_t prefix, uint8_t opcode, uint8_t* memory, cpu_register_t* reg, uint32_t* pc)
+#define INSTRUCTION_SET_ARGS uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t* memory, cpu_register_t* reg, uint32_t* pc
+#define SIGN_INSTRUCTION_SET(name) void name##_instruction_set(INSTRUCTION_SET_ARGS)
 #define PUSH_INSTRUCTION_MEM(name) uint32_t name##_push_instruction(uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t opcode, uint8_t regmem, uint32_t disp, uint32_t value)
 
 PUSH_INSTRUCTION_MEM(mov);
@@ -83,6 +104,7 @@ PUSH_INSTRUCTION_MEM(pop);
                                 memset(&pre, prefix, sizeof( ins_prefix_t ) ); \
                                 \
                                 ins_regmem_t __regmem; \
+                                ins_ext_regmem_t __ext_regmem; \
                                 uint8_t* r8 = NULL; \
                                 uint16_t* r16 = NULL; \
                                 uint32_t* r32 = NULL; \
@@ -93,13 +115,18 @@ PUSH_INSTRUCTION_MEM(pop);
                                 \
                                 uint32_t offset = 0; \
                                 uint32_t value = 0;
+#define REGMEM_DEFINED(m, p)    if( prefix & PREFIX_RM_INC ) \
+                                    memset(&__regmem, read8(m, p), 1); \
+                                if( (prefix & PREFIX_RM_INC) && __regmem.flags & (1 << 0) ) \
+                                    memset(&__ext_regmem, read8(m, p), 1);
 
-#define OPCODE_ADD_1    0x30
-#define OPCODE_ADD_2    0x31
-#define OPCODE_ADD_3    0x32
+#define OPCODE_ADD_1    0x30    /* ADD REG -> REG */
+#define OPCODE_ADD_2    0x31    /* ADD VALUE -> REG */
+                                /* ADD $LABEL -> REG */
+
 #define OPCODE_SUB_1    0x33
 #define OPCODE_SUB_2    0x34
-#define OPCODE_SUB_3    0x35
+
 #define OPCODE_MUL_1    0x36
 #define OPCODE_MUL_2    0x37
 
@@ -109,10 +136,12 @@ PUSH_INSTRUCTION_MEM(pop);
 #define OPCODE_PUSH_2   0x3C
 #define OPCODE_POP_1    0x3D
 
+#define OPCODE_LOD_1    0x3E    /* LOD REG(n) -> REG */
+#define OPCODE_LOD_2    0x3F    /* LOD ADDR(n) -> REG*/
+                                /* LOD $LABEL(n) -> REG */
 
 #define OPCODE_MOV_1    0x40
 #define OPCODE_MOV_2    0x41
-#define OPCODE_MOV_3    0x42
 
 #define OPCODE_PUSH_RM32    0x44
 #define OPCODE_PUSH_VALUE   0x45
@@ -132,22 +161,26 @@ PUSH_INSTRUCTION_MEM(pop);
 #define OPCODE_XNOR_1       0x52
 #define OPCODE_XNOR_2       0x53
 
-#define OPCODE_CND_1        0x54
-#define OPCODE_CND_2        0x55
-#define OPCODE_CND_3        0x56
-#define OPCODE_CND_4        0x57
+#define OPCODE_CND_1        0x54    /* CND REGMEM (SYM) REG */
+#define OPCODE_CND_2        0x55    /* CND VALUE  (SYM) REGMEM */
 
 #define OPCODE_CALL_1       0x58
 #define OPCODE_CALL_2       0x59
 #define OPCODE_RETURN       0x5A
 #define OPCODE_GO_1         0x5B
 #define OPCODE_GO_2         0x5C
+#define OPCODE_GOC_1        0x5D
+#define OPCODE_GOC_2        0x5E
+#define OPCODE_STR_1        0x5F    /* STR REG -> REG */
+#define OPCODE_STR_2        0x60    /* STR ADDR -> REG */
+                                    /* STR $LABEL -> REG */
 
 #define OPCODE_STP          0x90
 
 
-SIGN_INSTRUCTION_SET(load);
-SIGN_INSTRUCTION_SET(store);
+SIGN_INSTRUCTION_SET(lod);
+
+SIGN_INSTRUCTION_SET(str);
 
 /**
  * Instruction Set Details
@@ -155,6 +188,7 @@ SIGN_INSTRUCTION_SET(store);
  * - reg8/16/32 -> using REGISTER only of 8, 16 and 32 bits
  * - mem8/16/32 -> using MEMORY only with requiring OFFSET of 8, 16 and 32 bits
  * - value8/16/32 -> using the VALUE with size 1, 2 or 4 bytes
+ * - (SYM)          -> including 1 bytes slot for symbols
  */
 
 /**
@@ -276,3 +310,8 @@ SIGN_INSTRUCTION_SET(go);
  * RET - instruction set ( return to the previous address by popping the stack )
  */
 SIGN_INSTRUCTION_SET(ret);
+
+/**
+ * CND - instruction set
+ */
+SIGN_INSTRUCTION_SET(cnd);

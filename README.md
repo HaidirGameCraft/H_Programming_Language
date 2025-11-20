@@ -2,23 +2,25 @@
 
 Do you know when C file compile to binary it threw Assembly Language before compiling into binary?. So, this is my own CPU Emulator that inspired me from Intel x86 Architecture and Assembly Language.
 
-H Programmer Language is the Emulator machine that running the H code to binary code. 
+H Programmer Language is the Emulator machine that running the H code to binary code.
+This project has bug and the confusion of compiler and instruction program. *Dont Expect it Work Properly*. I will adjust it for next time.
 
 # The Instruction set Format
 the Instruction Set Format is the rule that make machine run functionlly
 
 For this format:
 
-| Prefix | Opcode | RegMem | Offset | Value |
+| Prefix | Ext Prefix | Opcode | RegMem | Ext RegMem | Offset | Value |
 
 
 - Prefix are require for instruction set, containing flags
+- Ext Prefix are option based on PREFIX_EXT_INC on Prefix
 - Opcode are require for instruction set, containing operation code like MOV, PUSH, POP, ADD, SUB, MUL and so on.
 - RegMem are optional because it containing Register format:
     - 3 bits -> destination register
     - 2 bits -> reserved ( not implement )
     - 3 bits -> source register
-- RegMem can be use as Memory while the PREFIX.M is == 1, allow the offset are used in this case
+- Ext Regmem is option based on RegMem.FLAGS=0b01
 - Offset are optional but when PREFIX.M == 1, it turn to required
 - Value are optional that containing value of data
 

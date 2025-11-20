@@ -3,6 +3,10 @@
  * Created By Haidir
  */
 #include <inst.h>
+#include <ins_make.h>
+#include <stdio.h>
+
+#define MAX_REGMATCH_LENGTH     10
 
 uint8_t read8(uint8_t* memory, uint32_t* pc) {
     uint8_t r = memory[*pc];
@@ -32,16 +36,19 @@ uint32_t gread32(uint8_t* memory, uint32_t pc) {
     return r;
 }
 
-void write8(uint8_t* memory, uint32_t pc, uint8_t data) {
+uint32_t write8(uint8_t* memory, uint32_t pc, uint8_t data) {
     memory[pc] = data & 0xFF;
+    return pc + 1;
 }
-void write16(uint8_t* memory, uint32_t pc, uint16_t data) {
+uint32_t write16(uint8_t* memory, uint32_t pc, uint16_t data) {
     write8(memory, pc, data & 0xFF);
     write8(memory, pc + 1, (data >> 8) & 0xFF);
+    return pc + 2;
 }
-void write32( uint8_t* memory, uint32_t pc, uint32_t data) {
+uint32_t write32( uint8_t* memory, uint32_t pc, uint32_t data) {
     write16( memory, pc, data & 0xFFFF );
     write16( memory, pc + 2, ( data >> 16 ) & 0xFFFF );
+    return pc + 4;
 }
 
 uint8_t* reg8(cpu_register_t* reg, uint8_t r) {
@@ -97,4 +104,58 @@ uint32_t* reg32(cpu_register_t* reg, uint8_t r) {
         return &reg->r32s;
     else if ( r == 7 )
         return &reg->r32bp;
+}
+
+regex_matches_t* regex_matches(const char* pattern, const char* text) {
+    regex_t regex;
+    int val = 0;
+
+    // build the regex component with pattern
+    val = regcomp( &regex, pattern, REG_EXTENDED );
+    if( val != 0 )
+    {
+        
+        printf("Doent match\n");
+        return NULL;
+    }
+
+
+    
+
+    regex_matches_t* rmatch = (regex_matches_t*) malloc( sizeof( regex_matches_t ) );
+    memset(rmatch, 0, sizeof( regex_matches_t ) );
+    rmatch->match = (regmatch_t*) malloc( MAX_REGMATCH_LENGTH * sizeof( regmatch_t ) );
+    memset( rmatch->match, 0, sizeof( regmatch_t ) * MAX_REGMATCH_LENGTH );
+
+    // executing the regex matches with text
+    val = regexec( &regex, text, MAX_REGMATCH_LENGTH, rmatch->match, 0 );
+    if (val != 0 && val != REG_NOMATCH ){
+        free_regex_matches( rmatch );
+        rmatch = NULL;
+        perror("Error to regex\n");
+        regfree( &regex );
+        return rmatch;
+    }
+
+    if( val == REG_NOMATCH )
+    {
+        free_regex_matches( rmatch );
+        rmatch = NULL;
+        regfree( &regex );
+        return rmatch;
+    }
+
+    // finding the length on matches
+    rmatch->length = MAX_REGMATCH_LENGTH;
+
+    regfree( &regex );
+    return rmatch;
+}
+
+void             free_regex_matches(regex_matches_t* ptr) {
+    if( ptr == NULL )
+        return;
+
+    free( ptr->match );
+    free( ptr );
 }

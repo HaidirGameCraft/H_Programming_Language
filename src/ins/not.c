@@ -1,19 +1,8 @@
 #include "not.h"
 
-uint32_t create_instruction_not_reg(CREATE_INSTRUCTION_ARGS) {
-    if( strncmp("not", opcode, 3) != 0 )
-        return pc;
-
-    uint8_t prefix = PREFIX_RM_INC;
-    uint8_t op = OPCODE_NOT;
-    uint8_t dreg = regbytext(lReg);
-    
-    return instruction_reg(memory, pc, prefix, op, dreg);
-}
-
 void instruction_not_reg(INSTRUCTION_SET_ARGS) {
     VARIABLE_INSTRUCTION
-    memset( &__regmem, read8(memory, pc ), 1 );
+    REGMEM_DEFINED(memory, pc);
     if( prefix & PREFIX_32BITS )
     {
         r32 = reg32(reg, __regmem.dreg );
@@ -30,5 +19,5 @@ void instruction_not_reg(INSTRUCTION_SET_ARGS) {
 
 SIGN_INSTRUCTION_SET(not) {
     if( opcode == OPCODE_NOT )
-        instruction_not_reg(prefix, opcode, memory, reg, pc );
+        instruction_not_reg(prefix, ext_prefix, opcode, memory, reg, pc );
 }

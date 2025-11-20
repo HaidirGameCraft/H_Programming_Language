@@ -5,5 +5,6 @@ sample
 cmake_install.cmake
 CMakeCache.txt
 sample.sh
-sample.hm.ho
+sample.ho
 binaries.bn
+ram
