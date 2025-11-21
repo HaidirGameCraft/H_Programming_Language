@@ -16,15 +16,13 @@
                                     }
 #define INITIALIZE_VARIABLE         char opcode[8] = {0}; \
                                     char label[64] = {0}; \
-                                    char lReg[8] = {0}; \
-                                    char rReg[8] = {0}; \
 \
-                                    uint8_t PREFIX = 0; \
-                                    uint8_t LREG = 0; \
-                                    uint8_t RREG = 0; \
-                                    uint8_t MEMTYPE = 0; \
+                                    uint8_t prefix = 0; \
+                                    uint8_t lReg = 0; \
+                                    uint8_t rReg = 0; \
+                                    uint8_t symbols = 0; \
 \
-                                    uint32_t offset = 0; \
+                                    short offset = 0; \
                                     uint32_t value = 0;
 
 #define ARGUMENT_PATTERN    uint8_t* memory, uint32_t *pc, std::string text
@@ -33,6 +31,8 @@
 PATTERN_FINDER(opcode_reg_reg);
 PATTERN_FINDER(opcode_value_reg);
 PATTERN_FINDER(opcode_label_reg);
+PATTERN_FINDER(opcode_reg_value);
+PATTERN_FINDER(opcode_reg_label);
 PATTERN_FINDER(opcode_regoff_reg);
 PATTERN_FINDER(opcode_valueoff_reg);
 PATTERN_FINDER(opcode_labeloff_reg);
@@ -44,5 +44,3 @@ PATTERN_FINDER(opcode_label);
 PATTERN_FINDER(opcode_value);
 PATTERN_FINDER(opcode_only);
 PATTERN_FINDER(defined_label);
-PATTERN_FINDER(opcode_reg_sym_reg);
-PATTERN_FINDER(opcode_value_sym_reg);

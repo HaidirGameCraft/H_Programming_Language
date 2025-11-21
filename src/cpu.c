@@ -21,15 +21,15 @@ void cpu_set_memory(uint8_t* __memory, uint64_t size) {
     size_memory = size;
 }
 void cpu_execute() {
-    while( reg.pc32 < size_memory && is_program_running )
+    while( reg.pc < size_memory && is_program_running )
     {
-        uint8_t prefix = read8(memory, &reg.pc32);
+        uint8_t prefix = read8(memory, &reg.pc);
         uint8_t ext_prefix = 0;
         if( prefix & PREFIX_EXT_INC )
-            ext_prefix = read8( memory, &reg.pc32 );
+            ext_prefix = read8( memory, &reg.pc );
 
-        uint8_t opcode = read8(memory, &reg.pc32);
-#define ARGS_INSTRUCTION_SET prefix, ext_prefix, opcode, memory, &reg, &reg.pc32
+        uint8_t opcode = read8(memory, &reg.pc);
+#define ARGS_INSTRUCTION_SET prefix, ext_prefix, opcode, memory, &reg, &reg.pc
         mov_instruction_set(ARGS_INSTRUCTION_SET);
         add_instruction_set(ARGS_INSTRUCTION_SET);
         and_instruction_set(ARGS_INSTRUCTION_SET);
@@ -50,18 +50,28 @@ void cpu_execute() {
         cnd_instruction_set(ARGS_INSTRUCTION_SET);
         lod_instruction_set(ARGS_INSTRUCTION_SET);
         str_instruction_set(ARGS_INSTRUCTION_SET);
+        pnt_instruction_set(ARGS_INSTRUCTION_SET);
+        pct_instruction_set(ARGS_INSTRUCTION_SET);
     }
 }
 void cpu_output() {
     printf("=============== OUTPUT ================\n");
-    printf("R8A: %2x, R16A: %4x, R32A: %8x\n", reg.r8a, reg.r16a, reg.r32a);
-    printf("R8B: %2x, R16B: %4x, R32B: %8x\n", reg.r8b, reg.r16b, reg.r32b);
-    printf("R8C: %2x, R16C: %4x, R32C: %8x\n", reg.r8c, reg.r16c, reg.r32c);
-    printf("R8D: %2x, R16D: %4x, R32D: %8x\n", reg.r8d, reg.r16d, reg.r32d);
-    printf("R8E: %2x, R16E: %4x, R32E: %8x\n", reg.r8e, reg.r16e, reg.r32e);
-    printf("R8F: %2x, R16F: %4x, R32F: %8x\n", reg.r8f, reg.r16f, reg.r32f);
-    printf("R8S: %2x, R16S: %4x, R32S: %8x\n", reg.r8s, reg.r16s, reg.r32s);
-    printf("R8BP: %2x, R16BP: %4x, R32BP: %8x\n", reg.r8bp, reg.r16bp, reg.r32bp);
+    printf("RA: %8x\n", reg.ra);
+    printf("RB: %8x\n", reg.rb);
+    printf("RC: %8x\n", reg.rc);
+    printf("RD: %8x\n", reg.rd);
+    printf("RE: %8x\n", reg.re);
+    printf("RF: %8x\n", reg.rf);
+    printf("RG: %8x\n", reg.rg);
+    printf("RH: %8x\n", reg.rh);
+    printf("RI: %8x\n", reg.ri);
+    printf("RJ: %8x\n", reg.rj);
+    printf("RK: %8x\n", reg.rk);
+    printf("RL: %8x\n", reg.rl);
+    printf("RM: %8x\n", reg.rm);
+    printf("RN: %8x\n", reg.rn);
+    printf("RS: %8x\n", reg.rs);
+    printf("RP: %8x\n", reg.rp);
     printf("\n");
-    printf("FLAGS: %16b (%4x), PC32: %8x", reg.flags, reg.flags, reg.pc32);
+    printf("FLAGS: %16b (%4x), PC: %8x", reg.flags, reg.flags, reg.pc);
 }

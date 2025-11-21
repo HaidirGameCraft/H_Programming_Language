@@ -5,26 +5,25 @@
 
 #pragma once
 
-#define PATTERN_OPCODE_REG_REG                  "^([a-zA-Z]+)\\s+([rR][0-9a-zA-Z]+)\\s*->\\s*([rR][0-9a-zA-Z]+)$"
-#define PATTERN_OPCODE_VALUE_REG                "^([a-zA-Z]+)\\s+(0x[0-9a-fA-F]+|[0-9]+)\\s*->\\s*([rR][0-9a-zA-Z]+)$"
-#define PATTERN_OPCODE_LABEL_REG                "^([a-zA-Z]+)\\s+(\\$\\w*)\\s*->\\s*([r|R][0-9a-zA-Z]+)$"
+#define PATTERN_OPCODE_REG_REG                  "^(\\w+)\\s+([rR][a-z])\\s*(->|==|<=?|>=?)\\s*([rR][a-z])\\s*$"
+#define PATTERN_OPCODE_REGOFF_REG               "^(\\w+)\\s+([rR][a-z])(?:\\(([-+]?0x[[:xdigit:]]+|[-+]?[[:digit:]]+)\\))\\s*->\\s*([rR][a-z])\\s*$"
+#define PATTERN_OPCODE_REG_REGOFF               "^(\\w+)\\s+([rR][a-z])\\s*->\\s*([rR][a-z])(?:\\(([-+]?0x[[:xdigit:]]+|[-+]?[[:digit:]]+)\\))\\s*$"
 
-#define PATTERN_OPCODE_REGOFF_REG               "^(\\w+)\\s+([rR][0-9]+[a-zA-Z]+)(?:\\(([-+]?0x[0-9a-fA-F]+|[-+]?[0-9]+)\\))?\\s*->\\s*([rR][0-9]+[a-zA-Z]+)\\s*$"
-#define PATTERN_OPCODE_VALUEOFF_REG             "^(\\w+)\\s+(0x[0-9a-fA-F]+|[0-9]+)(?:\\(([-+]?0x[0-9a-fA-F]+|[-+]?[0-9]+)\\))?\\s*->\\s*([rR][0-9]+[a-zA-Z]+)\\s*$"
-#define PATTERN_OPCODE_LABELOFF_REG             "^(\\w+)\\s+(\\$\\w*)(?:\\(([-+]?0x[0-9a-fA-F]+|[-+]?[0-9]+)\\))?\\s*->\\s*([rR][0-9]+[a-zA-Z]+)\\s*$"
+#define PATTERN_OPCODE_VALUE_REG                "^(\\w+)\\s+(0x[[:xdigit:]]+|[[:digit:]]+)\\s*(->|==|<=?|>=?)\\s*([rR][a-z])\\s*$"
+#define PATTERN_OPCODE_REG_VALUE                "^(\\w+)\\s+([rR][a-z])\\s*(->|==|<=?|>=?)\\s*(0x[[:xdigit:]]+|[[:digit:]]+)\\s*$"
+#define PATTERN_OPCODE_VALUEOFF_REG             "^(\\w+)\\s+(0x[[:xdigit:]]+|[[:digit:]]+)(?:\\(([-+]?0x[[:xdigit:]]+|[-+]?[[:digit:]]+)\\))\\s*->\\s*([rR][a-z])\\s*$"
+#define PATTERN_OPCODE_REG_VALUEOFF             "^(\\w+)\\s+([rR][a-z])\\s*->\\s*(0x[[:xdigit:]]+|[[:digit:]]+)(?:\\(([-+]?0x[[:xdigit:]]+|[-+]?[[:digit:]]+)\\))\\s*$"
 
-#define PATTERN_OPCODE_REG_REGOFF               "^(\\w+)\\s+([rR][0-9]+[a-zA-Z]+)\\s*->\\s*([rR][0-9]+[a-zA-Z]+)(?:\\(([-+]?0x[0-9a-fA-F]+|[-+]?[0-9]+)\\))?\\s*$"
-#define PATTERN_OPCODE_REG_VALUEOFF             "^(\\w+)\\s+([rR][0-9]+[a-zA-Z]+)\\s*->\\s*(0x[0-9a-fA-F]+|[0-9]+)(?:\\(([-+]?0x[0-9a-fA-F]+|[-+]?[0-9]+)\\))?\\s*$"
-#define PATTERN_OPCODE_REG_LABELOFF             "^(\\w+)\\s+([rR][0-9]+[a-zA-Z]+)\\s*->\\s*(\\$\\w*)(?:\\(([-+]?0x[0-9a-fA-F]+|[-+]?[0-9]+)\\))?\\s*$"
+#define PATTERN_OPCODE_LABEL_REG                "^(\\w+)\\s+(\\$\\w*)\\s*(->|==|<=?|>=?)\\s*([rR][a-z])\\s*$"
+#define PATTERN_OPCODE_REG_LABEL                "^(\\w+)\\s+([rR][a-z])\\s*(->|==|<=?|>=?)\\s*(\\$\\w*)\\s*$"
+#define PATTERN_OPCODE_LABELOFF_REG             "^(\\w+)\\s+(\\$\\w*)(?:\\(([-+]?0x[[:xdigit:]]+|[-+]?[[:digit:]]+)\\))\\s*->\\s*([rR][a-z])\\s*$"
+#define PATTERN_OPCODE_REG_LABELOFF             "^(\\w+)\\s+([rR][a-z])\\s*->\\s*(\\$\\w*)(?:\\(([-+]?0x[[:xdigit:]]+|[-+]?[[:digit:]]+)\\))\\s*$"
 
-#define PATTERN_OPCODE_LABEL                    "^([a-zA-Z]+)\\s+(\\$\\w*)$"
-#define PATTERN_OPCODE_REG                      "^(\\w+)\\s+([r|R][0-9]*[a,b,c,d,e,f,g,h,s,bp]+)$"
+#define PATTERN_OPCODE_LABEL                    "^(\\w+)\\s+(\\$\\w*)$"
+#define PATTERN_OPCODE_REG                      "^(\\w+)\\s+([rR][a-z]+)$"
 #define PATTERN_OPCODE_VALUE                    "^(\\w+)\\s+(0x[0-9a-fA-F]+|[0-9]+)$"
-#define PATTERN_OPCODE_ONLY                     "^([a-zA-Z]+)$"
+#define PATTERN_OPCODE_ONLY                     "^(\\w+)$"
 #define PATTERN_DEFINED_LABEL                   "^(\\w+):$"
-
-#define PATTERN_OPCODE_REG_SYM_REG              "^(\\w+)\\s+([rR][0-9a-zA-Z]+)\\s*(==|<=?|>=?)\\s*([rR][0-9a-zA-Z]+)$"
-#define PATTERN_OPCODE_VALUE_SYM_REG            "^(\\w+)\\s+(0x[0-9a-fA-F]+|\\d+)\\s*(==|<=?|>=?)\\s*([rR]\\d+[a-z][p]?)\\s*$"
 
 #include <regex>
 #include <stdint.h>
@@ -52,28 +51,24 @@ void list_label_instruction();
 void update_all_instruction_label( uint8_t* memory );
 void clear_label();
 
-uint32_t instruction_reg_reg    (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t lReg, uint8_t rReg);
-uint32_t instruction_label_reg  (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t rReg, uint32_t value);
-uint32_t instruction_value_reg  (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t rReg, uint32_t value);
+uint32_t instruction_reg_reg    (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t lReg, uint8_t rReg, uint8_t sym);
+uint32_t instruction_value_reg  (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t rReg, uint8_t sym, uint32_t value);
+uint32_t instruction_label_reg  (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t rReg, uint8_t sym, uint32_t value);
+uint32_t instruction_reg_value  (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t lReg, uint8_t sym, uint32_t value);
+uint32_t instruction_reg_label  (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t lReg, uint8_t sym, uint32_t value);
 
-uint32_t instruction_regoff_reg    (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t lReg, uint8_t rReg   , uint32_t offset);
-uint32_t instruction_valueoff_reg  (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t rReg, uint32_t offset, uint32_t value );
-uint32_t instruction_labeloff_reg  (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t rReg, uint32_t offset, uint32_t value );
+uint32_t instruction_regoff_reg    (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t lReg, uint8_t rReg   , short offset);
+uint32_t instruction_valueoff_reg  (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t rReg, short offset, uint32_t value );
+uint32_t instruction_labeloff_reg  (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t rReg, short offset, uint32_t value );
 
-uint32_t instruction_reg_regoff    (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t lReg, uint8_t rReg   , uint32_t offset);
-uint32_t instruction_reg_valueoff  (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t lReg, uint32_t offset, uint32_t value );
-uint32_t instruction_reg_labeloff  (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t lReg, uint32_t offset, uint32_t value );
+uint32_t instruction_reg_regoff    (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t lReg, uint8_t rReg   , short offset);
+uint32_t instruction_reg_valueoff  (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t lReg, short offset, uint32_t value );
+uint32_t instruction_reg_labeloff  (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t lReg, short offset, uint32_t value );
 
 uint32_t instruction_reg        (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t rReg);
 uint32_t instruction_value      (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint32_t value );
 uint32_t instruction_label      (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode);
 uint32_t instruction_opcode     (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode);
-
-// using symbols in middle
-uint32_t instruction_reg_sym_reg(uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t sym, uint8_t lreg, uint8_t rreg);
-uint32_t instruction_value_sym_reg(uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t sym, uint8_t rreg, uint32_t value);
-uint32_t instruction_reg_sym_value(uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t sym, uint8_t lreg, uint32_t value );
-
 
 /**
  * Instruction Set Created 
@@ -83,7 +78,6 @@ uint32_t instruction_reg_sym_value(uint8_t* memory, uint32_t pc, uint8_t prefix,
                                         uint8_t ext_prefix, \
                                         uint8_t opcode, \
                                         uint8_t registers, \
-                                        uint8_t ext_registers, \
                                         uint8_t symbols, \
                                         uint32_t offset, \
                                         uint32_t value

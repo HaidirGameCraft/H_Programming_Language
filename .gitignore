@@ -1,5 +1,6 @@
 .vscode
 build_sample
+build
 CMakeFiles
 sample
 cmake_install.cmake

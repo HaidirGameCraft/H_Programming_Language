@@ -1,34 +1,51 @@
-mov 0x1000 -> r32s
-mov r32s -> r32bp
+mov 0x1000 -> rs
+mov rs -> rp
 
 main:
     push 0x5000
     push $text
     call $memcpy
+    add 8 -> rs
+
+    pnt $text
     stp
 
 memcpy:
-    lod r32s -> r32a
-    lod r32s(4) -> r32e
-    lod r32s(8) -> r32f
-    xor r32a -> r32a
-    xor r32b -> r32b
+    lod rs(4) -> rd
+    lod rs(8) -> re
+
+    xor ra -> ra
+    xor rb -> rb
 loop:
-    lod r32e -> r32a
-    and 0xFF -> r32a
-    cnd r8b == r8a
+    lods rd -> ra
+    cnd ra == 0 
     goc $done
 
-    str r8a -> r32f
-    add 1 -> r32e
-    add 1 -> r32f
+    strs ra -> re(0)
+    add 1 -> rd
+    add 1 -> re
     go $loop
 done:
     ret
-    
+
+print:
+    lod rs(4) -> rd
+    xor ra -> ra
+print_loop:
+    lods rd -> ra
+    cnd ra == 0
+    goc $done_print
+
+    pct ra
+    add 1 -> rd
+    go $print_loop
+done_print:
+    ret
 
 text:
 =ascii "Hello, World"
+=single 0x0A
+=ascii "Welcome Back to my Channel"
 =single 0
 value:
 =quad 0x1234DEAD

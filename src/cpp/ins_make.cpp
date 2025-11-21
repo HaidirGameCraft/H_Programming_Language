@@ -19,56 +19,39 @@
 #include <cpp/ins_compiler.list.hpp>
 
 uint8_t regbytext(const char* reg_text) {
-    if( strcmp(reg_text, "r8a") == 0 || strcmp(reg_text, "R8A") == 0)
-        return  0b00000;
-    else if( strcmp(reg_text, "r8b") == 0 || strcmp(reg_text, "R8B") == 0)
-        return  0b00001;
-    else if( strcmp(reg_text, "r8c") == 0 || strcmp(reg_text, "R8C") == 0)
-        return  0b00010;
-    else if( strcmp(reg_text, "r8d") == 0 || strcmp(reg_text, "R8D") == 0)
-        return  0b00011;
-    else if( strcmp(reg_text, "r8e") == 0 || strcmp(reg_text, "R8E") == 0)
-        return  0b00100;
-    else if( strcmp(reg_text, "r8f") == 0 || strcmp(reg_text, "R8F") == 0)
-        return  0b00101;
-    else if( strcmp(reg_text, "r8s") == 0 || strcmp(reg_text, "R8S") == 0)
-        return  0b00110;
-    else if( strcmp(reg_text, "r8bp") == 0 || strcmp(reg_text, "R8BP") == 0)
-        return  0b00111;
-    // 16 register
-    else if( strcmp(reg_text, "r16a") == 0 || strcmp(reg_text, "R16A") == 0)
-        return  0b01000;
-    else if( strcmp(reg_text, "r16b") == 0 || strcmp(reg_text, "R16B") == 0)
-        return  0b01001;
-    else if( strcmp(reg_text, "r16c") == 0 || strcmp(reg_text, "R16C") == 0)
-        return  0b01010;
-    else if( strcmp(reg_text, "r16d") == 0 || strcmp(reg_text, "R16D") == 0)
-        return  0b01011;
-    else if( strcmp(reg_text, "r16e") == 0 || strcmp(reg_text, "R16E") == 0)
-        return  0b01100;
-    else if( strcmp(reg_text, "r16f") == 0 || strcmp(reg_text, "R16F") == 0)
-        return  0b01101;
-    else if( strcmp(reg_text, "r16s") == 0 || strcmp(reg_text, "R16S") == 0)
-        return  0b01110;
-    else if( strcmp(reg_text, "r16bp") == 0 || strcmp(reg_text, "R16BP") == 0)
-        return  0b01111;
     // 32 register
-    else if( strcmp(reg_text, "r32a") == 0 || strcmp(reg_text, "R32A") == 0)
-        return  0b10000;
-    else if( strcmp(reg_text, "r32b") == 0 || strcmp(reg_text, "R32B") == 0)
-        return  0b10001;
-    else if( strcmp(reg_text, "r32c") == 0 || strcmp(reg_text, "R32C") == 0)
-        return  0b10010;
-    else if( strcmp(reg_text, "r32d") == 0 || strcmp(reg_text, "R32D") == 0)
-        return  0b10011;
-    else if( strcmp(reg_text, "r32e") == 0 || strcmp(reg_text, "R32E") == 0)
-        return  0b10100;
-    else if( strcmp(reg_text, "r32f") == 0 || strcmp(reg_text, "R32F") == 0)
-        return  0b10101;
-    else if( strcmp(reg_text, "r32s") == 0 || strcmp(reg_text, "R32S") == 0)
-        return  0b10110;
-    else if( strcmp(reg_text, "r32bp") == 0 || strcmp(reg_text, "R32BP") == 0)
-        return  0b10111;
+    if( strcmp(reg_text, "ra") == 0 || strcmp(reg_text, "RA") == 0)
+        return  0b0000;
+    else if( strcmp(reg_text, "rb") == 0 || strcmp(reg_text, "RB") == 0)
+        return  0b0001;
+    else if( strcmp(reg_text, "rc") == 0 || strcmp(reg_text, "RC") == 0)
+        return  0b0010;
+    else if( strcmp(reg_text, "rd") == 0 || strcmp(reg_text, "RD") == 0)
+        return  0b0011;
+    else if( strcmp(reg_text, "re") == 0 || strcmp(reg_text, "RE") == 0)
+        return  0b0100;
+    else if( strcmp(reg_text, "rf") == 0 || strcmp(reg_text, "RF") == 0)
+        return  0b0101;
+    else if( strcmp(reg_text, "rg") == 0 || strcmp(reg_text, "RG") == 0)
+        return  0b0110;
+    else if( strcmp(reg_text, "rh") == 0 || strcmp(reg_text, "RH") == 0)
+        return  0b0111;
+    else if( strcmp(reg_text, "ri") == 0 || strcmp(reg_text, "RI") == 0)
+        return  0b1000;
+    else if( strcmp(reg_text, "rj") == 0 || strcmp(reg_text, "RJ") == 0)
+        return  0b1001;
+    else if( strcmp(reg_text, "rk") == 0 || strcmp(reg_text, "RK") == 0)
+        return  0b1010;
+    else if( strcmp(reg_text, "rl") == 0 || strcmp(reg_text, "RL") == 0)
+        return  0b1011;
+    else if( strcmp(reg_text, "rm") == 0 || strcmp(reg_text, "RM") == 0)
+        return  0b1100;
+    else if( strcmp(reg_text, "rn") == 0 || strcmp(reg_text, "RN") == 0)
+        return  0b1101;
+    else if( strcmp(reg_text, "rs") == 0 || strcmp(reg_text, "RS") == 0)
+        return  0b1110;
+    else if( strcmp(reg_text, "rp") == 0 || strcmp(reg_text, "RP") == 0)
+        return  0b1111;
 }
 
 uint8_t rm_set(uint8_t bit, uint8_t sreg, uint8_t dreg) {
@@ -99,6 +82,8 @@ uint32_t create_instruction(uint8_t* memory, uint32_t pc, const char* instructio
     status |= opcode_reg_reg_finder_instruction          (memory, &pc, instruction);
     status |= opcode_value_reg_finder_instruction        (memory, &pc, instruction);
     status |= opcode_label_reg_finder_instruction        (memory, &pc, instruction);
+    status |= opcode_reg_value_finder_instruction        (memory, &pc, instruction);
+    status |= opcode_reg_label_finder_instruction        (memory, &pc, instruction);
     status |= opcode_regoff_reg_finder_instruction       (memory, &pc, instruction);
     status |= opcode_valueoff_reg_finder_instruction     (memory, &pc, instruction);
     status |= opcode_labeloff_reg_finder_instruction     (memory, &pc, instruction);
@@ -110,9 +95,6 @@ uint32_t create_instruction(uint8_t* memory, uint32_t pc, const char* instructio
     status |= opcode_only_finder_instruction             (memory, &pc, instruction);
     status |= opcode_value_finder_instruction            (memory, &pc, instruction);
     status |= defined_label_finder_instruction           (memory, &pc, instruction);
-    
-    status |= opcode_reg_sym_reg_finder_instruction      (memory, &pc, instruction);
-    status |= opcode_value_sym_reg_finder_instruction    (memory, &pc, instruction);
 
     // ASSERT("");
 

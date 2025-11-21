@@ -718,6 +718,54 @@ src/ins/or.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/or.c.s
 .PHONY : src/ins/or.c.s
 
+src/ins/pct.o: src/ins/pct.c.o
+.PHONY : src/ins/pct.o
+
+# target to build an object file
+src/ins/pct.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/pct.c.o
+.PHONY : src/ins/pct.c.o
+
+src/ins/pct.i: src/ins/pct.c.i
+.PHONY : src/ins/pct.i
+
+# target to preprocess a source file
+src/ins/pct.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/pct.c.i
+.PHONY : src/ins/pct.c.i
+
+src/ins/pct.s: src/ins/pct.c.s
+.PHONY : src/ins/pct.s
+
+# target to generate assembly for a file
+src/ins/pct.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/pct.c.s
+.PHONY : src/ins/pct.c.s
+
+src/ins/pnt.o: src/ins/pnt.c.o
+.PHONY : src/ins/pnt.o
+
+# target to build an object file
+src/ins/pnt.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/pnt.c.o
+.PHONY : src/ins/pnt.c.o
+
+src/ins/pnt.i: src/ins/pnt.c.i
+.PHONY : src/ins/pnt.i
+
+# target to preprocess a source file
+src/ins/pnt.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/pnt.c.i
+.PHONY : src/ins/pnt.c.i
+
+src/ins/pnt.s: src/ins/pnt.c.s
+.PHONY : src/ins/pnt.s
+
+# target to generate assembly for a file
+src/ins/pnt.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/pnt.c.s
+.PHONY : src/ins/pnt.c.s
+
 src/ins/pop.o: src/ins/pop.c.o
 .PHONY : src/ins/pop.o
 
@@ -1016,6 +1064,12 @@ help:
 	@echo "... src/ins/or.o"
 	@echo "... src/ins/or.i"
 	@echo "... src/ins/or.s"
+	@echo "... src/ins/pct.o"
+	@echo "... src/ins/pct.i"
+	@echo "... src/ins/pct.s"
+	@echo "... src/ins/pnt.o"
+	@echo "... src/ins/pnt.i"
+	@echo "... src/ins/pnt.s"
 	@echo "... src/ins/pop.o"
 	@echo "... src/ins/pop.i"
 	@echo "... src/ins/pop.s"

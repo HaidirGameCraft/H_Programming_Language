@@ -7,7 +7,7 @@ SIGN_INSTRUCTION_SET(ret) {
 
 void instruction_ret(INSTRUCTION_SET_ARGS) {
     VARIABLE_INSTRUCTION
-    value = gread32(memory, reg->r32s);
-    reg->r32s += 4;
-    reg->pc32 = value;
+    value = gread32(memory, reg->rs);
+    reg->rs += 4;
+    reg->pc = value;
 }

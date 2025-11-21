@@ -9,66 +9,43 @@
 #define flags_condition 1 << 2
 
 typedef struct {
-    union {
-        uint8_t r8a;
-        uint16_t r16a;
-        uint32_t r32a;
-    };
-    union {
-        uint8_t r8b;
-        uint16_t r16b;
-        uint32_t r32b;
-    };
-    union {
-        uint8_t r8c;
-        uint16_t r16c;
-        uint32_t r32c;
-    };
-    union {
-        uint8_t r8d;
-        uint16_t r16d;
-        uint32_t r32d;
-    };
-    union {
-        uint8_t r8e;
-        uint16_t r16e;
-        uint32_t r32e;
-    };
-    union {
-        uint8_t r8f;
-        uint16_t r16f;
-        uint32_t r32f;
-    };
-    union {
-        uint8_t r8s;
-        uint16_t r16s;
-        uint32_t r32s;
-    };
-    union {
-        uint8_t r8bp;
-        uint16_t r16bp;
-        uint32_t r32bp;
-    };
+    uint32_t ra;
+    uint32_t rb;
+    uint32_t rc;
+    uint32_t rd;
+    uint32_t re;
+    uint32_t rf;
+    uint32_t rg;
+    uint32_t rh;
+    uint32_t ri;
+    uint32_t rj;
+    uint32_t rk;
+    uint32_t rl;
+    uint32_t rm;
+    uint32_t rn;
+    uint32_t rs;
+    uint32_t rp;
 
-    union {
-        uint16_t pc16;
-        uint32_t pc32;
-    };
+    uint32_t pc;
     uint16_t flags;
 } cpu_register_t;
 
-#define REG_A   0b000
-#define REG_B   0b001
-#define REG_C   0b010
-#define REG_D   0b011
-#define REG_E   0b100
-#define REG_F   0b101
-#define REG_S   0b110
-#define REG_BP  0b111
-
-#define RM8     0b00
-#define RM16    0b01
-#define RM32    0b10
+#define REG_A   0b0000
+#define REG_B   0b0001
+#define REG_C   0b0010
+#define REG_D   0b0011
+#define REG_E   0b0100
+#define REG_F   0b0101
+#define REG_G   0b0110
+#define REG_H   0b0111
+#define REG_I   0b1000
+#define REG_J   0b1001
+#define REG_K   0b1010
+#define REG_L   0b1011
+#define REG_M   0b1100
+#define REG_N   0b1101
+#define REG_S   0b1110
+#define REG_P   0b1111
 
 void cpu_initialize();
 void cpu_set_memory(uint8_t* memory, uint64_t size);

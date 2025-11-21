@@ -97,7 +97,7 @@ uint32_t read_line( char* text, int size, uint8_t* memory, uint32_t pc ) {
     }
 
     
-    // printf("Text: %.*s|\n", end_char - start_char, &t_tmp[start_char] );
+    printf("Text: %.*s\n", end_char - start_char, &t_tmp[start_char] );
     // printf("Hai");
     
     pc = create_instruction(memory, pc, &t_tmp[start_char]);

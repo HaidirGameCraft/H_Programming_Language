@@ -51,59 +51,15 @@ uint32_t write32( uint8_t* memory, uint32_t pc, uint32_t data) {
     return pc + 4;
 }
 
-uint8_t* reg8(cpu_register_t* reg, uint8_t r) {
-    if( r == 0 )
-        return &reg->r8a;
-    else if ( r == 1 )
-        return &reg->r8b;
-    else if ( r == 2 )
-        return &reg->r8c;
-    else if ( r == 3 )
-        return &reg->r8d;
-    else if ( r == 4 )
-        return &reg->r8e;
-    else if ( r == 5 )
-        return &reg->r8f;
-    else if ( r == 6 )
-        return &reg->r8s;
-    else if ( r == 7 )
-        return &reg->r8bp;
-}
-uint16_t* reg16(cpu_register_t* reg, uint8_t r) {
-    if( r == 0 )
-        return &reg->r16a;
-    else if ( r == 1 )
-        return &reg->r16b;
-    else if ( r == 2 )
-        return &reg->r16c;
-    else if ( r == 3 )
-        return &reg->r16d;
-    else if ( r == 4 )
-        return &reg->r16e;
-    else if ( r == 5 )
-        return &reg->r16f;
-    else if ( r == 6 )
-        return &reg->r16s;
-    else if ( r == 7 )
-        return &reg->r16bp;
-}
-uint32_t* reg32(cpu_register_t* reg, uint8_t r) {
-    if( r == 0 )
-        return &reg->r32a;
-    else if ( r == 1 )
-        return &reg->r32b;
-    else if ( r == 2 )
-        return &reg->r32c;
-    else if ( r == 3 )
-        return &reg->r32d;
-    else if ( r == 4 )
-        return &reg->r32e;
-    else if ( r == 5 )
-        return &reg->r32f;
-    else if ( r == 6 )
-        return &reg->r32s;
-    else if ( r == 7 )
-        return &reg->r32bp;
+uint32_t* getreg(cpu_register_t* reg, uint8_t r) {
+    uint32_t* b = (uint32_t*) reg;
+    if( r > 0xF )
+    {
+        ASSERT("Error: No such register");
+        return NULL;
+    }
+
+    return &b[r];
 }
 
 regex_matches_t* regex_matches(const char* pattern, const char* text) {

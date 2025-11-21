@@ -19,13 +19,9 @@
  * Instruction Set
 */
 
-#define PREFIX_MEMORY       1 << 1
 
-#define PREFIX_16BITS       1 << 2
-#define PREFIX_32BITS       1 << 3
-
-
-#define PREFIX_RM_INC       1 << 4
+#define PREFIX_SYM_INC      1 << 3
+#define PREFIX_REG_INC      1 << 4
 #define PREFIX_OFF_INC      1 << 5
 #define PREFIX_VAL_INC      1 << 6
 #define PREFIX_EXT_INC      1 << 7
@@ -34,35 +30,24 @@
 
 typedef struct {
     uint8_t _0: 1;
-    uint8_t m: 1;   // When set, It will set the memory in RM includer ( if set )
-    uint8_t b16: 1; // When set, It entering 16 bits
-    uint8_t b32: 1; // When set, It entering 32 bits
-    uint8_t regmem: 1;  // When set, RM include
-    uint8_t o: 1;   // When set, Offset include
-    uint8_t v: 1;   // When set, Value include
-    uint8_t ext: 1; // When set, Prefix Extended included ( it has 2 bytes of prefix )
+    uint8_t _1: 1;      
+    uint8_t _2: 1;      
+    uint8_t sym: 1;     // When set, Symbols Include
+    uint8_t r: 1;       // When set, Register include
+    uint8_t o: 1;       // When set, Offset include
+    uint8_t v: 1;       // When set, Value include
+    uint8_t ext: 1;     // When set, Prefix Extended included ( it has 2 bytes of prefix )
 } ins_prefix_t;
 
 typedef struct {
-    uint8_t addr_size: 1; // When set the addr is 32 bits, otherwise 16 bits
-} ins_ext_prefix_t;
+    uint8_t dreg: 4;
+    uint8_t sreg: 4;
+} ins_register_t;
 
 typedef struct {
-    uint8_t dreg: 3;     // 3 bits represent destination register
-    /**
-     * FLAGS - 2 bits represent the flags
-     * 0| -> when set the Extended RegMem will required ( providing the type of bits of each source and destination register )
-     * 1| -> reserved;
-     */
-    uint8_t flags: 2;
-    uint8_t sreg: 3;     // 3 bits represent source register
-} ins_regmem_t;
-
-typedef struct {
-    uint8_t dbit: 2;
-    uint8_t sbit: 2;
-    uint8_t _0: 4;
-} ins_ext_regmem_t;
+    uint8_t sym: 4;
+    uint8_t rsvd: 4;
+} ins_symbols_t;
 
 uint8_t read8(uint8_t* memory, uint32_t* pc);
 uint16_t read16(uint8_t* memory, uint32_t* pc);
@@ -75,9 +60,7 @@ uint32_t write8(uint8_t* memory, uint32_t pc, uint8_t data);
 uint32_t write16(uint8_t* memory, uint32_t pc, uint16_t data);
 uint32_t write32( uint8_t* memory, uint32_t pc, uint32_t data);
 
-uint8_t* reg8(cpu_register_t* reg, uint8_t r);
-uint16_t* reg16(cpu_register_t* reg, uint8_t r);
-uint32_t* reg32(cpu_register_t* reg, uint8_t r);
+uint32_t* getreg(cpu_register_t* reg, uint8_t r);
 
 char* str_lowercase(const char* str);
 char* str_uppercase(const char* str);
@@ -88,37 +71,21 @@ uint32_t create_instruction(uint8_t* memory, uint32_t pc, const char* instructio
 
 #define INSTRUCTION_SET_ARGS uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t* memory, cpu_register_t* reg, uint32_t* pc
 #define SIGN_INSTRUCTION_SET(name) void name##_instruction_set(INSTRUCTION_SET_ARGS)
-#define PUSH_INSTRUCTION_MEM(name) uint32_t name##_push_instruction(uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t opcode, uint8_t regmem, uint32_t disp, uint32_t value)
-
-PUSH_INSTRUCTION_MEM(mov);
-PUSH_INSTRUCTION_MEM(add);
-PUSH_INSTRUCTION_MEM(sub);
-PUSH_INSTRUCTION_MEM(mul);
-PUSH_INSTRUCTION_MEM(div);
-PUSH_INSTRUCTION_MEM(push);
-PUSH_INSTRUCTION_MEM(pop);
 
 
 #define CREATE_INSTRUCTION_ARGS char* opcode, char* lReg, char* rReg, uint32_t* offset, uint32_t* value, uint8_t* memory, uint32_t pc
 #define VARIABLE_INSTRUCTION    ins_prefix_t pre; \
                                 memset(&pre, prefix, sizeof( ins_prefix_t ) ); \
                                 \
-                                ins_regmem_t __regmem; \
-                                ins_ext_regmem_t __ext_regmem; \
-                                uint8_t* r8 = NULL; \
-                                uint16_t* r16 = NULL; \
-                                uint32_t* r32 = NULL; \
+                                ins_register_t __register; \
+                                uint32_t* sreg = NULL; \
                                 \
-                                uint8_t* dr8 = NULL; \
-                                uint16_t* dr16 = NULL; \
-                                uint32_t* dr32 = NULL; \
+                                uint32_t* dreg = NULL; \
                                 \
                                 uint32_t offset = 0; \
                                 uint32_t value = 0;
-#define REGMEM_DEFINED(m, p)    if( prefix & PREFIX_RM_INC ) \
-                                    memset(&__regmem, read8(m, p), 1); \
-                                if( (prefix & PREFIX_RM_INC) && __regmem.flags & (1 << 0) ) \
-                                    memset(&__ext_regmem, read8(m, p), 1);
+#define REGMEM_DEFINED(m, p)    if( prefix & PREFIX_REG_INC ) \
+                                    memset(&__register, read8(m, p), 1); \
 
 #define OPCODE_ADD_1    0x30    /* ADD REG -> REG */
 #define OPCODE_ADD_2    0x31    /* ADD VALUE -> REG */
@@ -136,12 +103,13 @@ PUSH_INSTRUCTION_MEM(pop);
 #define OPCODE_PUSH_2   0x3C
 #define OPCODE_POP_1    0x3D
 
-#define OPCODE_LOD_1    0x3E    /* LOD REG(n) -> REG */
-#define OPCODE_LOD_2    0x3F    /* LOD ADDR(n) -> REG*/
-                                /* LOD $LABEL(n) -> REG */
+#define OPCODE_LOD_1    0x3E    /* LOD REG(+-off) -> REG */
+#define OPCODE_LOD_2    0x3F    /* LOD ADDR(+-off) -> REG*/
+                                /* LOD $LABEL(+-off) -> REG */
 
-#define OPCODE_MOV_1    0x40
-#define OPCODE_MOV_2    0x41
+#define OPCODE_MOV_1    0x40    /* MOVS REG -> REG */
+#define OPCODE_MOV_2    0x41    /* MOVS VALUE -> REG */
+                                /* MOVS $LABEL -> REG */
 
 #define OPCODE_PUSH_RM32    0x44
 #define OPCODE_PUSH_VALUE   0x45
@@ -161,8 +129,11 @@ PUSH_INSTRUCTION_MEM(pop);
 #define OPCODE_XNOR_1       0x52
 #define OPCODE_XNOR_2       0x53
 
-#define OPCODE_CND_1        0x54    /* CND REGMEM (SYM) REG */
-#define OPCODE_CND_2        0x55    /* CND VALUE  (SYM) REGMEM */
+#define OPCODE_CND_1        0x54    /* CND REG (SYM) REG */
+#define OPCODE_CND_2        0x55    /* CND VALUE  (SYM) REG */
+                                    /* CND $LABEL (SYM) REG */
+#define OPCODE_CND_3        0x56    /* CND REG (SYM) VALUE */
+                                    /* CND REG (SYM) $LABEL */
 
 #define OPCODE_CALL_1       0x58
 #define OPCODE_CALL_2       0x59
@@ -171,9 +142,44 @@ PUSH_INSTRUCTION_MEM(pop);
 #define OPCODE_GO_2         0x5C
 #define OPCODE_GOC_1        0x5D
 #define OPCODE_GOC_2        0x5E
-#define OPCODE_STR_1        0x5F    /* STR REG -> REG */
-#define OPCODE_STR_2        0x60    /* STR ADDR -> REG */
-                                    /* STR $LABEL -> REG */
+#define OPCODE_STR_1        0x5F    /* STR REG -> REG(+-off) */
+#define OPCODE_STR_2        0x60    /* STR REG -> ADDR(+-off) */
+                                    /* STR REG -> $LABEL(+-off) */
+#define OPCODE_STRS_1       0x61    /* STRS REG -> REG(+-off) */
+#define OPCODE_STRS_2       0x62    /* STRS REG -> ADDR(+-off) */
+                                    /* STRS REG -> $LABEL(+-off)*/
+#define OPCODE_STRD_1       0x63    /* STRD REG -> REG(+-off) */
+#define OPCODE_STRD_2       0x64    /* STRD REG -> ADDR(+-off) */
+                                    /* STRD REG -> $LABEL(+-off)*/
+
+#define OPCODE_LODS_1       0x65    /* LODS REG(+-off) -> REG */
+#define OPCODE_LODS_2       0x66    /* LODS ADDR(+-off) -> REG */
+                                    /* LODS $LABEL(+-off) -> REG*/
+
+#define OPCODE_LODD_1       0x67    /* LODD REG(+-off) -> REG */
+#define OPCODE_LODD_2       0x68    /* LODD ADDR(+-off) -> REG */
+                                    /* LODD $LABEL(+-off) -> REG*/
+#define OPCODE_MOVS_1       0x69   /* MOVS REG -> REG */
+#define OPCODE_MOVS_2       0x6A   /* MOVS VALUE -> REG */
+                                    /* MOVS $LABEL -> REG */
+#define OPCODE_MOVD_1       0x6B   /* MOVD REG -> REG */
+#define OPCODE_MOVD_2       0x6C   /* MOVD VALUE -> REG
+                                    /* MOVD $LABEL -> REG */
+#define OPCODE_PNT_1        0x6D    /* PNT REG */
+/**
+ * PNT VALUE
+ * PNT $LABEL
+ */
+#define OPCODE_PNT_2        0x6E
+/**
+ * PCT REG
+ */
+#define OPCODE_PCT_1        0x6F
+/**
+ * PCT VALUE
+ * PCT $LABEL
+ */
+#define OPCODE_PCT_2        0x70
 
 #define OPCODE_STP          0x90
 
@@ -315,3 +321,6 @@ SIGN_INSTRUCTION_SET(ret);
  * CND - instruction set
  */
 SIGN_INSTRUCTION_SET(cnd);
+
+SIGN_INSTRUCTION_SET(pnt);
+SIGN_INSTRUCTION_SET(pct);
