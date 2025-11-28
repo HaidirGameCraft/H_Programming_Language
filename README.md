@@ -81,6 +81,23 @@ run the program:
 ./h <file.ho>
 ```
 
+# Installation
+For Linux:
+```sh
+sh ./build-linux.sh
+```
+
+For (WSL) on Windows:
+```sh
+sh ./build-linux.sh
+sh ./build-windows.sh
+```
+
+For Build All on (WSL) in Windows or Linux:
+```sh
+sh ./build_all.sh
+```
+
 # Inspire
 - This project inspire with:
     - Intel x86 Documentation: [(Link Documentation)](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html)
