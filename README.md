@@ -89,3 +89,14 @@ run the program:
 The H Programmer Language is based on Assembly Language but different scheme to run the code. This project should be imporved with collaboration with you to make this language is useful for future.
 
 That's all from me, Thank you for review.
+
+## Disclaimer
+
+The H Programming Language is provided **"as is"** for personal testing and learning only.
+
+You may **download, build, and run** the project, but you may **not copy, reuse, or redistribute**
+the source code without permission.
+
+The author is **not responsible** for any damage or issues caused by using this software.
+Use at your own risk.
+
