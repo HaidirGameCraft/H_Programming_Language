@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <memory.h>
+#include <stdbool.h>
 
 #define MAX_MEMORY_SIZE 0x00100000
 
@@ -14,11 +15,17 @@ int main(int argc, const char** argv) {
     uint8_t save_ram = 0;
     const char* file = NULL;
     const char* output_file = NULL;
+    bool show_register = false;
     for(int i = 0; i < argc; i++) {
         if( strcmp("-h", argv[i]) == 0 || strcmp("--help", argv[i]) == 0 )
         {
             printf("usage: %s [OPTIONS] <binary_file.ho>; -> running the binary file\n", argv[0] );
             printf("help: %s -h|--help\n", argv[0] );
+            printf("===============================\n");
+            printf("[OPTIONS]:\n");
+            printf("-sr     --show-register : Showing the Output Register\n");
+            printf("-h      --help          : help | details \n");
+            printf("-save_ram               : save the memory to file\n");
             return EXIT_SUCCESS;
         } else if( strcmp("-rsize", argv[i]) == 0 ) {
             if( i + 1 >= argc )
@@ -31,6 +38,9 @@ int main(int argc, const char** argv) {
         } else if ( strcmp(argv[i], "-save_ram") == 0 )
         {
             save_ram = 1;
+        } else if ( strcmp(argv[i], "-sr") == 0 || strcmp(argv[i], "--show-register") == 0 )
+        {
+            show_register = true;
         }
         else {
             file = argv[i];
@@ -57,7 +67,8 @@ int main(int argc, const char** argv) {
     cpu_initialize();
     cpu_set_memory(memory, memory_size);
     cpu_execute();
-    cpu_output();
+    if( show_register )
+        cpu_output();
 
     if( save_ram )
     {

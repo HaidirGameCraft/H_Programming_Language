@@ -1,6 +1,13 @@
 #include "ins_compiler.list.hpp"
 #include <iostream>
 #include <string.h>
+#include <tools/tools.h>
+
+extern char* instruction_text;
+extern int line_of_text;
+
+#define ASSERT_WRONG_OPCODE     printf("\"%s\":%i -> Unknown Operand Name (%s)\n", instruction_text, line_of_text, opcode); \
+                                ASSERT("unknown operand name");
 
 PATTERN_FINDER(opcode_reg_reg) {
     REGEX_START( PATTERN_OPCODE_REG_REG );
@@ -35,11 +42,15 @@ PATTERN_FINDER(opcode_reg_reg) {
     for(int i = 0; i < length; i++) {
         h_text_compile* htext = &instruction_maker_opcode_reg_reg[i];
         if( strcmp( htext->opcode_name, opcode) == 0 )
+        {
             *pc = instruction_reg_reg(memory, *pc, htext->prefix, htext->ext_prefix, htext->opcode, lReg, rReg, symbols);
+            return 1;
+        }
     }
 
+    ASSERT_WRONG_OPCODE
 
-    return 1;
+    return 0;
 }
 
 PATTERN_FINDER(opcode_value_reg) {
@@ -75,10 +86,14 @@ PATTERN_FINDER(opcode_value_reg) {
     for(int i = 0; i < length; i++) {
         h_text_compile* htext = &instruction_maker_opcode_value_reg[i];
         if( strcmp( htext->opcode_name, opcode) == 0 )
+        {
             *pc = instruction_value_reg(memory, *pc, htext->prefix, htext->ext_prefix, htext->opcode, rReg, symbols, value);
+            return 1;
+        }
     }
+    ASSERT_WRONG_OPCODE
 
-    return 1;
+    return 0;
 }
 PATTERN_FINDER(opcode_label_reg) {
     REGEX_START( PATTERN_OPCODE_LABEL_REG );
@@ -113,14 +128,16 @@ PATTERN_FINDER(opcode_label_reg) {
         if( strcmp( htext->opcode_name, opcode) == 0 )
         {
             *pc = instruction_label_reg(memory, *pc, htext->prefix, htext->ext_prefix | EXT_PREFIX_ADDRSIZE, htext->opcode, rReg, symbols, value);
-            push_label( label, strlen( label ), *pc - 4);
+            push_next_label_name( label, *pc - 4);
+            return 1;
         }
     }
+    ASSERT_WRONG_OPCODE
 
     // *pc = create_instruction_mov_addr_reg(opcode, NULL, rReg, NULL, 0, memory, *pc );
     
 
-    return 1;
+    return 0;
 }
 
 PATTERN_FINDER(opcode_reg_value) {
@@ -156,10 +173,14 @@ PATTERN_FINDER(opcode_reg_value) {
     for(int i = 0; i < length; i++) {
         h_text_compile* htext = &instruction_maker_opcode_reg_value[i];
         if( strcmp( htext->opcode_name, opcode) == 0 )
+        {
             *pc = instruction_reg_value(memory, *pc, htext->prefix, htext->ext_prefix, htext->opcode, lReg, symbols, value);
+            return 1;
+        }
     }
+    ASSERT_WRONG_OPCODE
 
-    return 1;
+    return 0;
 }
 
 PATTERN_FINDER(opcode_reg_label) {
@@ -195,11 +216,13 @@ PATTERN_FINDER(opcode_reg_label) {
         if( strcmp( htext->opcode_name, opcode) == 0 )
         {
             *pc = instruction_reg_label(memory, *pc, htext->prefix, htext->ext_prefix | EXT_PREFIX_ADDRSIZE, htext->opcode, lReg, symbols, value);
-            push_label( label, strlen( label ), *pc - 4);
+            push_next_label_name( label, *pc - 4);
+            return 1;
         }
     }
+    ASSERT_WRONG_OPCODE
 
-    return 1;
+    return 0;
 }
 
 
@@ -234,11 +257,15 @@ PATTERN_FINDER(opcode_regoff_reg) {
     for(int i = 0; i < length; i++) {
         h_text_compile* htext = &instruction_maker_opcode_regoff_reg[i];
         if( strcmp( htext->opcode_name, opcode) == 0 )
+        {
             *pc = instruction_regoff_reg(memory, *pc, htext->prefix, htext->ext_prefix, htext->opcode, lReg, rReg, offset);
+            return 1;
+        }
     }
+    ASSERT_WRONG_OPCODE
 
 
-    return 1;
+    return 0;
 }
 PATTERN_FINDER(opcode_valueoff_reg) {
     REGEX_START( PATTERN_OPCODE_VALUEOFF_REG );
@@ -271,11 +298,15 @@ PATTERN_FINDER(opcode_valueoff_reg) {
     for(int i = 0; i < length; i++) {
         h_text_compile* htext = &instruction_maker_opcode_valueoff_reg[i];
         if( strcmp( htext->opcode_name, opcode) == 0 )
+        {
             *pc = instruction_valueoff_reg(memory, *pc, htext->prefix, htext->ext_prefix, htext->opcode, rReg, offset, value );
+            return 1;
+        }
     }
+    ASSERT_WRONG_OPCODE
 
 
-    return 1;
+    return 0;
 }
 PATTERN_FINDER(opcode_labeloff_reg) {
     REGEX_START( PATTERN_OPCODE_LABELOFF_REG );
@@ -308,13 +339,17 @@ PATTERN_FINDER(opcode_labeloff_reg) {
     for(int i = 0; i < length; i++) {
         h_text_compile* htext = &instruction_maker_opcode_labeloff_reg[i];
         if( strcmp( htext->opcode_name, opcode) == 0 )
+        {
             *pc = instruction_labeloff_reg(memory, *pc, htext->prefix, htext->ext_prefix, htext->opcode, rReg, offset, 0 );
+            push_next_label_name( label, *pc - 4 );
+            return 1;
+        }
     }
+    ASSERT_WRONG_OPCODE
 
-    push_label(label, strlen( label ), *pc - 4 );
 
 
-    return 1;
+    return 0;
 }
 
 PATTERN_FINDER(opcode_reg_regoff) {
@@ -348,11 +383,15 @@ PATTERN_FINDER(opcode_reg_regoff) {
     for(int i = 0; i < length; i++) {
         h_text_compile* htext = &instruction_maker_opcode_reg_regoff[i];
         if( strcmp( htext->opcode_name, opcode) == 0 )
+        {
             *pc = instruction_reg_regoff(memory, *pc, htext->prefix, htext->ext_prefix, htext->opcode, lReg, rReg, offset);
+            return 1;
+        }
     }
+    ASSERT_WRONG_OPCODE
 
 
-    return 1;
+    return 0;
 }
 PATTERN_FINDER(opcode_reg_valueoff) {
     REGEX_START( PATTERN_OPCODE_REG_VALUEOFF );
@@ -385,11 +424,15 @@ PATTERN_FINDER(opcode_reg_valueoff) {
     for(int i = 0; i < length; i++) {
         h_text_compile* htext = &instruction_maker_opcode_reg_valueoff[i];
         if( strcmp( htext->opcode_name, opcode) == 0 )
+        {
             *pc = instruction_reg_valueoff(memory, *pc, htext->prefix, htext->ext_prefix, htext->opcode, lReg, offset, value );
+            return 1;
+        }
     }
+    ASSERT_WRONG_OPCODE
 
 
-    return 1;
+    return 0;
 }
 PATTERN_FINDER(opcode_reg_labeloff) {
     REGEX_START( PATTERN_OPCODE_REG_LABELOFF );
@@ -422,12 +465,16 @@ PATTERN_FINDER(opcode_reg_labeloff) {
     for(int i = 0; i < length; i++) {
         h_text_compile* htext = &instruction_maker_opcode_reg_labeloff[i];
         if( strcmp( htext->opcode_name, opcode) == 0 )
+        {
             *pc = instruction_reg_labeloff(memory, *pc, htext->prefix, htext->ext_prefix, htext->opcode, lReg, offset, 0 );
+            push_next_label_name( label, *pc - 4 );
+            return 1;
+        }
     }
+    ASSERT_WRONG_OPCODE
 
-    push_label( label, strlen( label ), *pc - 4 );
 
-    return 1;
+    return 0;
 }
 
 PATTERN_FINDER(opcode_label) {
@@ -456,11 +503,14 @@ PATTERN_FINDER(opcode_label) {
         if( strcmp( htext->opcode_name, opcode) == 0 )
         {    
             *pc = instruction_label(memory, *pc, htext->prefix, htext->ext_prefix, htext->opcode);
-            push_label(label, strlen( label ), *pc - 4 );
+            
+            push_next_label_name(label, *pc - 4 );
+            return 1;
         }
     }
+    ASSERT_WRONG_OPCODE
 
-    return 1;
+    return 0;
 }
 PATTERN_FINDER(opcode_reg) {
     REGEX_START( PATTERN_OPCODE_REG );
@@ -484,10 +534,14 @@ PATTERN_FINDER(opcode_reg) {
     for(int i = 0; i < length; i++) {
         h_text_compile* htext = &instruction_maker_opcode_reg[i];
         if( strcmp( htext->opcode_name, opcode) == 0 )
+        {
             *pc = instruction_reg(memory, *pc, htext->prefix, htext->ext_prefix, htext->opcode, lReg);
+            return 1;
+        }
     }
+    ASSERT_WRONG_OPCODE
 
-    return 1;
+    return 0;
 }
 
 PATTERN_FINDER(opcode_only) {
@@ -510,10 +564,14 @@ PATTERN_FINDER(opcode_only) {
     for(int i = 0; i < length; i++) {
         h_text_compile* htext = &instruction_maker_opcode[i];
         if( strcmp( htext->opcode_name, opcode) == 0 )
+        {
             *pc = instruction_opcode(memory, *pc, htext->prefix, htext->ext_prefix, htext->opcode);
+            return 1;
+        }
     }
+    ASSERT_WRONG_OPCODE
 
-    return 1;
+    return 0;
 }
 PATTERN_FINDER(opcode_value) {
     REGEX_START( PATTERN_OPCODE_VALUE );
@@ -542,10 +600,15 @@ PATTERN_FINDER(opcode_value) {
     for(int i = 0; i < length; i++) {
         h_text_compile* htext = &instruction_maker_opcode_value[i];
         if( strcmp( htext->opcode_name, opcode) == 0 )
+        {
             *pc = instruction_value(memory, *pc, htext->prefix, htext->ext_prefix, htext->opcode, value);
+            return 1;
+        }
     }
 
-    return 1;
+    ASSERT_WRONG_OPCODE
+
+    return 0;
 }
 PATTERN_FINDER(defined_label) {
     REGEX_START( PATTERN_DEFINED_LABEL );
@@ -554,13 +617,6 @@ PATTERN_FINDER(defined_label) {
 
     
     std::string str = match[1];
-    char* label_name = (char*) malloc( str.size() + 1 );
-    memset( label_name, 0, str.size() +  1 );
-    memcpy( label_name, str.c_str(), str.size() );
-
-    update_label( label_name, str.size(), *pc);
-    
-    free( label_name );
-
+    update_address_label_name( str.c_str(), *pc );
     return 1;
 }

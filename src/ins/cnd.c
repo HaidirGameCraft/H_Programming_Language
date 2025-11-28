@@ -24,15 +24,15 @@ void instruction_cnd_reg_sym_reg(INSTRUCTION_SET_ARGS) {
     cmp1 = *sreg;
     cmp2 = *dreg;
 
-    if ( sym_cnd == SYM_CND_EQUAL )
+    if ( sym_cnd == SYM_EQUAL )
         reg->flags |= ( cmp1 == cmp2 ) << 2;
-    else if ( sym_cnd == SYM_CND_LESS )
+    else if ( sym_cnd == SYM_LESS )
         reg->flags |= ( cmp1 < cmp2 ) << 2;
-    else if ( sym_cnd == SYM_CND_GREATER )
+    else if ( sym_cnd == SYM_GREATER )
         reg->flags |= ( cmp1 > cmp2 ) << 2;
-    else if ( sym_cnd == SYM_CND_LESS_EQUAL )
+    else if ( sym_cnd == SYM_LESS_EQUAL )
         reg->flags |= ( cmp1 <= cmp2 ) << 2;
-    else if ( sym_cnd == SYM_CND_GREATER_EQUAL )
+    else if ( sym_cnd == SYM_GREATER_EQUAL )
         reg->flags |= ( cmp1 >= cmp2 ) << 2;
 
     // printf("Cmp 1: %x, Cmp 2: %x\n", cmp1, cmp2);
@@ -52,15 +52,15 @@ void instruction_cnd_value_sym_reg(INSTRUCTION_SET_ARGS) {
     cmp1 = *dreg;
     cmp2 = value;
 
-    if ( sym_cnd == SYM_CND_EQUAL )
+    if ( sym_cnd == SYM_EQUAL )
         reg->flags = ( cmp1 == cmp2 ) << 2;
-    else if ( sym_cnd == SYM_CND_LESS )
+    else if ( sym_cnd == SYM_LESS )
         reg->flags = ( cmp1 < cmp2 ) << 2;
-    else if ( sym_cnd == SYM_CND_GREATER )
+    else if ( sym_cnd == SYM_GREATER )
         reg->flags = ( cmp1 > cmp2 ) << 2;
-    else if ( sym_cnd == SYM_CND_LESS_EQUAL )
+    else if ( sym_cnd == SYM_LESS_EQUAL )
         reg->flags = ( cmp1 <= cmp2 ) << 2;
-    else if ( sym_cnd == SYM_CND_GREATER_EQUAL )
+    else if ( sym_cnd == SYM_GREATER_EQUAL )
         reg->flags = ( cmp1 >= cmp2 ) << 2;
 }
 
@@ -77,14 +77,14 @@ void instruction_cnd_reg_sym_value(INSTRUCTION_SET_ARGS) {
     cmp1 = *sreg;
     cmp2 = value;
 
-    if ( sym_cnd == SYM_CND_EQUAL )
+    if ( sym_cnd == SYM_EQUAL )
         reg->flags = ( cmp1 == cmp2 ) << 2;
-    else if ( sym_cnd == SYM_CND_LESS )
+    else if ( sym_cnd == SYM_LESS )
         reg->flags = ( cmp1 < cmp2 ) << 2;
-    else if ( sym_cnd == SYM_CND_GREATER )
+    else if ( sym_cnd == SYM_GREATER )
         reg->flags = ( cmp1 > cmp2 ) << 2;
-    else if ( sym_cnd == SYM_CND_LESS_EQUAL )
+    else if ( sym_cnd == SYM_LESS_EQUAL )
         reg->flags = ( cmp1 <= cmp2 ) << 2;
-    else if ( sym_cnd == SYM_CND_GREATER_EQUAL )
+    else if ( sym_cnd == SYM_GREATER_EQUAL )
         reg->flags = ( cmp1 >= cmp2 ) << 2;
 }

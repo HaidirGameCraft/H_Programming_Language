@@ -5,35 +5,31 @@
 
 #pragma once
 
-#define PATTERN_OPCODE_REG_REG                  "^(\\w+)\\s+([rR][a-z])\\s*(->|==|<=?|>=?)\\s*([rR][a-z])\\s*$"
+#define PATTERN_OPCODE_REG_REG                  "^(\\w+)\\s+([rR][a-z])\\s*(->|==|<=?|>=?|<<|>>)\\s*([rR][a-z])\\s*$"
 #define PATTERN_OPCODE_REGOFF_REG               "^(\\w+)\\s+([rR][a-z])(?:\\(([-+]?0x[[:xdigit:]]+|[-+]?[[:digit:]]+)\\))\\s*->\\s*([rR][a-z])\\s*$"
 #define PATTERN_OPCODE_REG_REGOFF               "^(\\w+)\\s+([rR][a-z])\\s*->\\s*([rR][a-z])(?:\\(([-+]?0x[[:xdigit:]]+|[-+]?[[:digit:]]+)\\))\\s*$"
 
-#define PATTERN_OPCODE_VALUE_REG                "^(\\w+)\\s+(0x[[:xdigit:]]+|[[:digit:]]+)\\s*(->|==|<=?|>=?)\\s*([rR][a-z])\\s*$"
-#define PATTERN_OPCODE_REG_VALUE                "^(\\w+)\\s+([rR][a-z])\\s*(->|==|<=?|>=?)\\s*(0x[[:xdigit:]]+|[[:digit:]]+)\\s*$"
+#define PATTERN_OPCODE_VALUE_REG                "^(\\w+)\\s+(0x[[:xdigit:]]+|[[:digit:]]+)\\s*(->|==|<=?|>=?|<<|>>)\\s*([rR][a-z])\\s*$"
+#define PATTERN_OPCODE_REG_VALUE                "^(\\w+)\\s+([rR][a-z])\\s*(->|==|<=?|>=?|<<|>>)\\s*(0x[[:xdigit:]]+|[[:digit:]]+)\\s*$"
 #define PATTERN_OPCODE_VALUEOFF_REG             "^(\\w+)\\s+(0x[[:xdigit:]]+|[[:digit:]]+)(?:\\(([-+]?0x[[:xdigit:]]+|[-+]?[[:digit:]]+)\\))\\s*->\\s*([rR][a-z])\\s*$"
 #define PATTERN_OPCODE_REG_VALUEOFF             "^(\\w+)\\s+([rR][a-z])\\s*->\\s*(0x[[:xdigit:]]+|[[:digit:]]+)(?:\\(([-+]?0x[[:xdigit:]]+|[-+]?[[:digit:]]+)\\))\\s*$"
 
-#define PATTERN_OPCODE_LABEL_REG                "^(\\w+)\\s+(\\$\\w*)\\s*(->|==|<=?|>=?)\\s*([rR][a-z])\\s*$"
-#define PATTERN_OPCODE_REG_LABEL                "^(\\w+)\\s+([rR][a-z])\\s*(->|==|<=?|>=?)\\s*(\\$\\w*)\\s*$"
-#define PATTERN_OPCODE_LABELOFF_REG             "^(\\w+)\\s+(\\$\\w*)(?:\\(([-+]?0x[[:xdigit:]]+|[-+]?[[:digit:]]+)\\))\\s*->\\s*([rR][a-z])\\s*$"
-#define PATTERN_OPCODE_REG_LABELOFF             "^(\\w+)\\s+([rR][a-z])\\s*->\\s*(\\$\\w*)(?:\\(([-+]?0x[[:xdigit:]]+|[-+]?[[:digit:]]+)\\))\\s*$"
+#define PATTERN_OPCODE_LABEL_REG                "^(\\w+)\\s+(\\$\\w*.?\\w[^ ]+)\\s*(->|==|<=?|>=?|<<|>>)\\s*([rR][a-z])\\s*$"
+#define PATTERN_OPCODE_REG_LABEL                "^(\\w+)\\s+([rR][a-z])\\s*(->|==|<=?|>=?|<<|>>)\\s*(\\$\\w*.?\\w[^ ]+)\\s*$"
+#define PATTERN_OPCODE_LABELOFF_REG             "^(\\w+)\\s+(\\$\\w*.?\\w*[^ ]+)(?:\\(([-+]?0x[[:xdigit:]]+|[-+]?[[:digit:]]+)\\))\\s*->\\s*([rR][a-z])\\s*$"
+#define PATTERN_OPCODE_REG_LABELOFF             "^(\\w+)\\s+([rR][a-z])\\s*->\\s*(\\$\\w*.?\\w*[^ ]+)(?:\\(([-+]?0x[[:xdigit:]]+|[-+]?[[:digit:]]+)\\))\\s*$"
 
-#define PATTERN_OPCODE_LABEL                    "^(\\w+)\\s+(\\$\\w*)$"
+#define PATTERN_OPCODE_LABEL                    "^(\\w+)\\s+(\\$\\w*.?\\w*)$"
 #define PATTERN_OPCODE_REG                      "^(\\w+)\\s+([rR][a-z]+)$"
 #define PATTERN_OPCODE_VALUE                    "^(\\w+)\\s+(0x[0-9a-fA-F]+|[0-9]+)$"
 #define PATTERN_OPCODE_ONLY                     "^(\\w+)$"
-#define PATTERN_DEFINED_LABEL                   "^(\\w+):$"
+#define PATTERN_DEFINED_LABEL                   "^(.?\\w+):$"
+
+#define PATTERN_REGION_NAME                     "^region\\s+(\\w+)$"
 
 #include <regex>
 #include <stdint.h>
 
-typedef struct label_name_addr {
-    char* label_name;
-    uint32_t address;
-    uint32_t destination;
-    struct label_name_addr* next;
-} label_name_addr ;
 
 std::smatch* cpp_regex_matches(std::string pattern, std::string text);
 
@@ -43,13 +39,6 @@ std::smatch* cpp_regex_matches(std::string pattern, std::string text);
 uint8_t read_memtype(const char* memtype);
 uint8_t read_symbols_cnd(const char* _sym);
 uint32_t     read_number(const char* _sym);
-
-void new_label_name(const char* name, int size, uint32_t dest, uint32_t address, uint8_t make_child);
-void push_label(const char* name, int size, uint32_t dest);
-void update_label(const char* name, int size, uint32_t address );
-void list_label_instruction();
-void update_all_instruction_label( uint8_t* memory );
-void clear_label();
 
 uint32_t instruction_reg_reg    (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t lReg, uint8_t rReg, uint8_t sym);
 uint32_t instruction_value_reg  (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t rReg, uint8_t sym, uint32_t value);

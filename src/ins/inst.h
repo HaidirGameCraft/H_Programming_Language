@@ -21,6 +21,7 @@
 #include <ins/ret.h>
 #include <ins/go.h>
 #include <ins/cnd.h>
+#include <ins/sh.h>
 
 typedef struct h_text_compile {
     const char* opcode_name;
@@ -48,7 +49,8 @@ static h_text_compile instruction_maker_opcode_reg_reg[] = {
     {"str",     OPCODE_STR_1,   PREFIX_REG_INC, 0},
     {"strs",     OPCODE_STRS_1,   PREFIX_REG_INC, 0},
     {"strd",     OPCODE_STRD_1,   PREFIX_REG_INC, 0},
-    {"cnd",     OPCODE_CND_1,   PREFIX_REG_INC | PREFIX_SYM_INC, 0}
+    {"cnd",     OPCODE_CND_1,   PREFIX_REG_INC | PREFIX_SYM_INC, 0},
+    {"sh",      OPCODE_SH_1,    PREFIX_REG_INC | PREFIX_SYM_INC, 0},
 };
 
 static h_text_compile instruction_maker_opcode_value_reg[] = {
@@ -87,6 +89,7 @@ static h_text_compile instruction_maker_opcode_label_reg[] = {
 
 static h_text_compile instruction_maker_opcode_reg_value[] = {
     {"cnd", OPCODE_CND_3,   PREFIX_REG_INC | PREFIX_VAL_INC, 0},
+    {"sh",  OPCODE_SH_2,    PREFIX_REG_INC | PREFIX_VAL_INC |PREFIX_SYM_INC, 0},
 };
 
 static h_text_compile instruction_maker_opcode_reg_label[] = {

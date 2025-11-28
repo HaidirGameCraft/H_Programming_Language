@@ -35,9 +35,13 @@ For this format:
 - Value are optional that containing value of data
 
 # New Update
+## Cross Platform
+-   H programming Language are supported Windows and Linux
 ## Add
 -   new Opcode PNT (reg/value/label) -> printing the text to terminal interface
 -   new Opcode PCT (reg/value/label) -> printing the character (char) to terminal interface
+-   Compiling Multiple Files
+-   adding region TEXT, DATA, RAW
 ## Remake
 -   Remaking all Instruction Set Format, Including:
     - new register will support only 32 bits and no longer using r8 and r16

@@ -110,7 +110,7 @@ uint32_t instruction_reg_value  (uint8_t* memory, uint32_t pc, uint8_t prefix, u
     if( sym != 0 )
         pc = write8(memory, pc, sym );
     // Value Origin
-    write32(memory, pc, 0); pc += 4;
+    write32(memory, pc, value); pc += 4;
     return pc;
 }
 
@@ -197,9 +197,9 @@ uint32_t instruction_labeloff_reg  (uint8_t* memory, uint32_t pc, uint8_t prefix
     return pc;
 }
 
-uint32_t instruction_reg(uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t rReg) {
+uint32_t instruction_reg(uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t lReg) {
     ins_register_t __register = {0};
-    __register.dreg = rReg & 0b111;
+    __register.sreg = lReg & 0b1111;
 
     write8(memory, pc, prefix); pc++;
     if( prefix & PREFIX_EXT_INC )

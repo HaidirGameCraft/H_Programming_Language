@@ -1,5 +1,4 @@
 .vscode
-build_sample
 build
 CMakeFiles
 sample
@@ -9,3 +8,6 @@ sample.sh
 sample.ho
 binaries.bn
 ram
+build-win
+build-linux
+

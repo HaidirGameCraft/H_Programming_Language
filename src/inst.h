@@ -49,6 +49,14 @@ typedef struct {
     uint8_t rsvd: 4;
 } ins_symbols_t;
 
+#define SYM_EQUAL           1
+#define SYM_LESS            2
+#define SYM_GREATER         3
+#define SYM_LESS_EQUAL      4
+#define SYM_GREATER_EQUAL   5
+#define SYM_SHIFT_LEFT      6
+#define SYM_SHIFT_RIGHT     7
+
 uint8_t read8(uint8_t* memory, uint32_t* pc);
 uint16_t read16(uint8_t* memory, uint32_t* pc);
 uint32_t read32(uint8_t* memory, uint32_t* pc);
@@ -67,7 +75,7 @@ char* str_uppercase(const char* str);
 
 uint8_t regbytext(const char* reg_text);
 uint8_t regmem_set(uint8_t bit, uint8_t sreg, uint8_t dreg);
-uint32_t create_instruction(uint8_t* memory, uint32_t pc, const char* instruction );
+uint32_t create_instruction(uint8_t* memory, uint32_t pc, const char* instruction, int line);
 
 #define INSTRUCTION_SET_ARGS uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t* memory, cpu_register_t* reg, uint32_t* pc
 #define SIGN_INSTRUCTION_SET(name) void name##_instruction_set(INSTRUCTION_SET_ARGS)
@@ -85,7 +93,10 @@ uint32_t create_instruction(uint8_t* memory, uint32_t pc, const char* instructio
                                 uint32_t offset = 0; \
                                 uint32_t value = 0;
 #define REGMEM_DEFINED(m, p)    if( prefix & PREFIX_REG_INC ) \
-                                    memset(&__register, read8(m, p), 1); \
+                                    memset(&__register, read8(m, p), 1);
+
+#define OPCODE_SH_1     0x20    /* SH REG (<<|>>) REG */
+#define OPCODE_SH_2     0x21    /* SH REG (<<|>>) VALUE */
 
 #define OPCODE_ADD_1    0x30    /* ADD REG -> REG */
 #define OPCODE_ADD_2    0x31    /* ADD VALUE -> REG */
@@ -324,3 +335,4 @@ SIGN_INSTRUCTION_SET(cnd);
 
 SIGN_INSTRUCTION_SET(pnt);
 SIGN_INSTRUCTION_SET(pct);
+SIGN_INSTRUCTION_SET(sh);

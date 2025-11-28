@@ -52,6 +52,8 @@ void cpu_execute() {
         str_instruction_set(ARGS_INSTRUCTION_SET);
         pnt_instruction_set(ARGS_INSTRUCTION_SET);
         pct_instruction_set(ARGS_INSTRUCTION_SET);
+        sh_instruction_set(ARGS_INSTRUCTION_SET);
+        
     }
 }
 void cpu_output() {

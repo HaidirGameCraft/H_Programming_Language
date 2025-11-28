@@ -8,8 +8,14 @@
 #include <stdio.h>
 #include <iostream>
 #include <ins/inst.h>
+#include <file_reader.h>
 
 #define MAX_REGMATCH_LENGTH     10
+
+extern char* instruction_text;
+extern int line_of_text;
+#define ASSERT_SYMBOLS(x)          printf("\"%s\":%i -> Unknown/Wrong Symbols (%s)\n", instruction_text, line_of_text, x); \
+                                ASSERT("unknown operand name");
 
 uint8_t read8(uint8_t* memory, uint32_t* pc) {
     uint8_t r = memory[*pc];
@@ -40,6 +46,7 @@ uint32_t gread32(uint8_t* memory, uint32_t pc) {
 }
 
 uint32_t write8(uint8_t* memory, uint32_t pc, uint8_t data) {
+    expand_memory();
     memory[pc] = data & 0xFF;
     return pc + 1;
 }
@@ -96,15 +103,23 @@ uint8_t read_memtype(const char* memtype) {
 
 uint8_t read_symbols_cnd(const char* _sym) {
     if( strcmp(_sym, "==") == 0 )
-        return SYM_CND_EQUAL;
+        return SYM_EQUAL;
     else if ( strcmp(_sym, "<") == 0 )
-        return SYM_CND_LESS;
+        return SYM_LESS;
     else if ( strcmp(_sym, ">") == 0 )
-        return SYM_CND_GREATER;
+        return SYM_GREATER;
     else if ( strcmp(_sym, "<=") == 0 )
-        return SYM_CND_LESS_EQUAL;
+        return SYM_LESS_EQUAL;
     else if ( strcmp(_sym, ">=") == 0 )
-        return SYM_CND_GREATER_EQUAL;
+        return SYM_GREATER_EQUAL;
+    else if ( strcmp(_sym, "<<") == 0 )
+        return SYM_SHIFT_LEFT;
+    else if ( strcmp(_sym, ">>") == 0 )
+        return SYM_SHIFT_RIGHT;
+    else
+    {
+        ASSERT_SYMBOLS(_sym)
+    }
 
     return 0;
 }

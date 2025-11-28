@@ -35,7 +35,7 @@
 // #define PATTERN_OPCODE_REG_SYM_REG_MEMORY       "^(\\w+)\\s+([rR]\\d+\\w+)\\s*(==|<=?|>=?)\\s*\\(\\s*([rR]\\d+\\w+)\\s*(\\+)?\\s*(0x[0-9a-fA-F]+|(\\d+))?\\s*\\)\\s*$"
 // #define PATTERN_OPCODE_VALUE_SYM_REG            "^(\\w+)\\s+(0x[0-9a-fA-F]+|\\d+)\\s*(==|<=?|>=?)\\s*([rR]\\d+[a-z][p]?)\\s*$"
 
-#include <regex.h>
+//#include <regex.h>
 #include <stdint.h>
 
 // typedef struct label_name_addr {
@@ -45,18 +45,18 @@
 //     struct label_name_addr* next;
 // } label_name_addr ;
 
-typedef struct regex_matches_t {
-    regmatch_t* match;
-    int length;
-} regex_matches_t;
+//typedef struct regex_matches_t {
+//   regmatch_t* match;
+//    int length;
+//} regex_matches_t;
 
 /**
  * regex matches
  * @return when (NULL) -> No Match, otherwise address of regex_matches_t
  */
 
-regex_matches_t* regex_matches(const char* pattern, const char* text);
-void             free_regex_matches(regex_matches_t* ptr);
+//regex_matches_t* regex_matches(const char* pattern, const char* text);
+// void             free_regex_matches(regex_matches_t* ptr);
 
 void new_label_name(const char* name, int size, uint32_t dest, uint32_t address, uint8_t make_child);
 void push_label(const char* name, int size, uint32_t dest);

@@ -16,4 +16,4 @@
 
 #define PATTERN_DATATYPE    "^=(single|double|quad)\\s+(0x[0-9a-fA-F]+|[0-9]+)$"
 
-int datatype_define_finder(std::string text, uint8_t* memory, uint32_t* pc);
+int datatype_define_finder(std::string text, uint8_t* memory, uint32_t* pc, int __status);

@@ -15,9 +15,10 @@ void instruction_div_reg_reg(INSTRUCTION_SET_ARGS) {
 
     sreg = getreg( reg, __register.sreg );
     dreg = getreg( reg, __register.dreg );
-    *dreg = (uint32_t)( *dreg / *sreg );
+    uint32_t tmp = *dreg;
+    *dreg = (uint32_t)( tmp / *sreg );
     // remaining value will save on RI register
-    reg->ri = (uint8_t)( *dreg % *sreg );
+    reg->ri = (char)( tmp % *sreg );
 }
 
 void instruction_div_value_reg(INSTRUCTION_SET_ARGS) {
@@ -26,7 +27,8 @@ void instruction_div_value_reg(INSTRUCTION_SET_ARGS) {
 
     value = read32( memory, pc );
     dreg = getreg( reg, __register.dreg );
-    *dreg = (uint32_t)( *dreg / value );
+    uint32_t tmp = *dreg;
+    *dreg = (uint32_t)( tmp / value );
     // remaining value will save on RI register
-    reg->ri = (uint8_t)( *dreg % value );
+    reg->ri = (char)( tmp % value );
 }

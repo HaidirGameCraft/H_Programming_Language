@@ -1,0 +1,36 @@
+=region text
+strlen:
+    lod rs(4) -> re
+    xor ra -> ra
+    xor rd -> rd
+.loop:
+    lods re -> rd
+    cnd rd == 0
+    goc $.done
+
+    add 1 -> ra
+    add 1 -> re
+    go $.loop
+.done:
+    ret
+
+memcpy:
+    # Buffer
+    lod rs(4) -> re
+    # Target Address
+    lod rs(8) -> rf
+    # Length ( size )
+    lod rs(12) -> rg
+    xor ra -> ra
+    xor rb -> rb
+.loop:
+    lods re -> ra
+    strs ra -> rf
+    add 1 -> re
+    add 1 -> rf
+
+    sub 1 -> rg
+    cnd rg > rb
+    goc $.loop
+.done:
+    ret

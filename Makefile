@@ -310,6 +310,54 @@ src/cpp/instruction.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/instruction.cpp.s
 .PHONY : src/cpp/instruction.cpp.s
 
+src/cpp/label.o: src/cpp/label.cpp.o
+.PHONY : src/cpp/label.o
+
+# target to build an object file
+src/cpp/label.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/label.cpp.o
+.PHONY : src/cpp/label.cpp.o
+
+src/cpp/label.i: src/cpp/label.cpp.i
+.PHONY : src/cpp/label.i
+
+# target to preprocess a source file
+src/cpp/label.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/label.cpp.i
+.PHONY : src/cpp/label.cpp.i
+
+src/cpp/label.s: src/cpp/label.cpp.s
+.PHONY : src/cpp/label.s
+
+# target to generate assembly for a file
+src/cpp/label.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/label.cpp.s
+.PHONY : src/cpp/label.cpp.s
+
+src/cpp/tools.o: src/cpp/tools.cpp.o
+.PHONY : src/cpp/tools.o
+
+# target to build an object file
+src/cpp/tools.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/tools.cpp.o
+.PHONY : src/cpp/tools.cpp.o
+
+src/cpp/tools.i: src/cpp/tools.cpp.i
+.PHONY : src/cpp/tools.i
+
+# target to preprocess a source file
+src/cpp/tools.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/tools.cpp.i
+.PHONY : src/cpp/tools.cpp.i
+
+src/cpp/tools.s: src/cpp/tools.cpp.s
+.PHONY : src/cpp/tools.s
+
+# target to generate assembly for a file
+src/cpp/tools.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/cpp/tools.cpp.s
+.PHONY : src/cpp/tools.cpp.s
+
 src/cpu.o: src/cpu.c.o
 .PHONY : src/cpu.o
 
@@ -838,6 +886,30 @@ src/ins/ret.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/ret.c.s
 .PHONY : src/ins/ret.c.s
 
+src/ins/sh.o: src/ins/sh.c.o
+.PHONY : src/ins/sh.o
+
+# target to build an object file
+src/ins/sh.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/sh.c.o
+.PHONY : src/ins/sh.c.o
+
+src/ins/sh.i: src/ins/sh.c.i
+.PHONY : src/ins/sh.i
+
+# target to preprocess a source file
+src/ins/sh.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/sh.c.i
+.PHONY : src/ins/sh.c.i
+
+src/ins/sh.s: src/ins/sh.c.s
+.PHONY : src/ins/sh.s
+
+# target to generate assembly for a file
+src/ins/sh.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins/sh.c.s
+.PHONY : src/ins/sh.c.s
+
 src/ins/stp.o: src/ins/stp.c.o
 .PHONY : src/ins/stp.o
 
@@ -982,6 +1054,30 @@ src/ins_tools.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/h.dir/build.make CMakeFiles/h.dir/src/ins_tools.c.s
 .PHONY : src/ins_tools.c.s
 
+src/tools/memory.o: src/tools/memory.cpp.o
+.PHONY : src/tools/memory.o
+
+# target to build an object file
+src/tools/memory.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/tools/memory.cpp.o
+.PHONY : src/tools/memory.cpp.o
+
+src/tools/memory.i: src/tools/memory.cpp.i
+.PHONY : src/tools/memory.i
+
+# target to preprocess a source file
+src/tools/memory.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/tools/memory.cpp.i
+.PHONY : src/tools/memory.cpp.i
+
+src/tools/memory.s: src/tools/memory.cpp.s
+.PHONY : src/tools/memory.s
+
+# target to generate assembly for a file
+src/tools/memory.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hc.dir/build.make CMakeFiles/hc.dir/src/tools/memory.cpp.s
+.PHONY : src/tools/memory.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -1013,6 +1109,12 @@ help:
 	@echo "... src/cpp/instruction.o"
 	@echo "... src/cpp/instruction.i"
 	@echo "... src/cpp/instruction.s"
+	@echo "... src/cpp/label.o"
+	@echo "... src/cpp/label.i"
+	@echo "... src/cpp/label.s"
+	@echo "... src/cpp/tools.o"
+	@echo "... src/cpp/tools.i"
+	@echo "... src/cpp/tools.s"
 	@echo "... src/cpu.o"
 	@echo "... src/cpu.i"
 	@echo "... src/cpu.s"
@@ -1079,6 +1181,9 @@ help:
 	@echo "... src/ins/ret.o"
 	@echo "... src/ins/ret.i"
 	@echo "... src/ins/ret.s"
+	@echo "... src/ins/sh.o"
+	@echo "... src/ins/sh.i"
+	@echo "... src/ins/sh.s"
 	@echo "... src/ins/stp.o"
 	@echo "... src/ins/stp.i"
 	@echo "... src/ins/stp.s"
@@ -1097,6 +1202,9 @@ help:
 	@echo "... src/ins_tools.o"
 	@echo "... src/ins_tools.i"
 	@echo "... src/ins_tools.s"
+	@echo "... src/tools/memory.o"
+	@echo "... src/tools/memory.i"
+	@echo "... src/tools/memory.s"
 .PHONY : help
 
 

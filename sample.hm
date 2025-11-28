@@ -1,52 +1,98 @@
-mov 0x1000 -> rs
-mov rs -> rp
+=region data
+message:
+=ascii "Hello, Welcome to H Programming Language v0.0.001"
+=double 0x000A
 
+=region text
 main:
-    push 0x5000
-    push $text
+    mov 0x1000 -> rs
+    mov rs -> rp
+    pnt $message
+
+    call $init_alloc
+
+    push 10
+    call $malloc
+    add 4 -> rs
+
+    push ra
+    call $free
+
+    push 10
+    push ra
+    push $message
     call $memcpy
-    add 8 -> rs
+    add 12 -> rs
 
-    pnt $text
+    push 0x50
+    call $malloc
+
+    push $text.t2
+    call $strlen
+    add 4 -> rs
+
+    push ra
+    push 0x5000
+    push $text.t2
+    call $memcpy
+    add 12 -> rs
+
+    push $text
+    call $print
+    add 4 -> rs
+
+    push 1234
+    call $print_number
     stp
-
-memcpy:
-    lod rs(4) -> rd
-    lod rs(8) -> re
-
-    xor ra -> ra
-    xor rb -> rb
-loop:
-    lods rd -> ra
-    cnd ra == 0 
-    goc $done
-
-    strs ra -> re(0)
-    add 1 -> rd
-    add 1 -> re
-    go $loop
-done:
-    ret
 
 print:
     lod rs(4) -> rd
     xor ra -> ra
-print_loop:
+.loop:
     lods rd -> ra
     cnd ra == 0
-    goc $done_print
+    goc $.done
 
     pct ra
     add 1 -> rd
-    go $print_loop
-done_print:
+    go $.loop
+.done:
     ret
 
+print_number:
+    lod rs(4) -> re
+
+    xor ra -> ra
+    mov re -> rb
+.loop:
+    div 10 -> rb
+    add 48 -> ri
+    pct ri
+    
+    xor ri -> ri
+    cnd 0 <= rb
+    goc $.done
+
+    go $.loop
+.done:
+    ret
+
+=region data
 text:
+.t1:
 =ascii "Hello, World"
 =single 0x0A
+.t2:
 =ascii "Welcome Back to my Channel"
-=single 0
+=double 0x000A
+
 value:
 =quad 0x1234DEAD
+
+=region raw
 saved_text:
+
+
+
+
+

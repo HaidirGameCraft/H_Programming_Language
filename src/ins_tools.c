@@ -62,6 +62,7 @@ uint32_t* getreg(cpu_register_t* reg, uint8_t r) {
     return &b[r];
 }
 
+/*
 regex_matches_t* regex_matches(const char* pattern, const char* text) {
     regex_t regex;
     int val = 0;
@@ -108,6 +109,7 @@ regex_matches_t* regex_matches(const char* pattern, const char* text) {
     return rmatch;
 }
 
+
 void             free_regex_matches(regex_matches_t* ptr) {
     if( ptr == NULL )
         return;
@@ -115,3 +117,9 @@ void             free_regex_matches(regex_matches_t* ptr) {
     free( ptr->match );
     free( ptr );
 }
+
+*/
+
+
+
+

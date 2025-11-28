@@ -6,11 +6,16 @@
 #include <string.h>
 #include <cpp/ins_make.hpp>
 #include <ins/inst.h>
+#include <tools/memory.h>
+#include <cpp/label.hpp>
 
-#define REGEX_START(pattern)        std::regex regex( pattern );
+#define REGEX_START(pattern)        if( __status == 1 ) \
+                                        return __status; \
+                                    std::regex regex( pattern );
 #define REGEX_SEARCH(text)          std::smatch match; \
-                                    if( std::regex_match(text, regex) == false ) return 0; \
-                                    bool status = std::regex_search(text, match, regex); \
+                                    std::string textmatch = text; \
+                                    if( std::regex_match( textmatch, regex) == false ) return 0; \
+                                    bool status = std::regex_search( textmatch , match, regex); \
                                     if( status == false ) { \
                                         return 0; \
                                     }
@@ -25,7 +30,7 @@
                                     short offset = 0; \
                                     uint32_t value = 0;
 
-#define ARGUMENT_PATTERN    uint8_t* memory, uint32_t *pc, std::string text
+#define ARGUMENT_PATTERN    uint8_t* memory, uint32_t *pc, const char* text, int __status
 #define PATTERN_FINDER(x) int x##_finder_instruction(ARGUMENT_PATTERN)
 
 PATTERN_FINDER(opcode_reg_reg);
