@@ -47,7 +47,12 @@ typedef struct {
 #define REG_S   0b1110
 #define REG_P   0b1111
 
-void cpu_initialize();
-void cpu_set_memory(uint8_t* memory, uint64_t size);
-void cpu_execute();
-void cpu_output();
+#ifdef __cplusplus
+#define EXTR extern "C"
+#else
+#define EXTR extern
+#endif
+EXTR void cpu_initialize();
+EXTR void cpu_set_memory(uint8_t* memory, uint64_t size);
+EXTR void cpu_execute(uint8_t exec_one );
+EXTR void cpu_output();

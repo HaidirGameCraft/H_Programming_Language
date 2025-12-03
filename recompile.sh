@@ -1,3 +1,4 @@
+#!/bin/sh
 cmake --build ./build-win
 cmake --build ./build-linux
 

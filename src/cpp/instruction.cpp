@@ -138,7 +138,7 @@ uint32_t instruction_reg_label  (uint8_t* memory, uint32_t pc, uint8_t prefix, u
 }
 
 uint32_t instruction_regoff_reg    (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t lReg, uint8_t rReg, short offset) {
-    prefix |= PREFIX_OFF_INC | PREFIX_VAL_INC;
+    prefix |= PREFIX_OFF_INC;
 
     ins_register_t __register = {0};
     __register.sreg = lReg & 0b1111;
@@ -253,7 +253,7 @@ uint32_t instruction_opcode(uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_
 // }
 
 uint32_t instruction_reg_regoff    (uint8_t* memory, uint32_t pc, uint8_t prefix, uint8_t ext_prefix, uint8_t opcode, uint8_t lReg, uint8_t rReg   , short offset) {
-    prefix |= PREFIX_OFF_INC | PREFIX_VAL_INC;
+    prefix |= PREFIX_OFF_INC;
 
     ins_register_t __register = {0};
     __register.sreg = lReg & 0b1111;

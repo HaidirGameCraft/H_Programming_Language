@@ -15,6 +15,7 @@ int main(int argc, const char** argv) {
     uint8_t save_ram = 0;
     const char* file = NULL;
     const char* output_file = NULL;
+
     bool show_register = false;
     for(int i = 0; i < argc; i++) {
         if( strcmp("-h", argv[i]) == 0 || strcmp("--help", argv[i]) == 0 )
@@ -47,6 +48,9 @@ int main(int argc, const char** argv) {
         }
     }
 
+    printf("\x1B[2J\x1B[H");
+
+
     memory = (uint8_t*) malloc(memory_size);
     memset( memory, 0, memory_size );
 
@@ -66,7 +70,7 @@ int main(int argc, const char** argv) {
 
     cpu_initialize();
     cpu_set_memory(memory, memory_size);
-    cpu_execute();
+    cpu_execute( 0 );
     if( show_register )
         cpu_output();
 

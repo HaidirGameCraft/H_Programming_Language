@@ -28,7 +28,10 @@ typedef struct h_text_compile {
     uint8_t opcode;
     uint8_t prefix;
     uint8_t ext_prefix;
+    uint8_t flip;
 } h_text_compile;
+
+typedef h_text_compile inst_opcode_t;
 
 static h_text_compile instruction_maker_opcode_reg_reg[] = {
     {"mov",     OPCODE_MOV_1 ,   PREFIX_REG_INC, 0},
@@ -76,24 +79,24 @@ static h_text_compile instruction_maker_opcode_value_reg[] = {
 };
 
 static h_text_compile instruction_maker_opcode_label_reg[] = {
-    {"mov", OPCODE_MOV_2, PREFIX_REG_INC | 0, 0},
-    {"movs", OPCODE_MOVS_2, PREFIX_REG_INC | 0, 0},
-    {"movd", OPCODE_MOVD_2, PREFIX_REG_INC | 0, 0},
-    {"lod", OPCODE_LOD_2, PREFIX_REG_INC, 0},
-    {"lods", OPCODE_LODS_2, PREFIX_REG_INC, 0},
-    {"lodd", OPCODE_LODD_2, PREFIX_REG_INC, 0},
-    {"str", OPCODE_STR_2, PREFIX_REG_INC, 0},
-    {"strs", OPCODE_STRS_2, PREFIX_REG_INC, 0},
-    {"strd", OPCODE_STRD_2, PREFIX_REG_INC, 0}
+    {"mov", OPCODE_MOV_2, PREFIX_REG_INC | PREFIX_VAL_INC, 0},
+    {"movs", OPCODE_MOVS_2, PREFIX_REG_INC | PREFIX_VAL_INC, 0},
+    {"movd", OPCODE_MOVD_2, PREFIX_REG_INC | PREFIX_VAL_INC, 0},
+    {"lod", OPCODE_LOD_2, PREFIX_REG_INC | PREFIX_VAL_INC, 0},
+    {"lods", OPCODE_LODS_2, PREFIX_REG_INC | PREFIX_VAL_INC, 0},
+    {"lodd", OPCODE_LODD_2, PREFIX_REG_INC | PREFIX_VAL_INC, 0},
+    {"str", OPCODE_STR_2, PREFIX_REG_INC | PREFIX_VAL_INC, 0},
+    {"strs", OPCODE_STRS_2, PREFIX_REG_INC | PREFIX_VAL_INC, 0},
+    {"strd", OPCODE_STRD_2, PREFIX_REG_INC | PREFIX_VAL_INC, 0}
 };
 
 static h_text_compile instruction_maker_opcode_reg_value[] = {
-    {"cnd", OPCODE_CND_3,   PREFIX_REG_INC | PREFIX_VAL_INC, 0},
-    {"sh",  OPCODE_SH_2,    PREFIX_REG_INC | PREFIX_VAL_INC |PREFIX_SYM_INC, 0},
+    {"cnd", OPCODE_CND_3,   PREFIX_REG_INC | PREFIX_VAL_INC | PREFIX_SYM_INC, 0},
+    {"sh",  OPCODE_SH_2,    PREFIX_REG_INC | PREFIX_VAL_INC | PREFIX_SYM_INC, 0},
 };
 
 static h_text_compile instruction_maker_opcode_reg_label[] = {
-    {"mov", OPCODE_CND_3, PREFIX_REG_INC | 0, 0},
+    {"mov", OPCODE_CND_3, PREFIX_REG_INC | PREFIX_VAL_INC, 0},
 };
 
 static h_text_compile instruction_maker_opcode_regoff_reg[] = {
@@ -109,9 +112,9 @@ static h_text_compile instruction_maker_opcode_valueoff_reg[] = {
 };
 
 static h_text_compile instruction_maker_opcode_labeloff_reg[] = {
-    {"lod", OPCODE_LOD_2, PREFIX_REG_INC | PREFIX_OFF_INC, 0},
-    {"lods", OPCODE_LODS_2, PREFIX_REG_INC | PREFIX_OFF_INC, 0},
-    {"lodd", OPCODE_LODD_2, PREFIX_REG_INC | PREFIX_OFF_INC, 0},
+    {"lod", OPCODE_LOD_2, PREFIX_REG_INC | PREFIX_OFF_INC | PREFIX_VAL_INC, 0},
+    {"lods", OPCODE_LODS_2, PREFIX_REG_INC | PREFIX_OFF_INC | PREFIX_VAL_INC, 0},
+    {"lodd", OPCODE_LODD_2, PREFIX_REG_INC | PREFIX_OFF_INC | PREFIX_VAL_INC, 0},
 };
 
 static h_text_compile instruction_maker_opcode_reg_regoff[] = {
@@ -127,9 +130,9 @@ static h_text_compile instruction_maker_opcode_reg_valueoff[] = {
 };
 
 static h_text_compile instruction_maker_opcode_reg_labeloff[] = {
-    {"str", OPCODE_STR_2, PREFIX_REG_INC | PREFIX_OFF_INC, 0},
-    {"strs", OPCODE_STRS_2, PREFIX_REG_INC | PREFIX_OFF_INC, 0},
-    {"strd", OPCODE_STRD_2, PREFIX_REG_INC | PREFIX_OFF_INC, 0},
+    {"str", OPCODE_STR_2, PREFIX_REG_INC | PREFIX_OFF_INC | PREFIX_VAL_INC, 0},
+    {"strs", OPCODE_STRS_2, PREFIX_REG_INC | PREFIX_OFF_INC | PREFIX_VAL_INC, 0},
+    {"strd", OPCODE_STRD_2, PREFIX_REG_INC | PREFIX_OFF_INC | PREFIX_VAL_INC, 0},
 };
 
 

@@ -20,7 +20,7 @@ void cpu_set_memory(uint8_t* __memory, uint64_t size) {
     memory = __memory;
     size_memory = size;
 }
-void cpu_execute() {
+void cpu_execute(uint8_t exec_one) {
     while( reg.pc < size_memory && is_program_running )
     {
         uint8_t prefix = read8(memory, &reg.pc);
@@ -54,6 +54,8 @@ void cpu_execute() {
         pct_instruction_set(ARGS_INSTRUCTION_SET);
         sh_instruction_set(ARGS_INSTRUCTION_SET);
         
+        if( exec_one )
+            break;
     }
 }
 void cpu_output() {

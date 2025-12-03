@@ -1,3 +1,4 @@
+#!/bin/sh
 rm -rf ./bin
 sh ./build-windows.sh
 sh ./build-linux.sh
