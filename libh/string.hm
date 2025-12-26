@@ -1,0 +1,118 @@
+=region text
+strlen:
+    push rp
+    mov rs -> rp
+
+    lod rp(8) -> re
+    xor ra -> ra
+    xor rd -> rd
+.loop:
+    lods re -> rd
+    cnd rd == 0
+    goc $.done
+
+    add 1 -> ra
+    add 1 -> re
+    go $.loop
+.done:
+    pop rp
+    ret
+
+memcpy:
+    push rp
+    mov rs -> rp
+
+    # Buffer
+    lod rp(8) -> re
+    # Target Address
+    lod rp(12) -> rf
+    # Length ( size )
+    lod rs(16) -> rg
+    xor ra -> ra
+    xor rb -> rb
+.loop:
+    lods re -> ra
+    strs ra -> rf
+    add 1 -> re
+    add 1 -> rf
+
+    sub 1 -> rg
+    cnd rg > rb
+    goc $.loop
+.done:
+    pop rp
+    ret
+
+memset:
+    push rp
+    mov rs -> rp
+
+    # Buffer
+    lod rp(8) -> rb
+    # Data
+    lod rp(12) -> rd
+    # Length ( size )
+    lod rp(16) -> rc
+.loop:
+    strs rd -> rb
+    add 1 -> rb
+    sub 1 -> rc
+    cnd rc > 0
+    goc $.loop
+    
+.done:
+    pop rp
+    ret
+
+
+strcmp:
+    push rp
+    mov rs -> rp
+
+    lod rp(8) -> rb
+    lod rp(12) -> rd
+
+    push rd
+    push rb
+    call $strlen
+    add 4 -> rs
+    pop rd
+    mov ra -> rc
+
+    push rd
+    call $strlen
+    pop  rd
+
+    cnd rc == ra
+    goc $.check
+    go $.done_not_match
+
+.check:
+    lod rp(8) -> rb
+    lod rp(12) -> rd
+
+    xor re -> re
+    xor rf -> rf
+.check_loop:
+    cnd rc == 0
+    goc $.done
+
+    lods rb -> re
+    lods rd -> rf
+    sub 1 -> rc
+    add 1 -> rb
+    add 1 -> rd
+
+    cnd re == rf
+    goc $.check_loop
+    
+.done_not_match:
+    mov 1 -> ra
+    pop rp
+    ret
+.done:
+    mov 0 -> ra
+    pop rp
+    ret
+
+

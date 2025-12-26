@@ -1,0 +1,9 @@
+
+
+global func initMalloc() -> void
+    
+endfunc
+
+global func malloc( int size ) -> int
+
+endfunc

@@ -1,0 +1,22 @@
+=region text
+=global print
+=global println
+print:
+    push rp
+    mov rs -> rp
+    lod rp(-8) -> ra
+    pnt ra
+    xor ra -> ra
+    pop rp
+    ret
+
+println:
+    push rp
+    mov rs -> rp
+    lod rp(-8) -> ra
+    push ra
+    call print
+    add 4 -> rs
+    pct 0x0A
+    pop rp
+    ret

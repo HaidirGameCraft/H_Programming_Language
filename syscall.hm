@@ -1,0 +1,43 @@
+=region text
+__start:
+mov 0x1000 -> rs
+mov rs -> rp
+call $main
+stp
+add:
+push rp
+mov rs -> rp
+lod rp(12) -> ra
+lod rp(8) -> rb
+add ra -> rb
+mov rb -> ra
+pop rp
+ret
+main:
+push rp
+mov rs -> rp
+sub 4 -> rs
+mov 4 -> ra
+push ra
+mov 3 -> ra
+push ra
+mov $main -> ra
+call $add
+add 8 -> rs
+str ra -> rp(-4)
+lod rp(-4) -> ra
+add 4 -> rs
+pop rp
+ret
+=region data
+name:
+=quad 0
+number1:
+=quad 12
+number2:
+=quad 7
+num3:
+=quad 31
+jBsBq4ytDkdidNjq:
+=ascii "Hai"
+

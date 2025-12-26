@@ -1,0 +1,15 @@
+.vscode
+build
+CMakeFiles
+sample
+Makefile
+cmake_install.cmake
+CMakeCache.txt
+sample.sh
+sample.ho
+binaries.bn
+ram
+build-win
+build-linux
+compile_commands.json
+text.txt

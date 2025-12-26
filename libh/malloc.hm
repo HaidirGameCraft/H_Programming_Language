@@ -1,0 +1,194 @@
+=region data
+# memory_structure
+# .size     (quad)
+# .free     (single)
+# .next     (quad)
+memory_start:
+=quad 0x6000
+memory_size:
+=quad 0x1000
+free_size_msg:
+=ascii "Free Block Here\n"
+
+=region text
+init_alloc:
+    lod $memory_start -> ra
+    lod $memory_size -> rb
+    str rb -> ra(0)
+
+    mov 1 -> rb
+    strs rb -> ra(4)
+
+    xor rb -> rb
+    str rb -> ra(5)
+    ret
+
+malloc:
+    push rp
+    mov rs -> rp
+    sub 4 -> rs
+
+    lod $memory_start -> ra
+    mov ra -> re
+.re_not_null:
+    cnd re == 0
+    goc $.re_loop_done
+
+    # Check free block
+    lod re(4) -> rf
+    cnd rf == 0
+    goc $.re_no_free_size_block
+
+    # Checking Size block
+    lod rp(4) -> ra
+    add 9 -> ra
+    lod re(0) -> rb
+    cnd ra > rb
+    goc $.re_no_free_size_block
+
+    # Calculate remaining size
+    sub 8 -> rs
+    sub ra -> rb
+    str rb -> rp(-4)
+
+    # Store the Unavailable to free
+    mov 0 -> rb
+    strs rb -> re(4)
+
+    lod re(0) -> rb
+    cnd ra == rb
+    goc $.re_loop_return
+
+    push re
+    # Make New Block
+    add ra -> re
+    str re -> rp(-8)
+
+    # Free New Block
+    mov 1 -> rb
+    strs rb -> re(4)
+
+    # Save the remained size
+    lod rp(-4) -> rb
+    str rb -> re(0)
+    pop rf
+
+    lod rf(5) -> rd
+    str rd -> re(5)
+    str re -> rf(5)
+
+    xor rd -> rd
+    str ra -> rf(0)
+    mov rf -> re
+    pnt $free_size_msg
+
+.re_loop_return:
+    mov re -> rb
+    add 9 -> rb
+    mov rb -> ra
+    add 4 -> rs
+    pop rp
+    ret
+
+.re_no_free_size_block:
+    lod re(5) -> re
+    go $.re_not_null
+.re_loop_done:
+    mov rp -> rs
+    ret
+
+
+free:
+    push rp
+    mov rs -> rp
+    # preventing PC problem
+    sub 8 -> rs
+
+    lod rp(4) -> re
+    sub 9 -> re
+
+    #Save next block
+    lod re(5) -> ra
+    str ra -> rp(-4)
+
+    # Finding Previous Block
+    lod $memory_start -> rf
+    cnd rf == re
+    goc $.free_2
+    go $.find_prev_block
+.free_2:
+    mov 0 -> rb
+    go $.free_the_block
+    # No Previous Block
+.find_prev_block:
+    lod rf(5) -> rb
+    cnd rb == 0
+    goc $.next_block_not_found
+
+    cnd rb == re
+    goc $.done_find_prev_block
+
+    mov rb -> rf
+    go $.find_prev_block
+.done_find_prev_block:
+    # Save  previous block
+    str rb -> rp(-8)
+
+    # previous block->next = ptr->next
+    str ra -> rb(5)
+.free_the_block:
+    # set 1 to free current
+    mov 1 -> rc
+    strs rc -> re(4)
+
+    cnd ra == 0
+    goc $.next_is_not_free
+
+    lods ra(4) -> rc
+    cnd rc == 0
+    goc $.next_is_not_free
+
+    lod ra(0) -> rc
+    lod re(0) -> rd
+    add rd -> rc
+    str rc -> re(0)
+
+.next_is_not_free:
+    cnd rb == 0
+    goc $.done
+
+    cnd rb == 0
+    goc $.prev_is_not_free
+
+    lods rb(4) -> rc
+    cnd rc == 0
+    goc $.prev_is_not_free
+
+    lod rb(0) -> rc
+    lod re(0) -> rd
+    add rd -> rc
+    str rc -> rb(0)
+.prev_is_not_free:
+.next_block_not_found:
+.done:
+
+    add 8 -> rs
+    pop rp
+    ret
+
+=region data
+next_block_not_found_msg:
+=ascii "Next Block Not Found\n"
+=double 0x000A
+
+
+
+
+
+
+
+
+
+
+
+

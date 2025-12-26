@@ -1,0 +1,21 @@
+=region text
+getline:
+    push rp
+    mov rs -> rp
+
+    lod rp(12) -> rb
+    lod rp(8) -> rc
+.loop:
+    in 0x1103 -> ra
+    cnd ra == 0x0A
+    goc $.done
+    strs ra -> rb
+
+    sub 1 -> rc
+    add 1 -> rb
+    cnd rc > 0
+    goc $.loop
+.done:
+    pop rp
+    ret
+

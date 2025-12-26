@@ -1,0 +1,9 @@
+@import "./examples/malloc.hi"
+
+global func Add(int a, int b) -> int
+    return a + b
+endfunc
+
+global func Mult(int a, int b) -> int
+    return a * b
+endfunc
