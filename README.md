@@ -41,7 +41,7 @@ This is documentation for this programming language [Documentation](DOCUMENTATIO
 you can click this link to look the changes [ChangesLog](ChangesLogs/CHANGESLOG-01-17-26.md)
 
 # Example Code 
-You can check the [(sample code)](/sample.hm)
+You can check the [(sample code)](/examples/sample.hi)
 
 # How to run the code
 For the Compiler:
