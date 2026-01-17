@@ -1,10 +1,8 @@
 =region text
-=global print
-=global println
 print:
     push rp
     mov rs -> rp
-    lod rp(-8) -> ra
+    lod rp(8) -> ra
     pnt ra
     xor ra -> ra
     pop rp
@@ -15,8 +13,8 @@ println:
     mov rs -> rp
     lod rp(-8) -> ra
     push ra
-    call print
+    call $print
     add 4 -> rs
-    pct 0x0A
+    pct 10
     pop rp
     ret

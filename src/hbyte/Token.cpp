@@ -1,4 +1,5 @@
 #include "Token.hpp"
+namespace HByte {
 
 void Token::setName( const string& name ) {
     this->name = name;
@@ -29,4 +30,5 @@ void Token::print(int indent) {
     }
 
     printf("%s\n", str.c_str());
+}
 }

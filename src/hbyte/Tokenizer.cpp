@@ -4,13 +4,14 @@
 #include "../tools/memory.h"
 #include <string.h>
 
+
+namespace HByte {
 bool isOperator(char c);
 bool isSymbols(char c);
 bool isWords(char c);
 bool isSpace(char c);
 bool isRegister(string c);
 bool isNumber(string c);
-
 vector<Token*> Tokenizer::Extract(string instruction) {
     const char* byte = instruction.c_str();
     int length_instruction = instruction.size();
@@ -39,6 +40,8 @@ vector<Token*> Tokenizer::Extract(string instruction) {
 
             while( isSymbols(byte[i]) )
             {
+                if( ( byte[i] == '+' || byte[i] == '-' ) && i + 1 < length_instruction && ( byte[i + 1] >= '0' && byte[i + 1] <= '9' ))
+                    break;
                 __tmp += byte[i];
                 i++;
             }
@@ -58,7 +61,7 @@ vector<Token*> Tokenizer::Extract(string instruction) {
 
             __tmp += c;
             i++;
-            while( isWords(byte[i]) )
+            while( isWords(byte[i]) || byte[i] == '.' )
             {
                 __tmp += byte[i];
                 i++;
@@ -66,7 +69,7 @@ vector<Token*> Tokenizer::Extract(string instruction) {
             strs.push_back(__tmp);
             __tmp.clear();
         }
-        else if ( isOperator(c) ) // Operation Token
+        /* else if ( isOperator(c) ) // Operation Token
         {
             if( __tmp.size() > 0 )
             {
@@ -84,7 +87,7 @@ vector<Token*> Tokenizer::Extract(string instruction) {
             __tmp.clear();
             if( !isSpace(byte[i]) )
                 __tmp += byte[i];
-        }
+        } */
         else if ( c == '\"' )
         {
             if( __tmp.size() > 0 )
@@ -160,7 +163,7 @@ vector<Token*> Tokenizer::Extract(string instruction) {
 }
 
 bool isOperator(char c) {
-    const char* op = "+-*/<>=";
+    const char* op = "+-";
     for(int i = 0; i < strlen( op); i++ )
         if( op[i] == c )
             return true;
@@ -168,7 +171,7 @@ bool isOperator(char c) {
     return false;
 }
 bool isSymbols( char c ) {
-    const char* symbols = ";:()[]#";
+    const char* symbols = ";:()[]#+-*/<>!=";
     for(int i = 0; i < strlen( symbols ); i++)
         if( symbols[i] == c )
             return true;
@@ -234,7 +237,7 @@ bool isWords(char c) {
     return false;
 }
 
-
+}
 
 
 

@@ -190,6 +190,7 @@ static h_text_compile instruction_maker_opcode_value[] = {
     {"call", OPCODE_CALL_2, PREFIX_VAL_INC, 0},
     {"go", OPCODE_GO_2,     PREFIX_VAL_INC, 0},
     {"goc", OPCODE_GOC_2,   PREFIX_VAL_INC, 0},
+    {"gonc", OPCODE_GONC, PREFIX_VAL_INC, 0},
     {"pnt", OPCODE_PNT_2,   PREFIX_VAL_INC, 0},
     {"pct", OPCODE_PCT_2,   PREFIX_VAL_INC, 0},
     {"int", OPCODE_INT, PREFIX_VAL_INC, 0}
@@ -199,6 +200,7 @@ static h_text_compile instruction_maker_opcode_label[] = {
     {"call", OPCODE_CALL_2,     PREFIX_VAL_INC, 0},
     {"go", OPCODE_GO_2,         PREFIX_VAL_INC, 0},
     {"goc", OPCODE_GOC_2,       PREFIX_VAL_INC, 0},
+    {"gonc", OPCODE_GONC,       PREFIX_VAL_INC, 0},
     {"pnt", OPCODE_PNT_2,   PREFIX_VAL_INC, 0},
     {"pct", OPCODE_PCT_2,   PREFIX_VAL_INC, 0},
 };
@@ -208,6 +210,7 @@ static h_text_compile instruction_maker_opcode_reg[] = {
     {"call", OPCODE_CALL_1,     PREFIX_REG_INC, 0},
     {"go", OPCODE_GO_1,         PREFIX_REG_INC, 0},
     {"goc", OPCODE_GOC_1,       PREFIX_REG_INC, 0},
+    {"gonc", OPCODE_GONC,       PREFIX_REG_INC, 0},
     {"not", OPCODE_NOT,         PREFIX_REG_INC, 0},
     {"pnt", OPCODE_PNT_1,   PREFIX_REG_INC, 0},
     {"pct", OPCODE_PCT_1,   PREFIX_REG_INC, 0},

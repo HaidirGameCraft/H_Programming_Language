@@ -1,9 +1,9 @@
-#include "compiler/Array.hpp"
+#include "compiler/Class.hpp"
 #include "compiler/Compiler.hpp"
+#include "compiler/ControlStructure.hpp"
 #include "compiler/Function.hpp"
 #include "compiler/Token.hpp"
 #include "compiler/Tokenizer.hpp"
-#include "compiler/Variable.hpp"
 #include <cassert>
 #include <compiler/File.hpp>
 #include <cstddef>
@@ -40,29 +40,35 @@ void File::readFile( string filename ) {
         if( tokens.size() == 0 )
             continue;
 
-        printf("[Code]: %s\n", instruction.c_str());
-        if( tokens[0]->getType() == TokenType_SymbolsType && tokens[0]->getName() == "@" )
-        {
-            Token* config_token = tokens[1];
-            if( config_token->getName() == "import" )
-            {
-                assert(tokens[2] != nullptr && tokens[2]->getType() == TokenType_StringType);
-                string import_filename = tokens[2]->getName().substr(1, tokens[2]->getName().size() - 2);
-                printf("Import File: %s\n", import_filename.c_str());
-                File importFile;
-                importFile.readFile( import_filename ); 
-                printf("Return to File: %s\n", filename.c_str());
-            }
+  //      printf("Text: %s", buffer);
 
-            for(Token* token : tokens )
-                __free( token );
-        } else {
-            vector<string> code = Compiler::CompileTokens( tokens );
-            for( string& __code : code )
-                File::code.push_back( __code );
+        if( tokens.front()->getType() == TokenType_KeyWordType &&
+            tokens.front()->getName() == "class" )
+        {
+          ClassObject* classObject = ( ClassObject* ) __malloc( sizeof( ClassObject ) ); 
+          ClassObject::mainClass = classObject;
+          
+          classObject->setClassName( tokens[1]->getName() );
+        } else if (
+            tokens.front()->getType() == TokenType_KeyWordType && tokens.front()->getName() == "endclass"
+        ) {
+            
+        }
+        else {
+            std::vector<std::string> codeCompile = Compiler::CompileTokens( tokens );
+            if( Function::current_token != nullptr )
+                for( std::string& __code : codeCompile )
+                {
+                    if( ControlStructure::current_controlStruct != nullptr )
+                        ControlStructure::current_controlStruct->pushCode( __code );
+                    else
+                        Function::current_token->codeSegment.push_back( __code );
+                }
+            else
+                for( std::string& code : codeCompile )
+                    File::code.push_back( code );
         }
     }
-
     Function::cleanLocalFunction();
 
     free( buffer );

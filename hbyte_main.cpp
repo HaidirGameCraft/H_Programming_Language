@@ -18,13 +18,13 @@ int main(int argc, const char* argv[]) {
             i++;
         } else {
             filename = argv[i];
+            hbyte_open_file(filename.c_str());
         }
     }
 
-    printf("Filename: %s\n", filename.c_str());
-    printf("Output Filename: %s\n", outfilename.c_str());
+    //printf("Filename: %s\n", filename.c_str());
+    //printf("Output Filename: %s\n", outfilename.c_str());
 
-    hbyte_open_file(filename.c_str());
     hbyte_create_file(outfilename.c_str());
     hbyte_compile();
     hbyte_close_files();

@@ -77,13 +77,13 @@ static InstructionSet instruction_set_vr_list[] = {
     {"str", PREFIX_REG_INC | PREFIX_VAL_INC, 0, OPCODE_STR_2, ISR_Opcode_Value_Reg},
     {"strs", PREFIX_REG_INC | PREFIX_VAL_INC, 0, OPCODE_STRS_2, ISR_Opcode_Value_Reg},
     {"strd", PREFIX_REG_INC | PREFIX_VAL_INC, 0, OPCODE_STRD_2, ISR_Opcode_Value_Reg},
-    {"cnd", PREFIX_REG_INC | PREFIX_VAL_INC, 0, OPCODE_CND_2, ISR_Opcode_Value_Reg},
+    {"cnd", PREFIX_REG_INC | PREFIX_VAL_INC | PREFIX_SYM_INC, 0, OPCODE_CND_2, ISR_Opcode_Value_Reg},
     {"in", PREFIX_REG_INC | PREFIX_VAL_INC, 0, OPCODE_IN, ISR_Opcode_Value_Reg},
 };
 
 static InstructionSet instruction_set_rv_list[] = {
-    {"cnd", PREFIX_REG_INC | PREFIX_VAL_INC, 0, OPCODE_CND_3, ISR_Opcode_Reg_Value},
-    {"sh", PREFIX_REG_INC | PREFIX_VAL_INC, 0, OPCODE_SH_2, ISR_Opcode_Reg_Value},
+    {"cnd", PREFIX_REG_INC | PREFIX_VAL_INC | PREFIX_SYM_INC, 0, OPCODE_CND_3, ISR_Opcode_Reg_Value},
+    {"sh", PREFIX_REG_INC | PREFIX_VAL_INC | PREFIX_SYM_INC, 0, OPCODE_SH_2, ISR_Opcode_Reg_Value},
 };
 
 static InstructionSet instruction_set_rfr_list[] = {
@@ -121,6 +121,7 @@ static InstructionSet instruction_set_v_list[] = {
     {"call", PREFIX_VAL_INC, 0, OPCODE_CALL_2},
     {"go", PREFIX_VAL_INC, 0, OPCODE_GO_2},
     {"goc", PREFIX_VAL_INC, 0, OPCODE_GOC_2},
+    {"gonc", PREFIX_VAL_INC, 0, OPCODE_GONC},
     {"pnt", PREFIX_VAL_INC, 0, OPCODE_PNT_2},
     {"pct", PREFIX_VAL_INC, 0, OPCODE_PCT_2},
     {"int", PREFIX_VAL_INC, 0, OPCODE_INT},
@@ -132,6 +133,7 @@ static InstructionSet instruction_set_r_list[] = {
     {"call", PREFIX_REG_INC, 0, OPCODE_CALL_1},
     {"go", PREFIX_REG_INC, 0, OPCODE_GO_1},
     {"goc", PREFIX_REG_INC, 0, OPCODE_GOC_1},
+    {"gonc", PREFIX_REG_INC, 0, OPCODE_GONC},
     {"not", PREFIX_REG_INC, 0, OPCODE_NOT},
     {"pnt", PREFIX_REG_INC, 0, OPCODE_PNT_1},
     {"pct", PREFIX_REG_INC, 0, OPCODE_PCT_1},

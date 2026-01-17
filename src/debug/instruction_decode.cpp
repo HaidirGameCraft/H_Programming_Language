@@ -1,4 +1,6 @@
 #include "./instruction_decode.h"
+#include "inst.h"
+#include <cstdio>
 #include <ins/inst.h>
 #include <tools/tools.h>
 #include <tools/memory.h>
@@ -26,6 +28,8 @@ char* instruction_decode( uint8_t* memory, uint32_t pc, uint8_t size ) {
     char* __inside = decode_instruction( prefix, ext_prefix, opcode, memory, pc );
     if( __inside != NULL )
         sprintf( __tmp, "%.08x: %s %s", _tpc, opcode_name, __inside);
+    else
+        sprintf( __tmp, "%.08x: %s ERROR to READ", _tpc, opcode_name);
 
     __free( __inside );
     char* __instruction = (char*) strcpy( __tmp,strlen( __tmp) );
@@ -128,6 +132,8 @@ const char* instruction_symbols_name( uint8_t symbols ) {
         return "<=";
     else if ( symbols == SYM_GREATER_EQUAL )
         return ">=";
+    else if ( symbols == SYM_NOT_EQUAL )
+        return "!=";
 
     return "->";
 }

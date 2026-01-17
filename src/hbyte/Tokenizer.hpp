@@ -2,7 +2,9 @@
 
 #include "Token.hpp"
 
-class Tokenizer {
-public:
-    static vector<Token*> Extract(string instruction);
-};
+namespace HByte {
+    class Tokenizer {
+    public:
+        static vector<Token*> Extract(string instruction);
+    };
+}

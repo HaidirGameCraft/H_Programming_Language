@@ -1,15 +1,17 @@
 int a = 1
-int b = 2
-char message[] = "Hello, World"
-int number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+int b = 7
 
 func main() -> void
-    char user_name[] = "Hagemaru"
-    char msg[] = message
-    int num[] = number
+    int x = 1
+    int y = 3
+    int result = 0
 
-    char n1 = msg[0]
-    int num1 = num[1]
+    
+    int i = 0
+    while ( i < 10 )
+       result = result + i
+       i = i + 1
+    endwhile
 endfunc
 
 

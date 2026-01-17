@@ -56,6 +56,7 @@ typedef struct {
 #define SYM_GREATER_EQUAL   5
 #define SYM_SHIFT_LEFT      6
 #define SYM_SHIFT_RIGHT     7
+#define SYM_NOT_EQUAL       8
 
 uint8_t read8(uint8_t* memory, uint32_t* pc);
 uint16_t read16(uint8_t* memory, uint32_t* pc);
@@ -207,3 +208,5 @@ uint32_t create_instruction(uint8_t* memory, uint32_t pc, const char* instructio
 #define OPCODE_OUT          0x72
 
 #define OPCODE_STP          0x90
+
+#define OPCODE_GONC         0x73

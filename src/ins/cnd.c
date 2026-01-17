@@ -1,4 +1,5 @@
 #include "cnd.h"
+#include "cpu.h"
 #include "ins/inst.h"
 #include <inst.h>
 #include <stdio.h>
@@ -19,6 +20,20 @@ SIGN_INSTRUCTION_SET(cnd) {
     return status;
 }
 
+#define CND_SET_FLAGS \
+    if ( sym_cnd == SYM_EQUAL ) \
+        reg->flags |= ( cmp1 == cmp2 ) << 2; \
+    else if ( sym_cnd == SYM_LESS ) \
+        reg->flags |= ( cmp1 < cmp2 ) << 2; \
+    else if ( sym_cnd == SYM_GREATER ) \
+        reg->flags |= ( cmp1 > cmp2 ) << 2; \
+    else if ( sym_cnd == SYM_LESS_EQUAL ) \
+        reg->flags |= ( cmp1 <= cmp2 ) << 2; \
+    else if ( sym_cnd == SYM_GREATER_EQUAL ) \
+        reg->flags |= ( cmp1 >= cmp2 ) << 2; \
+    else if ( sym_cnd == SYM_NOT_EQUAL ) \
+        reg->flags |= ( cmp1 != cmp2 ) << 2;
+
 __instruction_opcode_reg_reg(cnd) {
     VARIABLE_INSTRUCTION;
     REGMEM_DEFINED(memory, pc);
@@ -32,16 +47,7 @@ __instruction_opcode_reg_reg(cnd) {
     cmp1 = *sreg;
     cmp2 = *dreg;
 
-    if ( sym_cnd == SYM_EQUAL )
-        reg->flags |= ( cmp1 == cmp2 ) << 2;
-    else if ( sym_cnd == SYM_LESS )
-        reg->flags |= ( cmp1 < cmp2 ) << 2;
-    else if ( sym_cnd == SYM_GREATER )
-        reg->flags |= ( cmp1 > cmp2 ) << 2;
-    else if ( sym_cnd == SYM_LESS_EQUAL )
-        reg->flags |= ( cmp1 <= cmp2 ) << 2;
-    else if ( sym_cnd == SYM_GREATER_EQUAL )
-        reg->flags |= ( cmp1 >= cmp2 ) << 2;
+    CND_SET_FLAGS
 
     // printf("Cmp 1: %x, Cmp 2: %x\n", cmp1, cmp2);
     // printf("Flags: %i\n", reg->flags);
@@ -59,20 +65,10 @@ __instruction_opcode_value_reg(cnd) {
     dreg = getreg( reg, __register.dreg );
     value = read32( memory, pc );
 
-    cmp1 = *dreg;
-    cmp2 = value;
+    cmp1 = value;
+    cmp2 = *dreg;
 
-    if ( sym_cnd == SYM_EQUAL )
-        reg->flags = ( cmp1 == cmp2 ) << 2;
-    else if ( sym_cnd == SYM_LESS )
-        reg->flags = ( cmp1 < cmp2 ) << 2;
-    else if ( sym_cnd == SYM_GREATER )
-        reg->flags = ( cmp1 > cmp2 ) << 2;
-    else if ( sym_cnd == SYM_LESS_EQUAL )
-        reg->flags = ( cmp1 <= cmp2 ) << 2;
-    else if ( sym_cnd == SYM_GREATER_EQUAL )
-        reg->flags = ( cmp1 >= cmp2 ) << 2;
-
+    CND_SET_FLAGS
     return 1;
 }
 
@@ -89,16 +85,8 @@ __instruction_opcode_reg_value(cnd) {
     cmp1 = *sreg;
     cmp2 = value;
 
-    if ( sym_cnd == SYM_EQUAL )
-        reg->flags = ( cmp1 == cmp2 ) << 2;
-    else if ( sym_cnd == SYM_LESS )
-        reg->flags = ( cmp1 < cmp2 ) << 2;
-    else if ( sym_cnd == SYM_GREATER )
-        reg->flags = ( cmp1 > cmp2 ) << 2;
-    else if ( sym_cnd == SYM_LESS_EQUAL )
-        reg->flags = ( cmp1 <= cmp2 ) << 2;
-    else if ( sym_cnd == SYM_GREATER_EQUAL )
-        reg->flags = ( cmp1 >= cmp2 ) << 2;
-
+    //printf("Cmp 1: %x, Cmp 2: %x\n", cmp1, cmp2);
+    //printf("Flags: %i\n", reg->flags);
+    CND_SET_FLAGS
     return 1;
 }

@@ -1,0 +1,40 @@
+=region text
+main:
+push rp
+mov rs -> rp
+mov 1 -> ra
+sub 4 -> rs
+str ra -> rp(-4)
+mov 3 -> ra
+sub 4 -> rs
+str ra -> rp(-8)
+mov 0 -> ra
+sub 4 -> rs
+str ra -> rp(-12)
+mov 0 -> ra
+sub 4 -> rs
+str ra -> rp(-16)
+.KBDS9243O4z7:
+lod rp(-16) -> ra
+mov 10 -> rb
+cnd ra < rb
+gonc $.nlUf1829g2w0
+lod rp(-16) -> rb
+lod rp(-12) -> rc
+add rb -> rc
+str rc -> rp(-12)
+lod rp(-16) -> ra
+mov 1 -> rb
+add rb -> ra
+str ra -> rp(-16)
+go $.KBDS9243O4z7
+.nlUf1829g2w0:
+add 16 -> rs
+mov rp -> rs
+pop rp
+ret
+=region data
+a:
+=quad 1
+b:
+=quad 7

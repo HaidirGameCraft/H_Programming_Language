@@ -10,7 +10,9 @@
 
 #define LENGTH(x, y) sizeof( x ) / sizeof( y )
 
-uint32_t HByte::pc = 0;
+using namespace HByte;
+
+uint32_t HByteCompiler::pc = 0;
 int ISRIdentifier(vector<Token*> tokens);
 vector<Token*> BracketChecker(vector<Token*> tokens);
 
@@ -70,6 +72,7 @@ int ISRIdentifier(vector<Token*> tokens) {
                     else if ( isRightReg ) return ISR_Opcode_Value_Reg;
                 }
             }
+
         }
         // Operand <Val/Reg>
         else if ( tokens.size() == 2 )
@@ -156,10 +159,9 @@ vector<Token*> BracketChecker(vector<Token*> tokens) {
     return newTokens;
 }
 
-void HByte::Compile(vector<Token *> tokens) {
+void HByteCompiler::Compile(vector<Token *> tokens) {
     tokens = BracketChecker(tokens);
     int isr = ISRIdentifier(tokens);
-
     uint8_t prefix = 0;
     uint8_t ext_prefix = 0;
     uint8_t opcode = 0;
@@ -191,6 +193,9 @@ void HByte::Compile(vector<Token *> tokens) {
         }
         else if ( isr == ISR_Opcode_Value_Reg ) {
             find_instruction_set(instruction_set_vr_list);
+        }
+        else if ( isr == ISR_Opcode_Reg_Value ) {
+            find_instruction_set(instruction_set_rv_list);
         }
         else if ( isr == ISR_Opcode_ValueOff_Reg ) {
             find_instruction_set(instruction_set_vfr_list);
@@ -309,7 +314,7 @@ void HByte::Compile(vector<Token *> tokens) {
 
 }
 
-int HByte::getRegister( string c ) {
+int HByteCompiler::getRegister( string c ) {
     if      ( c == "ra" ) return 0;
     else if ( c == "rb" ) return 1;
     else if ( c == "rc" ) return 2;
@@ -330,7 +335,7 @@ int HByte::getRegister( string c ) {
     return -1;
 }
 
-int HByte::getSymbols( string c ) {
+int HByteCompiler::getSymbols( string c ) {
     if ( c == "==" ) return 1;
     else if ( c == "<"  ) return 2;
     else if ( c == ">"  ) return 3;

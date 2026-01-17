@@ -15,6 +15,8 @@ struct label_t {
 void Label_add( string label );
 void Label_updateAddress( string label, uint32_t address );
 void Label_push( string label, uint32_t dest );
+uint32_t Label_getAddress( const string& name );
+void Label_clear();
 void Label_update();
 
 

@@ -5,6 +5,7 @@
 
 using namespace std;
 
+namespace HByte {
 enum TokenType {
     TokenType_CommandType,
     TokenType_SymbolsType,
@@ -33,3 +34,5 @@ public:
 
     void print(int indent);
 };
+
+}

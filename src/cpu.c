@@ -75,22 +75,22 @@ void cpu_execute(uint8_t exec_one) {
 }
 void cpu_output() {
     printf("=============== OUTPUT ================\n");
-    printf("RA: %.08x\n", reg.ra);
-    printf("RB: %.08x\n", reg.rb);
-    printf("RC: %.08x\n", reg.rc);
-    printf("RD: %.08x\n", reg.rd);
-    printf("RE: %.08x\n", reg.re);
-    printf("RF: %.08x\n", reg.rf);
-    printf("RG: %.08x\n", reg.rg);
-    printf("RH: %.08x\n", reg.rh);
-    printf("RI: %.08x\n", reg.ri);
-    printf("RJ: %.08x\n", reg.rj);
-    printf("RK: %.08x\n", reg.rk);
-    printf("RL: %.08x\n", reg.rl);
-    printf("RM: %.08x\n", reg.rm);
-    printf("RN: %.08x\n", reg.rn);
-    printf("RS: %.08x\n", reg.rs);
-    printf("RP: %.08x\n", reg.rp);
+    printf("RA: %.08x ( %i )\n", reg.ra, reg.ra );
+    printf("RB: %.08x ( %i )\n", reg.rb, reg.rb );
+    printf("RC: %.08x ( %i )\n", reg.rc, reg.rc );
+    printf("RD: %.08x ( %i )\n", reg.rd, reg.rd );
+    printf("RE: %.08x ( %i )\n", reg.re, reg.re );
+    printf("RF: %.08x ( %i )\n", reg.rf, reg.rf );
+    printf("RG: %.08x ( %i )\n", reg.rg, reg.rg );
+    printf("RH: %.08x ( %i )\n", reg.rh, reg.rh );
+    printf("RI: %.08x ( %i )\n", reg.ri, reg.ri );
+    printf("RJ: %.08x ( %i )\n", reg.rj, reg.rj );
+    printf("RK: %.08x ( %i )\n", reg.rk, reg.rk );
+    printf("RL: %.08x ( %i )\n", reg.rl, reg.rl );
+    printf("RM: %.08x ( %i )\n", reg.rm, reg.rm );
+    printf("RN: %.08x ( %i )\n", reg.rn, reg.rn );
+    printf("RS: %.08x ( %i )\n", reg.rs, reg.rs );
+    printf("RP: %.08x ( %i )\n", reg.rp, reg.rp );
     printf("\n");
     printf("FLAGS: %.016b (%4x), PC: %.08x", reg.flags, reg.flags, reg.pc);
 }

@@ -10,4 +10,5 @@ class Compiler {
 public:
     static vector<string> Compile( string instruction );
     static vector<string> CompileTokens( vector<Token*> tokens );
+    static vector<string> CompileParser( Token* parser );
 };

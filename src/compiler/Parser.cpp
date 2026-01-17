@@ -4,22 +4,32 @@
 #include "Function.hpp"
 #include <cassert>
 
+#include <execution>
 #include <string>
 #include <tools/memory.h>
 
-int operator_power(Token* token);
 vector<Token*> parserExpression( vector<Token*> tokens );
 vector<Token*> checkBrackets( vector<Token*> tokens );
+void checkCondition( Token* parser );
 
+bool Parser::make_easy_parser = true;
 Token* Parser::ParserExp(vector<Token*> tokens) {
+    //Tokenizer::AnalysisTokenizer(tokens);
     if( tokens.size() == 0 )
         return nullptr;
 
+    int attempts = 100;
     int length = tokens.size();
     while( length > 1 )
     {
         tokens = parserExpression(tokens);
         length = tokens.size();
+
+        if( attempts == 0 )
+        {
+            assert( false && "Attempts of Parser are going to Limited, it might have somthing wrong");
+        }
+        attempts = attempts - 1;
     }
 
     if( length != 1 )
@@ -28,11 +38,12 @@ Token* Parser::ParserExp(vector<Token*> tokens) {
         assert(length == 1);
     }
 
+    //checkCondition( tokens.front() );
     return tokens.front();
 }
 
 vector<Token*> parserExpression( vector<Token*> tokens ) {
-    tokens = checkBrackets( tokens );
+    Tokenizer::AnalysisBrackets( tokens );
     //printf("[DEBUG] Checking the Bracket");
     int higher_power = 0;
     int idx_token = -1;
@@ -57,7 +68,7 @@ vector<Token*> parserExpression( vector<Token*> tokens ) {
             if( token->left != nullptr || token->right != nullptr )
                 continue;
             
-            int power_operator = operator_power( token );
+            int power_operator = Parser::PrecedenceOperators( token->getName() );
             if( higher_power < power_operator )
             {
                 higher_power = power_operator;
@@ -87,58 +98,32 @@ vector<Token*> parserExpression( vector<Token*> tokens ) {
 
             i++;    // skipping the function, get next token
             assert( tokens[i]->getType() == TokenType_BracketType );
-            vector<int> brackets_idx;
             BracketToken* bracket_tk = ( BracketToken* ) tokens[i];
 
-            openbracket_idx = i - 1;
+            openbracket_idx = i;
             closebracket_idx = bracket_tk->closeBracket;
-            brackets_idx.push_back( i ); 
-            i++;    // skipping '('
 
-            int start = i;
-            while( brackets_idx.size() > 0 && i < tokens.size() )
-            {
-                Token* __tk = tokens[i];
-                if( __tk->getType() == TokenType_BracketType )
-                {
-                    if( __tk->getName() == "(" )
-                        brackets_idx.push_back( i );
-                    else if ( __tk->getName() == ")" ) {
-                        if( brackets_idx.size() == 1 )
-                        {
-                            vector<Token*> args__;
-                            for(int j = start; j < i; j++)
-                                args__.push_back( tokens[j] );
+            vector<Token*> arguments;
+            for( int __j = openbracket_idx + 1; __j <= closebracket_idx; __j++ ) {
+                Token* __token = (Token*) tokens[__j];
+                __token->print(0);
+                if( __token->getType() == TokenType_BracketType && __token->getName() == "(" )
+                    __j = ((BracketToken*) __token)->closeBracket;
+                else if ( ( __token->getType() == TokenType_BracketType && __token->getName() == ")" ) ||
+                        ( __token->getType() == TokenType_SymbolsType && __token->getName() == ",") ) {
 
+                    Token* parser_arg = Parser::ParserExp( arguments );
+                    func->args.push_back( parser_arg );
 
-                            if ( args__.size() > 0 ) {
-                                Token* parser = Parser::ParserExp( args__ );
-                                func->args.push_back( parser );
-                            }
-
-                            brackets_idx.pop_back();
-                            break;
-                        }
-                        brackets_idx.pop_back();
-                    }
+                    arguments.clear();
+                    continue;    
                 }
-                else if( __tk->getType() == TokenType_SymbolsType &&
-                        __tk->getName() == "," )
-                {
-                    assert( brackets_idx.size() == 1 );
-                    vector<Token*> args__;
-                    for(int j = start; j < i; j++)
-                        args__.push_back( tokens[j] );
-                    
-                    Token* parser = Parser::ParserExp( args__ );
-                    func->args.push_back( parser );
-                    start = i + 1;
+                else {
+                    arguments.push_back( __token );
                 }
-
-                i++;
             }
-
-            assert(brackets_idx.size() == 0);
+            //printf("Size Args: %i\n", func->args.size());
+            openbracket_idx--;
             break;
         }
         else if ( token->getType() == TokenType_ArrayType && !token->hasSet )
@@ -160,7 +145,7 @@ vector<Token*> parserExpression( vector<Token*> tokens ) {
             if( token->left != nullptr || token->right != nullptr )
                 continue;
 
-            if( token->getName() != "(" || token->getName() != ")" )
+            if( token->getName() != "(" && token->getName() != ")" )
                 continue;
 
             BracketToken* bracket_tk = ( BracketToken* ) token;
@@ -208,7 +193,7 @@ vector<Token*> parserExpression( vector<Token*> tokens ) {
                 operatorToken->left = tokens[idx_left_token];
                 operatorToken->right = tokens[idx_right_token];
  
-                if( operatorToken->left->getType() == TokenType_NumberType && operatorToken->right->getType() == TokenType_NumberType )
+                if( Parser::make_easy_parser && operatorToken->left->getType() == TokenType_NumberType && operatorToken->right->getType() == TokenType_NumberType )
                 {
                     double __val = 0;
                     double __left = stod( operatorToken->left->getName() );
@@ -233,6 +218,29 @@ vector<Token*> parserExpression( vector<Token*> tokens ) {
                     operatorToken->setName( to_string((int)( __val ) ) );
                     operatorToken->setType(TokenType_NumberType);
                 }
+
+                if( operatorToken->getName() == "&&" )
+                {
+                    if( operatorToken->left->getType() == TokenType_OperatorType )
+                    {
+                        if( operatorToken->left->getName() == "==" ) operatorToken->left->setName("!=");
+                        else if( operatorToken->left->getName() == "<" ) operatorToken->left->setName(">");
+                        else if( operatorToken->left->getName() == ">" ) operatorToken->left->setName("<");
+                        else if( operatorToken->left->getName() == "<=" ) operatorToken->left->setName(">=");
+                        else if( operatorToken->left->getName() == ">=" ) operatorToken->left->setName("<=");
+                        else if( operatorToken->left->getName() == "!=" ) operatorToken->left->setName("==");
+                    }
+                    
+                    if( operatorToken->right->getType() == TokenType_OperatorType )
+                    {
+                        if( operatorToken->right->getName() == "==" ) operatorToken->right->setName("!=");
+                        else if( operatorToken->right->getName() == "<" )  operatorToken->right->setName(">");
+                        else if( operatorToken->right->getName() == ">" )  operatorToken->right->setName("<");
+                        else if( operatorToken->right->getName() == "<=" ) operatorToken->right->setName(">=");
+                        else if( operatorToken->right->getName() == ">=" ) operatorToken->right->setName("<=");
+                        else if( operatorToken->right->getName() == "!=" ) operatorToken->right->setName("==");
+                    }
+                }
                 new_tokens.push_back( operatorToken );
             }
         }
@@ -240,11 +248,13 @@ vector<Token*> parserExpression( vector<Token*> tokens ) {
             new_tokens.push_back( tokens[i] );
         }
     }
-
     return new_tokens;
 }
 
 vector<Token*> checkBrackets( vector<Token*> tokens ) {
+    //for( Token* token : tokens )
+    //    token->print(0);
+
     vector<BracketToken*> bracket_idx;
     for( int i = 0; i < tokens.size(); i++ )
     {
@@ -258,8 +268,7 @@ vector<Token*> checkBrackets( vector<Token*> tokens ) {
             {
                 if( bracket_idx.size() == 0 )
                 {
-                    printf("BracketError: could not find the start of '(' or '['");
-                    assert( bracket_idx.size() != 0 );
+                    assert( false && "BracketError: could not find the start of '(' or '['");
                 }
 
                 BracketToken* start_brk_tk = bracket_idx[ bracket_idx.size() - 1 ];
@@ -272,35 +281,55 @@ vector<Token*> checkBrackets( vector<Token*> tokens ) {
 
     if( bracket_idx.size() != 0 )
     {
-        printf("BracketError: could not reach the end of ')' or ']'");
-        assert( bracket_idx.size() != 0 );
+        printf("Size of Bracket idx: %i\n", bracket_idx.size() );
+        assert( false && "BracketError: could not reach the end of ')' or ']'" );
     }
 
     return tokens;
 }
 
-int operator_power(Token* token) {
-    if( token->getName() == "+" || token->getName() == "-" )
-        return 4;
-    else if ( token->getName() == "=" )
-        return 3;
-    else if ( token->getName() == "*" || token->getName() == "/" )
-        return 5;
-    else if(    token->getName() == "==" || 
-                token->getName() == ">" ||
-                token->getName() == "<" ||
-                token->getName() == ">=" ||
-                token->getName() == "<=" ||
-                token->getName() == "!="
-            ) {
-        return 2;
-    }
-    else if ( token->getName() == "&&" || token->getName() == "||" )
-    {
-        return 1;
-    }
+void checkCondition( Token* parser ) {
+   if( parser->getType() == TokenType_OperatorType )
+   {
+       if( parser->getName() == "&&" )
+       {
+           parser->print(0);
+            if( parser->left != nullptr && parser->left->getType() == TokenType_OperatorType ) { 
+                if ( parser->left->getName() == "==" ) parser->left->setName("!=");
+                else if ( parser->left->getName() == "<"  ) parser->left->setName( ">");
+                else if ( parser->left->getName() == ">"  ) parser->left->setName( "<");
+                else if ( parser->left->getName() == "<=" ) parser->left->setName(">=");
+                else if ( parser->left->getName() == ">=" ) parser->left->setName("<=");
+                else if ( parser->left->getName() == "!=" ) parser->left->setName("==");
+            }
+
+            if( parser->right != nullptr && parser->right->getType() == TokenType_OperatorType ) { 
+                if ( parser->right->getName() == "==" ) parser->right->setName("!=");
+                else if ( parser->right->getName() == "<"  ) parser->right->setName( ">");
+                else if ( parser->right->getName() == ">"  ) parser->right->setName( "<");
+                else if ( parser->right->getName() == "<=" ) parser->right->setName(">=");
+                else if ( parser->right->getName() == ">=" ) parser->right->setName("<=");
+                else if ( parser->right->getName() == "!=" ) parser->right->setName("==");
+            }
+
+            return;
+       }
+       
+       if( parser->left != nullptr && parser->left->getType() == TokenType_OperatorType)
+           checkCondition( parser->left );
+       if( parser->right != nullptr && parser->right->getType() == TokenType_OperatorType)
+           checkCondition( parser->right );
+   }
+}
+
+int Parser::PrecedenceOperators(const std::string &symbols) {
+    if( symbols == "=" ) return 1;
+    else if ( symbols == "||" ) return 2;
+    else if ( symbols == "&&" ) return 3;
+    else if ( symbols == "==" || symbols == "!=" ) return 4;
+    else if ( symbols == "<" || symbols == "<=" || symbols == ">" || symbols == ">=" ) return 5;
+    else if ( symbols == "+" || symbols == "-" ) return 6;
+    else if ( symbols == "*" || symbols == "/" || symbols == "%" ) return 7;
 
     return 0;
 }
-
-

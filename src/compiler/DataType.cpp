@@ -6,8 +6,8 @@ DataTypeToken::DataTypeToken() {
     this->type = TokenType_DataType;
 }
 
-void DataTypeToken::setDataType( DataType type ) { this->data_type = type; }
-DataType DataTypeToken::getDataType() { return this->data_type; }
+void DataTypeToken::setDataType( Object* type ) { this->object = type; }
+Object* DataTypeToken::getDataType() { return this->object; }
 
 
 int DataTypeSize(DataType type){

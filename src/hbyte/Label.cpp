@@ -27,6 +27,14 @@ void Label_add( string label ) {
     }
 }
 
+uint32_t Label_getAddress( const string& name ) {
+    for( label_t* lbl : labels )
+        if( lbl->name == name )
+            return lbl->address;
+
+    return -1;
+}
+
 void Label_updateAddress( string label, uint32_t address ) {
    if( label[0] == '.' )
    {
@@ -143,10 +151,19 @@ void Label_update() {
                 hbyte_write32(dest, child_lbl.address); 
         for(uint32_t& dest : lbl->target )
             hbyte_write32(dest, lbl->address); 
-        __free( lbl );
+        //__free( lbl );
     }
 }
 
+void Label_clear() {
+
+    for(label_t* lbl : labels)
+    {
+        lbl->child.clear();
+        lbl->target.clear();
+        __free( lbl );
+    }
+}
 
 
 

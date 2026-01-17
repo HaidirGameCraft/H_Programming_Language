@@ -6,17 +6,6 @@
 int number
 bool isRun = 0
 ```
-- Can be array:
-```
-int number[] = [1, 2, 3, 4, 5, 6, 7, 8]
-char message[] = "Hello, World"
-```
-- Can be declare without initializing
-```
-int number[5]
-char message[16]
-```
-
 
 ## Variable
 - Outside of function it is constant Variable, which mean it is global Variable
@@ -48,8 +37,29 @@ func add( int a, int b ) -> int
 endfunc
 ```
 
-## If-Elif-Else Statement
-- On the end of this if-elif-else statement must be include 'endif'
+Extern from other source code;
+```
+extern func print( int textAddr ) -> void
+```
+
+## Control Structure
+### Selection Control Structure
+```
+if ( condition )
+    <Statement 1>
+endif
+```
+
+### Dual Selection Control Structure
+```
+if ( condition )
+    <Statement 1>
+else
+    <Statement 2>
+endif
+```
+
+### Multiple Selection Control Structure
 ```
 if ( condition )
     <Statement 1>
@@ -58,6 +68,13 @@ elif ( condition )
 else
     <Statement 3>
 endif
+```
+
+### Repetition Control Structure
+```
+while ( condition )
+    <Statement>
+endwhile
 ```
 
 

@@ -15,7 +15,7 @@ set(LIBRARY_H "h_linker")
 #endif()
 
 # if ( USEDEBUG=1 )
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__DEBUG__=1")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__DEBUG__=1")
 # endif()
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ./bin)
 
@@ -27,7 +27,10 @@ file(GLOB C_SOURCES "./src/*.c"
     )
 
 file(GLOB HC_CXX_SOURCES    "./src/compiler/*.cpp"
-                            "./src/tools/*.cpp")
+                            "./src/tools/*.cpp"
+                            "./src/hbyte/*.cpp"
+                            "./src/compiler/objects/*.cpp"
+                        )
 file(GLOB HBYTE_CXX_SOURCES "./src/hbyte/*.cpp"
                             "./src/tools/*.cpp")
 file(GLOB DBG_CXX_SOURCES   "./src/debug/*.cpp")

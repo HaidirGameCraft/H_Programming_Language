@@ -22,7 +22,7 @@ public:
     string name;
     string value;
     Array array;
-    DataType data_type;
+    Object* object;
 
     static vector<Variable*> globalVariable;
 
@@ -30,13 +30,14 @@ public:
     void setArray( const Array& array );
     void setSize( int size );
     void setValue( string str );
-    void setDataType( DataType data_type );
+    void setDataType( Object* object );
 
     const string& getName();
     const int& getSize();
     const string& getValue();
-    const DataType& getDataType();
+    Object* getDataType();
 
+    static vector<string> VariableCompiler( vector<Token*> tokens );
     static void cleanup();
 
     static void pushVariable( string name, int size, DataTypeToken* type );

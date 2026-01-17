@@ -36,6 +36,9 @@ void Token::print(int indent = 0) {
         case  TokenType_NumberType:
             str += " ( Number Type ) ";
             break;
+        case  TokenType_KeyWordType:
+            str += " ( KeyWord Type ) ";
+            break;
         case  TokenType_StringType:
             str += " ( String Type ) ";
             break;
@@ -53,6 +56,9 @@ void Token::print(int indent = 0) {
             break;
         case  TokenType_DataType:
             str += " ( DataType Type ) ";
+            break;
+        case  TokenType_PointerType:
+            str += " ( Pointer Type ) ";
             break;
         case  TokenType_SymbolsType:
             str += " ( Symbols Type ) ";

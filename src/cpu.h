@@ -8,6 +8,8 @@
 
 #define flags_condition 1 << 2
 
+#define FLAGS_CONDITION 1 << 2
+
 typedef struct {
     uint32_t ra;
     uint32_t rb;

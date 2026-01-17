@@ -19,10 +19,10 @@ public:
 class Function {
 public:
     vector<Variable*> parameters;
-    vector<Variable*> local_variables;
-    
+    vector<string>    codeSegment;
+
     string name;
-    DataTypeToken ret_data;
+    Object* ret_data;
     bool isGlobal = false;
 
     void setName( const string& name );
@@ -32,7 +32,6 @@ public:
     static Function* current_token;
 
     void initParams( vector<Token*> tokens );
-    void pushVariable( Variable* var );
     static void cleanLocalFunction();
     static void cleanup();
     Variable* getVariable( const string& name );
@@ -42,4 +41,6 @@ public:
     static void pushFunction(const string& name, Function* fun );
     static Function* getFunction( const string& name );
     static vector<string> codeGlobal();
+
+    static vector<string> FunctionCompile( vector<Token*> tokens );
 };

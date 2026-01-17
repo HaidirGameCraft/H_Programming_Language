@@ -1,3 +1,4 @@
+#include "file_reader.h"
 #include <cpu.h>
 #include <inst.h>
 #include <stdio.h>
@@ -56,19 +57,23 @@ int main(int argc, const char** argv) {
     memory = (uint8_t*) malloc(memory_size);
     memset( memory, 0, memory_size );
 
-    FILE* binary = fopen(file, "rb+");
-    fseek(binary, 0, SEEK_END);
-    int size = ftell(binary);
-    fseek(binary, 0, SEEK_SET);
+//    FILE* binary = fopen(file, "rb+");
+//    fseek(binary, 0, SEEK_END);
+//    int size = ftell(binary);
+//    fseek(binary, 0, SEEK_SET);
 
-    if( !binary )
-    {
-        perror("Error, Cannot open the file\n");
-        free( memory );
-        return EXIT_FAILURE;
-    }
+//    if( !binary )
+//    {
+//        perror("Error, Cannot open the file\n");
+//        free( memory );
+//        return EXIT_FAILURE;
+//    }
 
-    fread((char*) memory, 1, size, binary);
+//    fread((char*) memory, 1, size, binary);
+
+    h_openFile( file );
+    h_loadFile( memory );
+    h_closeFile();
 
     enableRawMode();
     InitInterrupt();

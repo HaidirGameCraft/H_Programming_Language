@@ -38,40 +38,7 @@ For this format:
 This is documentation for this programming language [Documentation](DOCUMENTATION.md)
 
 # ChangesLog
-you can click this link to look the changes [ChangesLog](ChangesLogs/CHANGESLOG-27-12-25.md)
-
-# New Update
-## Cross Platform
--   H programming Language are supported Windows and Linux
-## Add
--   new Opcode PNT (reg/value/label) -> printing the text to terminal interface
--   new Opcode PCT (reg/value/label) -> printing the character (char) to terminal interface
--   Compiling Multiple Files
--   adding region TEXT, DATA, RAW
-## Remake
--   Remaking all Instruction Set Format, Including:
-    - new register will support only 32 bits and no longer using r8 and r16
-    - new name register:
-        |No (Hex) | Name Register | Bits | Description |
-        | --- | :---:| :---: | :---: |
-        | 0 | ra | 32 | Accumulator Register |
-        | 1 | rb | 32 | Reserved Register |
-        | 2 | rc | 32 | Counter Register |
-        | 3 | rd | 32 | Reserved Register |
-        | 4 | re | 32 | Reserved Register |
-        | 5 | rf | 32 | Reserved Register |
-        | 6 | rg | 32 | Reserved Register |
-        | 7 | rh | 32 | Reserved Register |
-        | 8 | ri | 32 | Remainer Register |
-        | 9 | rj | 32 | Reserved Register |
-        | A | rk | 32 | Reserved Register |
-        | B | rl | 32 | Reserved Register |
-        | C | rm | 32 | Reserved Register |
-        | D | rn | 32 | Reserved Register |
-        | E | rs | 32 | Stack Pointer Register |
-        | F | rp | 32 | Base Pointer Register |
-    - new instruction format. you can check on this section [INSTRUCTION FORMAT](#the-instruction-set-format)
-    - repattern the instruction for compiler
+you can click this link to look the changes [ChangesLog](ChangesLogs/CHANGESLOG-01-17-26.md)
 
 # Example Code 
 You can check the [(sample code)](/sample.hm)
@@ -79,24 +46,16 @@ You can check the [(sample code)](/sample.hm)
 # How to run the code
 For the Compiler:
 ```sh
-./bin/hc -c <file>
+# H High Level Language Compiler
+./bin/hc --help
 
-# Example
-./bin/hc -c ./sample.hi
-# the output will be ./sample.hi.ho
-```
-
-For the Compiler -> Byte
-```sh
-./bin/hbyte -o <output_file> <file>
-
-#Example
-./bin/hbyte -o ./sample.ho ./sample.hi.ho
+# to Compile
+./bin/hc -o <output_file> -c <hi_files...> -cl <hm_files...>
 ```
 
 run the program:
 ```sh
-./bin/h <file> -sr
+./bin/h --help
 
 # Example
 ./bin/h ./sample.ho -sr

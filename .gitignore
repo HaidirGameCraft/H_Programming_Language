@@ -13,3 +13,4 @@ build-win
 build-linux
 compile_commands.json
 text.txt
+bin
