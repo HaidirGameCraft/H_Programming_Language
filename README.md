@@ -50,7 +50,7 @@ For the Compiler:
 ./bin/hc --help
 
 # to Compile
-./bin/hc -o <output_file> -c <hi_files...> -cl <hm_files...>
+./bin/hc -ub -o <output_file> -c <hi_files...> -cl <hm_files...>
 ```
 
 run the program:
@@ -58,7 +58,7 @@ run the program:
 ./bin/h --help
 
 # Example
-./bin/h ./sample.ho -sr
+./bin/h -ub ./sample.ho -sr
 ```
 
 # Installation
