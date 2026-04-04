@@ -1,5 +1,6 @@
 #include <inst.h>
 #include "and.h"
+#include "cpu.h"
 #include "ins/inst.h"
 #include <stdio.h>
 
@@ -21,7 +22,13 @@ __instruction_opcode_reg_reg(and) {
 
     sreg = getreg(reg, __register.sreg);
     dreg = getreg(reg, __register.dreg);
-    *dreg = *dreg & *sreg;
+    uint64_t result = *dreg & *sreg;
+    *dreg = result;
+
+    reg->flags &= ~FLAGS_STATUS_MASK;
+    reg->flags |= FLAGS_EVEN( result & 1 );
+    reg->flags |= FLAGS_ZERO( result == 0 );
+    reg->flags |= FLAGS_SIGN( ( result >> 31 & 1 ) );
 
     return 1;
 }
@@ -32,7 +39,13 @@ __instruction_opcode_value_reg(and) {
 
     dreg = getreg(reg, __register.dreg);
     value = read32(memory, pc);
-    *dreg = *dreg & value;
+    uint64_t result = *dreg & value;
+    *dreg = result;
+
+    reg->flags &= ~FLAGS_STATUS_MASK;
+    reg->flags |= FLAGS_EVEN( result & 1 );
+    reg->flags |= FLAGS_ZERO( result == 0 );
+    reg->flags |= FLAGS_SIGN( ( result >> 31 & 1 ) );
 
     return 1;
 }

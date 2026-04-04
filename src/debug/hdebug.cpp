@@ -6,7 +6,9 @@
 #include <string.h>
 #include <vector>
 #include <cpu.h>
+#include <interrupt.h>
 #include <tools/memory.h>
+#include <memory.h>
 
 #include "instruction_decode.h"
 
@@ -64,7 +66,7 @@ void debug_read_file(uint32_t size_memory) {
     long size = ftell( debug_file );
     fseek(debug_file, 0, SEEK_SET );
 
-    memory = (uint8_t*) malloc( size_memory );
+    memory = (uint8_t*) create_memory( size_memory );
     fread( memory, size, 1, debug_file ); 
     length_memory = size;
 
@@ -82,9 +84,11 @@ void debug_read_file(uint32_t size_memory) {
     }
 
     cpu_initialize();
+    InitInterrupt();
     cpu_set_memory( memory, size_memory );
     draw_terminal();
 
+    clear_memory();
     free( memory );
 }
 
@@ -261,6 +265,7 @@ void draw_terminal() {
                 }
             }
 
+            // id_window == 1, go to display Memory
             if( id_window == 1 )
                 display_memory( third_width * 2, 1, third_width, half_height, key);
             continue;

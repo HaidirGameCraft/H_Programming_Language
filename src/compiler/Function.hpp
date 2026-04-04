@@ -29,7 +29,7 @@ public:
     string getName();
 
     static vector<Function*> function_stack;
-    static Function* current_token;
+    static Function* currentFunction;
 
     void initParams( vector<Token*> tokens );
     static void cleanLocalFunction();

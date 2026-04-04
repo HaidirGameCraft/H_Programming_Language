@@ -5,11 +5,12 @@
 vector<Object*> Object::objects;
 
 void Object::initObjects() { 
-    Object::createObject( "char", 1 );   // Create 'char' object 
-    Object::createObject( "short", 2 );   // Create 'short' object 
-    Object::createObject( "int", 4 );   // Create 'int' object 
-    Object::createObject( "void", 0 );   // Create 'void' object 
-    Object::createObject( "string", 4 );   // Create 'string' object 
+    Object::createObject( "char", 1 );      // Create 'char' object 
+    Object::createObject( "short", 2 );     // Create 'short' object 
+    Object::createObject( "int", 4 );       // Create 'int' object 
+    Object::createObject( "string", 4 );    // Create 'string' object 
+    Object::createObject( "str", 4 );       // Create 'str' object
+    Object::createObject( "void", 0 );      // Create 'void' object 
 }
 
 bool Object::isDataType( string data )

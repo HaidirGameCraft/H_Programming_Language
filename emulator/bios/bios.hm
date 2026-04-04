@@ -1,0 +1,4 @@
+=region text
+__start:
+    mov :qa
+

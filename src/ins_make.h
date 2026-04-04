@@ -4,37 +4,6 @@
  */
 
 #pragma once
-
-// #define PATTERN_OPCODE_LABEL_AS_REG             "^([a-zA-Z]+)\\s+(\\(\\$[\\w]*\\))\\s+as\\s+(single|double|quad)\\s*->\\s*([r|R][0-9a-zA-Z]+)$"
-// #define PATTERN_OPCODE_REG_REG                  "^([a-zA-Z]+)\\s+([r|R][0-9a-zA-Z]+)\\s*->\\s*([r|R][0-9a-zA-Z]+)$"
-
-// #define PATTERN_OPCODE_REG_MEMORY_REG           "^([a-zA-Z]+)\\s+\\(([rR][0-9a-zA-Z]+)\\s*(\\+)?\\s*(0x[0-9a-fA-F]+|[0-9]+)?\\)\\s*(?:as\\s+(single|double|quad))?\\s*->\\s*([rR][0-9a-zA-Z]+)$"
-// #define PATTERN_OPCODE_REG_REG_MEMORY           "^([a-zA-Z]+)\\s+([r|R][0-9a-zA-Z]+)\\s*->\\s*\\(([rR][0-9a-zA-Z]+)\\s*(\\+)?\\s*(0x[0-9a-fA-F]+|[0-9]+)?\\)$"
-
-// #define PATTERN_OPCODE_VALUE_REG_MEMORY         "^([a-zA-Z]+)\\s+(0x[0-9a-fA-F]+|[0-9]+)\\s*->\\s*\\(([r|R][0-9a-zA-Z]+)\\s*\\+\\s*(0x[0-9a-fA-F]+|[0-9]+)\\)$"
-
-// #define PATTERN_OPCODE_VALUE_REG                "^([a-zA-Z]+)\\s+(0x[0-9a-fA-F]+|[0-9]+)\\s*->\\s*([r|R][0-9a-zA-Z]+)$"
-
-// #define PATTERN_OPCODE_LABEL_REG                "^([a-zA-Z]+)\\s+(\\$\\w*)\\s*->\\s*([r|R][0-9a-zA-Z]+)$"
-// #define PATTERN_OPCODE_LABEL                    "^([a-zA-Z]+)\\s+(\\$\\w*)$"
-
-// #define PATTERN_OPCODE_REG                      "^(\\w+)\\s+([r|R][0-9]*[a,b,c,d,e,f,g,h,s,bp]+)$"
-// #define PATTERN_OPCODE_REG_MEMORY               "^(\\w+)\\s+\\(([r|R][0-9]*[a,b,c,d,e,f,g,h,s,bp]+)\\s+\\+\\s+(0x[0-9a-fA-F]+|[0-9]+)\\)$"
-
-// #define PATTERN_OPCODE_ONLY                     "^([a-zA-Z]+)$"
-
-// #define PATTERN_OPCODE_VALUE                    "^(\\w+)\\s+(0x[0-9a-fA-F]+|[0-9]+)$"
-// #define PATTERN_DEFINED_LABEL                   "^(\\w*):$"
-
-// #define PATTERN_OPCODE_ADDR_AS_REG              "^([a-zA-Z]+)\\s+\\(\\s*(0x[0-9a-fA-F]+|[0-9]+)\\)\\s+as\\+(single|double|quad)\\s*->\\s*([r|R][0-9a-zA-Z]+)$"
-// #define PATTERN_OPCODE_REG_ADDR_AS              "^([a-zA-Z]+)\\s+\\(\\s*(0x[0-9a-fA-F]+|[0-9]+)\\)\\s+as\\+(single|double|quad)\\s*->\\s*([r|R][0-9a-zA-Z]+)\\s+as\\+(single|double|quad)$"
-// #define PATTERN_OPCODE_VALUE_ADDR_AS            "^([a-zA-Z]+)\\s+(0x[0-9a-fA-F]+|[0-9]+)\\s*->\\s*\\((0x[0-9a-fA-F]+|[0-9]+)\\)\\s+as\\+(single|double|quad)$"
-
-// #define PATTERN_OPCODE_REG_SYM_REG              "^(\\w+)\\s+([rR][0-9a-zA-Z]+)\\s*(==|<=?|>=?)\\s*([rR][0-9a-zA-Z]+)$"
-// #define PATTERN_OPCODE_REG_MEMORY_SYM_REG       "^(\\w+)\\s+\\(\\s*([rR]\\d+\\w+)\\s*(\\+)?\\s*(0x[0-9a-fA-F]+|(\\d+))?\\s*\\)\\s*(==|<=?|>=?)\\s*([rR]\\d+\\w+)\\s*$"
-// #define PATTERN_OPCODE_REG_SYM_REG_MEMORY       "^(\\w+)\\s+([rR]\\d+\\w+)\\s*(==|<=?|>=?)\\s*\\(\\s*([rR]\\d+\\w+)\\s*(\\+)?\\s*(0x[0-9a-fA-F]+|(\\d+))?\\s*\\)\\s*$"
-// #define PATTERN_OPCODE_VALUE_SYM_REG            "^(\\w+)\\s+(0x[0-9a-fA-F]+|\\d+)\\s*(==|<=?|>=?)\\s*([rR]\\d+[a-z][p]?)\\s*$"
-
 //#include <regex.h>
 #include <stdint.h>
 
@@ -57,6 +26,18 @@
 
 //regex_matches_t* regex_matches(const char* pattern, const char* text);
 // void             free_regex_matches(regex_matches_t* ptr);
+
+// This define give string only
+#define INS_OPCODE_REG_REG(op, rs, rd)              op + " " + rs + " -> " + rd
+#define INS_OPCODE_REGOFF_REG(op, rs, off, rd)      op + " " + rs + "(" + off + ") -> " + rd
+#define INS_OPCODE_REG_REGOFF(op, rs, rd, off)      op + " " + rs + " -> " + rd + "(" + off + ")"
+#define INS_OPCODE_VALUE_REG(op, val, rd)           op + " " + std::to_string( val ) + " -> " + rd
+#define INS_OPCODE_REG_VALUE(op, rs, val)           op + " " + rs + " -> " + val
+#define INS_OPCODE_VALUEOFF_REG(op, val, off, rd)   op + " " + val + "(" + off + ") -> " + rd 
+#define INS_OPCODE_REG_VALUEOFF(op, rs, val, off)   op + " " + rs + " -> " + val + "(" + off + ")"
+#define INS_OPCODE_REG(op, r)                       op + " " + r
+#define INS_OPCODE_VALUE(op, val)                   op + " " + val
+#define INS_OPCODE(op)                              op
 
 void new_label_name(const char* name, int size, uint32_t dest, uint32_t address, uint8_t make_child);
 void push_label(const char* name, int size, uint32_t dest);

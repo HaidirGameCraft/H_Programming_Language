@@ -1,0 +1,32 @@
+=region text
+main:
+    mov $message, rd
+    call $print
+
+    mov $load_boot_msg, rd
+    call $print
+
+.halt:
+    go $.halt
+
+print:
+    xor ra, ra
+    or 0x0100, ra
+.loop:
+    lods rd, ra
+    cmp 0, ra
+    goe $.done
+    int 0x13
+
+    add 1, rd
+    go $.loop
+.done:
+    ret
+
+=region data
+message:
+=ascii "Hello, World"
+=single 0x0A, 0x00
+load_boot_msg:
+=ascii "Load Boot loader"
+=single 0x0A, 0x00

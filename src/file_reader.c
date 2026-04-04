@@ -31,3 +31,19 @@ void h_loadFile( uint8_t* memory ) {
 void h_closeFile() {
     fclose( file );
 }
+
+void bin_openFile( const char* filename ) {
+    file = fopen( filename, "rb+");
+    if( !file )
+        assert( 0 && "Error: could not open the file");
+}
+void bin_loadFile( uint8_t* memory ) {
+    fseek( file, 0, SEEK_END);
+    uint64_t size = ftell( file );
+    fseek( file, 0, SEEK_SET );
+
+    fread( (void*) memory, size, 1, file );
+}
+void bin_closeFile() {
+    fclose( file );
+}

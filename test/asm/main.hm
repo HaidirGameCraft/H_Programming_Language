@@ -1,0 +1,41 @@
+=region text
+
+main:
+    push rp
+    mov rs, rp
+
+    mov 0, rc
+.loop:
+    cmp 10, rc
+    goge $.loop_end
+    mov $message, ra 
+    pnt ra
+    add 1, rc
+
+
+    go $.loop
+.loop_end:
+
+    mov 10, ra
+    pct ra
+    
+    mov 10, rc
+.loop2:
+    cmp 0, rc
+    gole $.loop2_end
+
+    mov $message, ra
+    pnt ra
+
+    sub 1, rc
+    go $.loop2
+.loop2_end:
+    mov rp, rs
+    pop rp
+    ret
+
+
+=region data
+message:
+=ascii "Hello, World"
+=single 0x0A, 0x00

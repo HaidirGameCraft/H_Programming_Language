@@ -5,12 +5,14 @@
 #include "compiler/Config.h"
 #include "compiler/Variable.hpp"
 #include <array>
+#include <stdint.h>
 #include <cassert>
 #include <cctype>
 #include <cstdio>
 #include <ios>
 #include <tools/memory.h>
 #include <memory>
+#include <asrt.h>
 #include <string.h>
 
 vector<Token*> Tokenizer::extract(string instruction) {
@@ -72,6 +74,29 @@ vector<Token*> Tokenizer::extract(string instruction) {
             strs.push_back(__tmp);
             __tmp.clear();
         }
+        else if ( c == '\'' )
+        {
+
+            if( __tmp.size() != 0 )
+            {
+                strs.push_back( __tmp );
+                __tmp.clear();
+            }
+            __tmp += "\'";
+            i++;
+
+            // Must be single character not string character
+            // Exit when there are many character inside '...'
+            if( instruction[i] != '\'' ) {
+                EXITFAIL(instruction[i + 1] == '\'', printf("[Syntax Error]: cannot be assign as string on char %i\n", instruction[i]))
+                __tmp += instruction[i];
+            }
+            
+            __tmp += '\'';
+            i++;
+            strs.push_back(__tmp);
+            __tmp.clear();
+        }
         else if ( Tokenizer::isSymbols( c ) )
         {
             if( __tmp.size() != 0 )
@@ -116,7 +141,15 @@ vector<Token*> Tokenizer::extract(string instruction) {
           }
           else if ( str[0] == '\"' && str[str.size() - 1] == '\"' )
           {
-              token->setType(TokenType_StringType);
+                token->setName( str.substr(1, str.size() - 1 ) );
+                token->setType(TokenType_StringType);
+          }
+          else if ( str[0] == '\'' && str[str.size() - 1] == '\'') {
+
+                // Try it for testing
+                if( str[0] != str[str.size() - 1] )
+                    token->setName( str[1] + "" );
+                token->setType(TokenType_CharType);
           }
           else if ( str[0] == ')' || str[0] == '(' || str[0] == '[' || str[0] == ']')
           {
@@ -159,17 +192,14 @@ vector<Token*> Tokenizer::extract(string instruction) {
                     tokens.push_back( functionToken );
                     continue;
                 }
-                else if ( i + 1 < strs.size() && strs[i + 1] == "[" )
-                {
+                else {
                     __free( token );
-                    ArrayToken* arrayToken = (ArrayToken*) __malloc( sizeof( ArrayToken ) );
-                    arrayToken->setType( TokenType_ArrayType );
-                    arrayToken->setName( str );
-                    tokens.push_back( arrayToken );
+                    VariableToken* varToken = ( VariableToken* ) __malloc( sizeof( VariableToken ));
+                    varToken->setType(TokenType_VariableType);
+                    varToken->setName( str );
+                    tokens.push_back( varToken );
                     continue;
                 }
-                else
-                    token->setType(TokenType_VariableType);
           }
 
         token->setName( str );
@@ -193,6 +223,7 @@ void Tokenizer::AnalysisBrackets( vector<Token*> tokens ) {
                 bracket_idx.push_back( brk_tk );
             else if ( brk_tk->getName() == ")" || brk_tk->getName() == "]")
             {
+            
                 if( bracket_idx.size() == 0 )
                 {
                     assert( false && "BracketError: could not find the start of '(' or '['");
@@ -264,42 +295,49 @@ vector<Token*> Tokenizer::AnalysisTokenizer( vector<Token*> tokens ) {
             }
             if( token->getName() == "*" )
             {
-                assert( rightToken != nullptr && "AnalysisError: Could not find right token for '&'");
+                assert( rightToken != nullptr && "AnalysisError: Could not find right token");
+                
                 if( leftToken != nullptr )
                 {
                     // When the left token is operation, condition or equal, we can make it as address
-                    if( Tokenizer::isSymbols( leftToken->getName()[0] ) ||  Tokenizer::isOperator( leftToken->getName() ) || Tokenizer::isConditionOperator( leftToken->getName() ) || leftToken->getName() == "=" )
+                    if( 
+                        leftToken->getType() == TokenType_SymbolsType ||
+                        leftToken->getType() == TokenType_AssignType ||
+                        leftToken->getType() == TokenType_DataType ||
+                        leftToken->getType() == TokenType_OperatorType
+                     )
                     {
-                        if( rightToken->getType() == TokenType_VariableType )
+                        assert( rightToken->getType() == TokenType_VariableType && "AnalysisError: expected 'Variable'");
+                        ((VariableToken*) rightToken)->isPointer = true;
+                        newTokens.push_back( (Token*) rightToken );
+                        __free( token );
+                        i += 1; // skipping Variable Token
+                        if( i + 1 < tokens.size() && tokens[i + 1]->getName() == "[" )
                         {
-                            //rightToken->setName( rightToken->getName() );
-                            rightToken->setType( TokenType_PointerType );
-                            newTokens.push_back( rightToken );
-                            __free( token );
-                            i += 1; // skipping Variable Token
-                            continue;
-                        } else {
-                            assert( false && "AnalysisError: On the Right Token, It is not Variable Type");
+                            ((VariableToken*) rightToken)->isArray = true;
                         }
+                        continue;
                     }
                 }
                 else {
                     //rightToken->setName( rightToken->getName() );
-                    if( rightToken->getType() == TokenType_VariableType ) {
-                        rightToken->setType( TokenType_PointerType );
-                        newTokens.push_back( rightToken );
-                        __free( token );
-                        i += 1; // skipping Variable Token
-                        continue;
+                    assert( rightToken->getType() == TokenType_VariableType && "AnalysisError: expected 'Variable'");
+                    ((VariableToken*) rightToken)->isPointer = true;
+                    newTokens.push_back( (Token*) rightToken );
+                    __free( token );
+                    i += 1; // skipping Variable Token
+                    if( i + 1 < tokens.size() && tokens[i + 1]->getName() == "[" )
+                    {
+                        ((VariableToken*) rightToken)->isArray = true;
                     }
+                    continue;
                 }
             }
-
             else if ( token->getName() == "+" || token->getName() == "-" )
             {
                 if( leftToken != nullptr ) {
                     if( Tokenizer::isOperator( leftToken->getName() ) || Tokenizer::isConditionOperator( leftToken->getName() ) || leftToken->getName() == "=" ) {
-                        if( rightToken->getType() == TokenType_NumberType || rightToken->getType() == TokenType_VariableType || rightToken->getType() == TokenType_PointerType )
+                        if( rightToken->getType() == TokenType_NumberType || rightToken->getType() == TokenType_VariableType )
                         {
                             if( token->getName() == "-" )
                             {
@@ -331,6 +369,17 @@ vector<Token*> Tokenizer::AnalysisTokenizer( vector<Token*> tokens ) {
                 }
             }
         }
+        else if ( token->getType() == TokenType_BracketType && token->getName() == "[") {
+            // checking if the right side has bracket
+            if( leftToken != nullptr && leftToken->getType() == TokenType_VariableType ) {
+                ((VariableToken*) token)->isArray = true;
+            }
+        }
+        else if ( token->getType() == TokenType_VariableType ) {
+            // checking if the right side has bracket
+            if( rightToken != nullptr && rightToken->getType() == TokenType_BracketType && rightToken->getName() == "[" )
+                ((VariableToken*) token)->isArray = true;
+        }
 
         newTokens.push_back( token );   // push into new tokens
    }
@@ -353,7 +402,7 @@ bool Tokenizer::isKeyWord(string keyword) {
 }
 
 bool Tokenizer::isOperator( char c ) {
-    const char* symb = "+-*/<>=&|";
+    const char* symb = "+-*/%<>=&|";
     for( int i = 0; i < strlen( symb ); i++ )
         if( symb[i] == c )
             return true;
@@ -393,6 +442,7 @@ bool Tokenizer::isOperator( string c ) {
     return  c == "+" ||
             c == "-" ||
             c == "*" ||
+            c == "%" ||
             c == "/" ||
             c == "&" ||
             c == "|" ;

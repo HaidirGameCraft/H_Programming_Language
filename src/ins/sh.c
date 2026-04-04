@@ -4,7 +4,6 @@ uint8_t instruction_sh_reg_reg(INSTRUCTION_SET_ARGS) {
     VARIABLE_INSTRUCTION
     REGMEM_DEFINED(memory, pc);
 
-    uint8_t symbols = read8(memory, pc);
     sreg = getreg( reg, __register.dreg );
     dreg = getreg( reg, __register.sreg );
     if( symbols == SYM_SHIFT_LEFT )
@@ -20,7 +19,6 @@ uint8_t instruction_sh_reg_value(INSTRUCTION_SET_ARGS) {
     VARIABLE_INSTRUCTION
     REGMEM_DEFINED(memory, pc);
 
-    uint8_t symbols = read8(memory, pc);
     dreg = getreg( reg, __register.sreg );
     value = read32( memory, pc );
     if( symbols == SYM_SHIFT_LEFT )

@@ -20,11 +20,13 @@
 */
 
 
-#define PREFIX_SYM_INC      1 << 3
-#define PREFIX_REG_INC      1 << 4
-#define PREFIX_OFF_INC      1 << 5
-#define PREFIX_VAL_INC      1 << 6
-#define PREFIX_EXT_INC      1 << 7
+// Swap the position (e.g MOV RA -> VAL -> (Swap) -> MOV VAL -> RA )
+#define PREFIX_SWP_INC      (1 << 2)
+#define PREFIX_SYM_INC      (1 << 3)
+#define PREFIX_REG_INC      (1 << 4)
+#define PREFIX_OFF_INC      (1 << 5)
+#define PREFIX_VAL_INC      (1 << 6)
+#define PREFIX_EXT_INC      (1 << 7)
 
 #define EXT_PREFIX_ADDRSIZE 1 << 0
 
@@ -92,7 +94,15 @@ uint32_t create_instruction(uint8_t* memory, uint32_t pc, const char* instructio
                                 uint32_t* dreg = NULL; \
                                 \
                                 uint32_t offset = 0; \
-                                uint32_t value = 0;
+                                uint32_t value = 0; \
+                                uint16_t symbols = 0;
+
+#define VARIABLE_DEFINED( reg, memory, pc )  REGMEM_DEFINED( memory, pc ) \
+                                        sreg = getreg( reg, __register.sreg ); \
+                                        dreg = getreg( reg, __register.dreg ); \
+                                        if( prefix & PREFIX_OFF_INC )   offset = read16( memory, pc ); \
+                                        else if ( prefix & PREFIX_SYM_INC ) symbols = read16( memory, pc ); \
+                                        if( prefix & PREFIX_VAL_INC ) value = read32( memory, pc );
 #define REGMEM_DEFINED(m, p)    if( prefix & PREFIX_REG_INC ) \
                                     memset(&__register, read8(m, p), 1);
 
@@ -210,3 +220,10 @@ uint32_t create_instruction(uint8_t* memory, uint32_t pc, const char* instructio
 #define OPCODE_STP          0x90
 
 #define OPCODE_GONC         0x73
+#define OPCODE_GOL          0x74
+#define OPCODE_GOLE         0x75
+#define OPCODE_GOG          0x76
+#define OPCODE_GOGE         0x77
+#define OPCODE_GOE          0x78
+#define OPCODE_GONE         0x79
+#define OPCODE_CMP          0x7A

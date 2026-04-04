@@ -12,6 +12,7 @@ enum TokenType {
     TokenType_NumberType,
     TokenType_OperationType,
     TokenType_StringType,
+    TokenType_CharType,
     TokenType_LabelType,
     TokenType_BracketType,
     TokenType_RegisterType,

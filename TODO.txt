@@ -1,0 +1,4 @@
+H Programming Language ( TODO List )
+- Fixing Global Array ( DONE )
+- Fixing Local Array
+- Syntax Error Detection

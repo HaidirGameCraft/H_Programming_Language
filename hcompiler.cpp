@@ -52,7 +52,7 @@ void test1() {
         printf("\n\n");
 
         std::vector<std::string> codeCompile = Compiler::CompileTokens( tokens );
-        if( Function::current_token != nullptr )
+        if( Function::currentFunction != nullptr )
         {
             if( ControlStructure::current_controlStruct != nullptr )
             {
@@ -60,7 +60,7 @@ void test1() {
                     ControlStructure::current_controlStruct->code.push_back( code );
             } else {
                 for(std::string& __c : codeCompile )
-                    Function::current_token->codeSegment.push_back( __c );
+                    Function::currentFunction->codeSegment.push_back( __c );
             }
         }
         else {
@@ -102,6 +102,7 @@ int main(int argc, const char** argv) {
     uint8_t is_lowlevelfile = 0;
     uint8_t is_run = 0;
     uint8_t show_temp = 0;
+    uint8_t binary_format = 0;
 
     std::vector<std::string> filenames;
     std::string file = "";
@@ -119,6 +120,7 @@ int main(int argc, const char** argv) {
             printf("-o              <outputFile>    : create new OutputFile after compiling\n");
             printf("-c --compile    <file...>       : read the hi (H High Level Language) files\n");
             printf("-cl             <file...>       : read the hm (H Assembly Language) files\n");
+            printf("-ub --use-binary                : Write it as binary format\n");
             printf("-h --help                       : help | details \n");
             return EXIT_SUCCESS;
         } else if ( strcmp("-c", argv[i]) == 0 || strcmp("--compile", argv[i]) == 0 )
@@ -138,9 +140,14 @@ int main(int argc, const char** argv) {
             }
 
             __output_file = argv[i + 1];
+            i = i + 1;
         } else if ( strcmp("-s", argv[i]) == 0 ) {
             show_temp = true;
         } 
+        else if ( strcmp(argv[i], "-ub") == 0 || strcmp(argv[i], "--use-binary") == 0 )
+        {
+            hbyte_use_binary_format( 1 );
+        }
         else {
             std::string tmp( argv[i] );
             if( is_compile )
@@ -159,11 +166,10 @@ int main(int argc, const char** argv) {
             code_asm.push_back( global_code );
 
         code_asm.push_back("=region text");
-        //code_asm.push_back("__init:");
-        //code_asm.push_back("mov 0x500 -> rs");
-        //code_asm.push_back("mov rs -> rp");
-        //code_asm.push_back("call $main");
-        //code_asm.push_back("stp");
+        // code_asm.push_back("__initCode:\n");
+        // for( string& initCode : File::initCode )
+        //     code_asm.push_back( initCode );
+
         for( string& code : File::code )
             code_asm.push_back( code );
         code_asm.push_back("=region data");

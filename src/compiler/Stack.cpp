@@ -37,28 +37,30 @@ int Stack::getTotalStackSizeVariable() {
 }
 
 Variable* Stack::getVariable(const std::string &name) {
-    for( Variable* var : Variable::globalVariable )
-        if( var->getName() == name )
-            return var;
-
-    if( Function::current_token != nullptr )
-        for( Variable* var : Function::current_token->parameters )
-            if( var->getName() == name )
-                return var;
-
+    // Find the variable in Local Variable
     for( Stack* stack : Stack::stacks )
         for( Variable* var : stack->variables )
             if( var->getName() == name )
                 return var;
+            
+    // Find the variable in Formal Parameters
+    if( Function::currentFunction != nullptr )
+        for( Variable* var : Function::currentFunction->parameters )
+            if( var->getName() == name )
+                return var;
 
+    // Find the variable in Global Variable
+    for( Variable* var : Variable::globalVariable )
+        if( var->getName() == name )
+            return var;
     return nullptr;
 }
 
 int Stack::getStackIndex(const std::string &name) {
     int stackIdx = 0;
-    if( Function::current_token != nullptr ) {
+    if( Function::currentFunction != nullptr ) {
         stackIdx = 8;
-        for( Variable* var : Function::current_token->parameters )
+        for( Variable* var : Function::currentFunction->parameters )
         {
             if( var->getName() == name )
             {

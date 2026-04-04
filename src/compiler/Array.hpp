@@ -11,3 +11,9 @@ public:
 
     static void GetArrayTokens( Array* array, vector<Token*>* tokens, int start_index );
 };
+
+class ArrayListToken : public Token {
+public:
+    // tokens after parser run
+    vector<Token*> tokens;
+};

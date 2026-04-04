@@ -2,7 +2,8 @@
 #include "hbyte/Label.hpp"
 #include "hbyte/Token.hpp"
 #include "hbyte/filereader.h"
-#include "hbyte/inst/instruction.h"
+// #include "hbyte/inst/instruction.h"
+#include "ins/inst.h"
 #include "inst.h"
 
 #include <cstdio>
@@ -160,6 +161,8 @@ vector<Token*> BracketChecker(vector<Token*> tokens) {
 }
 
 void HByteCompiler::Compile(vector<Token *> tokens) {
+    if( tokens.size() == 0 )
+        return;
     tokens = BracketChecker(tokens);
     int isr = ISRIdentifier(tokens);
     uint8_t prefix = 0;
@@ -172,50 +175,53 @@ void HByteCompiler::Compile(vector<Token *> tokens) {
 
     if( tokens[0]->getType() == TokenType_CommandType )
     {
-        InstructionSet* is = nullptr;
+        h_text_compile* is = nullptr;
 
 #define find_instruction_set( x ) \
-        for( int i = 0; i < sizeof( x ) / sizeof( InstructionSet ); i++ ) { \
+        for( int i = 0; i < sizeof( x ) / sizeof( h_text_compile ); i++ ) { \
             is = &x[i]; \
-            if( strcmp(tokens[0]->getName().c_str(), is->name) == 0 ) \
+            if( strcmp(tokens[0]->getName().c_str(), is->opcode_name) == 0 ) \
                 break; \
             is = nullptr; \
         }
 
         if( isr == ISR_Opcode_Reg_Reg ) {
-            find_instruction_set(instruction_set_rr_list);
+            find_instruction_set(instruction_maker_opcode_reg_reg);
         }
         else if ( isr == ISR_Opcode_RegOff_Reg ) {
-            find_instruction_set(instruction_set_rfr_list);
+            find_instruction_set(instruction_maker_opcode_regoff_reg);
         }
         else if ( isr == ISR_Opcode_Reg_RegOff ) {
-            find_instruction_set(instruction_set_rrf_list);
+            find_instruction_set(instruction_maker_opcode_reg_regoff);
         }
         else if ( isr == ISR_Opcode_Value_Reg ) {
-            find_instruction_set(instruction_set_vr_list);
+            find_instruction_set(instruction_maker_opcode_value_reg);
         }
         else if ( isr == ISR_Opcode_Reg_Value ) {
-            find_instruction_set(instruction_set_rv_list);
+            find_instruction_set(instruction_maker_opcode_reg_value);
         }
         else if ( isr == ISR_Opcode_ValueOff_Reg ) {
-            find_instruction_set(instruction_set_vfr_list);
+            find_instruction_set(instruction_maker_opcode_valueoff_reg);
         }
         else if ( isr == ISR_Opcode_Reg_ValueOff ) {
-            find_instruction_set(instruction_set_rvf_list);
+            find_instruction_set(instruction_maker_opcode_reg_valueoff);
         }
-        else if ( isr == ISR_Opcode_Value_RegOff ) {
-            find_instruction_set(instruction_set_vrf_list);
-        }
+        // else if ( isr == ISR_Opcode_Value_RegOff ) {
+        //     find_instruction_set(instruction_set_vrf_list);
+        // }
         else if ( isr == ISR_Opcode_Reg ) {
-            find_instruction_set(instruction_set_r_list);
+            find_instruction_set(instruction_maker_opcode_reg);
         }
         else if ( isr == ISR_Opcode_Value ) {
-            find_instruction_set(instruction_set_v_list);
+            find_instruction_set(instruction_maker_opcode_value);
         }
         else if ( isr == ISR_Opcode ) {
-            find_instruction_set(instruction_set_op_list);
+            find_instruction_set(instruction_maker_opcode);
         }
-        assert(is != 0);
+        EXITFAIL(is != 0, {
+            printf("Error: There is no matcher of ISR\n");
+            for( Token* token : tokens ) token->print(0);
+        })
 
         prefix = is->prefix;
         ext_prefix = is->ext_prefix;
@@ -284,6 +290,7 @@ void HByteCompiler::Compile(vector<Token *> tokens) {
     {
        Label_updateAddress(tokens[0]->getName(), pc); 
     }
+    // =[single, double, quad, ascii, rs, rd, rq]
     else if ( tokens[0]->getType() == TokenType_SymbolsType && tokens[0]->getName() == "=" )
     {
         Token* data_type = tokens[1];
@@ -294,21 +301,48 @@ void HByteCompiler::Compile(vector<Token *> tokens) {
             for(int i = 0; i < text.size(); i++)
                 pc = hbyte_write8(pc, text[i]);
         }
-        else if ( data_type->getName() == "single" )
-            pc = hbyte_write8(pc, convertNumber( data->getName() ) & 0xFF );
-        else if ( data_type->getName() == "double" )
-            pc = hbyte_write16(pc, convertNumber( data->getName() ) & 0xFFFF );
+        else if ( data_type->getName() == "single" ) {
+            for( int i = 2; i < tokens.size(); i++) {
+                if( tokens[i]->getType() == TokenType_SymbolsType && tokens[i]->getName() == "," ) continue;
+                else if ( tokens[i]->getType() == TokenType_CharType ) {
+                    // When the token as CharType
+                    pc = hbyte_write8(pc, tokens[i]->getName()[1] & 0xFF );
+                } else 
+                    pc = hbyte_write8(pc, convertNumber( tokens[i]->getName() ) & 0xFF );
+            }
+        }
+        else if ( data_type->getName() == "double" ) {
+            for( int i = 2; i < tokens.size(); i++) {
+                if( tokens[i]->getType() == TokenType_SymbolsType && tokens[i]->getName() == "," ) continue;
+                pc = hbyte_write16(pc, convertNumber( tokens[i]->getName() ) & 0xFFFF );
+            }
+        }
         else if ( data_type->getName() == "quad" )
-            pc = hbyte_write32(pc, convertNumber( data->getName() ) & 0xFFFFFFFF );
+        {   
+            for( int i = 2; i < tokens.size(); i++) {
+                if( tokens[i]->getType() == TokenType_SymbolsType && tokens[i]->getName() == "," ) continue;
+                pc = hbyte_write32(pc, convertNumber( tokens[i]->getName() ) & 0xFFFFFFFF );
+            }
+        }
         else if ( data_type->getName() == "rs" )
             for( int i = 0; i < convertNumber(data->getName()); i++)
                 pc = hbyte_write8(pc, 0);
         else if ( data_type->getName() == "rd" )
             for( int i = 0; i < convertNumber(data->getName()); i++)
                 pc = hbyte_write16(pc, 0);
-        else if ( data_type->getName() == "rq" )
-            for( int i = 0; i < convertNumber(data->getName()); i++)
+        else if ( data_type->getName() == "rq" ) {
+            data->print(0);
+            if( data->getType() == TokenType_LabelType )
+            {
+                Label_push(data->getName(), pc);
                 pc = hbyte_write32(pc, 0);
+            } else {
+                for( int i = 0; i < convertNumber(data->getName()); i++)
+                    pc = hbyte_write32(pc, 0);
+            }
+        }
+        // else if ( data_type->getName() == "origin" )
+        //     pc = (uint32_t) convertNumber( data->getName() );
     }
 
 

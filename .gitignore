@@ -14,3 +14,7 @@ build-linux
 compile_commands.json
 text.txt
 bin
+TODO
+libh_linker.a
+libh_linker.so
+.cache

@@ -16,6 +16,7 @@
 using namespace HByte;
 static FILE* output_file = nullptr;
 static struct hbyte_memory __memory;
+static uint8_t use_binary_format = 0;
 
 int pcCount = 0;
 static struct hbyte_region* currentRegion = nullptr;
@@ -46,6 +47,10 @@ void clearRegionMemory() {
         reg->texts.clear();
         __free( reg );
     }
+}
+
+void hbyte_use_binary_format( uint8_t use ) {
+    use_binary_format = use;
 }
 
 int hbyte_open_file( const char* filename ) {
@@ -135,8 +140,6 @@ void hbyte_compile() {
             if( tokens.size() == 0 )
                 continue;
 
-            //printf("[ASM]: %s", instruction.c_str());
-
             if( tokens[0]->getType() == HByte::TokenType_SymbolsType && tokens[0]->getName() == "=" && tokens[1]->getName() == "region")
             {
                 std::string regionName = tokens[2]->getName();
@@ -164,10 +167,12 @@ void hbyte_compile() {
     int start__ = 0;
     for( hbyte_region* region : __regionLists )
     {
+        printf("[ASM]: =region %s\n", region->nameRegion.c_str() );
         for( string& instruction : region->texts )
         {
 
             //printf("[Compiling ASM] %s", instruction.c_str());
+//            printf("[ASM] (%i): %s", instruction.size(), instruction.c_str());
             vector<Token*> tokens = Tokenizer::Extract(instruction);
             if( tokens.size() == 0 )
                 continue;
@@ -194,24 +199,34 @@ void hbyte_compile() {
 }
 
 void hbyte_createFormatFile() {
-    uint32_t addr = sizeof( h_file_header );
-    h_file_header fileHeader;
-    fileHeader.identifier = HFILEIDENTIFIER;
-    fileHeader.program_start = Label_getAddress("__init");
-    fileHeader.region_offset_start = sizeof( h_file_header );
-    fileHeader.region_count = __regionLists.size();
-    fwrite( &fileHeader, sizeof( h_file_header ), 1, output_file );
-
-    for( hbyte_region* region : __regionLists )
+    if( use_binary_format )
     {
-        region_header regHeader;
-        regHeader.size_region = region->end_addr - region->start_addr;
-        regHeader.data_offset = addr + sizeof( regHeader );
-        regHeader.memory_required = 0;
-        regHeader.next_region_offset = regHeader.data_offset + regHeader.size_region;
-        addr = addr + sizeof( regHeader ) + regHeader.size_region;
+        // Binary Format File
+        for( hbyte_region* region : __regionLists )
+        {
+            fwrite( &__memory.data[region->start_addr], region->end_addr - region->start_addr, 1, output_file );
+        }
+    } else {
+        // HByte Format File
+        uint32_t addr = sizeof( h_file_header );
+        h_file_header fileHeader;
+        fileHeader.identifier = HFILEIDENTIFIER;
+        fileHeader.program_start = Label_getAddress("__init");
+        fileHeader.region_offset_start = sizeof( h_file_header );
+        fileHeader.region_count = __regionLists.size();
+        fwrite( &fileHeader, sizeof( h_file_header ), 1, output_file );
 
-        fwrite( &regHeader, sizeof( regHeader ), 1, output_file );
-        fwrite( &__memory.data[region->start_addr], regHeader.size_region, 1, output_file );
+        for( hbyte_region* region : __regionLists )
+        {
+            region_header regHeader;
+            regHeader.size_region = region->end_addr - region->start_addr;
+            regHeader.data_offset = addr + sizeof( regHeader );
+            regHeader.memory_required = 0;
+            regHeader.next_region_offset = regHeader.data_offset + regHeader.size_region;
+            addr = addr + sizeof( regHeader ) + regHeader.size_region;
+
+            fwrite( &regHeader, sizeof( regHeader ), 1, output_file );
+            fwrite( &__memory.data[region->start_addr], regHeader.size_region, 1, output_file );
+        }
     }
 }

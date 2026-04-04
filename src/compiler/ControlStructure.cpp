@@ -73,13 +73,20 @@ vector<string> ControlStructure::RepetitionControlCompiler( vector<Token*> token
         for( string& cnd : condition_code ) whileCondition->code.push_back( cnd );
 
         // Register Condition
-        if( parser->getType() == TokenType_OperatorType && 
-            ( parser->getName() == "&&" || parser->getName() == "||" )) {
-            Register* condition_reg = Register::popRegister();
-            whileCondition->code.push_back("cnd " + condition_reg->name + " != 0" );
-            Register::UnusedRegister( condition_reg );
+        if( parser->getType() == TokenType_OperatorType )
+        {
+            if( parser->getName() == "&&" || parser->getName() == "||" ) {
+                Register* reg = Register::popRegister();
+                whileCondition->code.push_back("cmp 0, " + reg->name + " ");
+                whileCondition->code.push_back("gone $" + endLabel );
+                Register::UnusedRegister( reg );
+            } else if ( parser->getName() == "<=" ) whileCondition->code.push_back("gog $" + endLabel );
+            else if ( parser->getName() == "<" )  whileCondition->code.push_back("goge $" + endLabel );
+            else if ( parser->getName() == ">=" ) whileCondition->code.push_back("gol $" + endLabel );
+            else if ( parser->getName() == ">" )  whileCondition->code.push_back("gole $" + endLabel );
+            else if ( parser->getName() == "==" ) whileCondition->code.push_back("gone $" + endLabel );
+            else if ( parser->getName() == "!=" ) whileCondition->code.push_back("goe $" + endLabel );
         }
-        whileCondition->code.push_back("gonc $" + endLabel );
 
         // Make new Stack 
         Stack::CreateStack();
@@ -95,7 +102,7 @@ vector<string> ControlStructure::RepetitionControlCompiler( vector<Token*> token
 
         vector<string> codes;
         for( string& code : current_while->code) codes.push_back( code );
-
+        
         int stackSize = Stack::currentStack->getTotalStackSizeVariable();
         Stack::currentStack->clearVariables();
 
@@ -136,8 +143,8 @@ vector<string> ControlStructure::SelectionControlCompiler( vector<Token*> tokens
             ifCondition->pushCode(ifCondition->getNextSelectLabel() + ":");
 
             string label_name = "." + GenerateRandomName();
-            if( Function::current_token != nullptr )
-                label_name += "_" + Function::current_token->getName();
+            if( Function::currentFunction != nullptr )
+                label_name += "_" + Function::currentFunction->getName();
             return {};
         }
         else if ( if_token->getName() == "endif" )
@@ -149,6 +156,8 @@ vector<string> ControlStructure::SelectionControlCompiler( vector<Token*> tokens
                 ifCondition->pushCode( "add " + std::to_string( stackSizeVariable ) + " -> rs" );
             Stack::RemoveStack();   // Removing the latest Stack
 
+            ifCondition->pushCode("go $" + ifCondition->getNextSelectLabel() );
+            ifCondition->pushCode(ifCondition->getNextSelectLabel() + ":");
             ifCondition->pushCode(ifCondition->getEndifName() + ":");
             vector<string> ret_code = ifCondition->code;
             ifCondition->code.clear();
@@ -198,21 +207,30 @@ vector<string> ControlStructure::SelectionControlCompiler( vector<Token*> tokens
         {
             ControlStructure* ifCondition = (ControlStructure*) __malloc( sizeof( ControlStructure ) );
             string label_name = "." + GenerateRandomName();
-            if( Function::current_token != nullptr )
-                label_name += "_" + Function::current_token->getName();
+            if( Function::currentFunction != nullptr )
+                label_name += "_" + Function::currentFunction->getName();
 
             ifCondition->setNextSelectLabel( label_name );
-            ifCondition->setEndIfName("." + GenerateRandomName() + "_" + Function::current_token->getName());
+            ifCondition->setEndIfName("." + GenerateRandomName() + "_" + Function::currentFunction->getName());
 
             for(string& str : condition_code_asm)
                 ifCondition->pushCode(str);
-            if( parser->getType() == TokenType_OperatorType && ( parser->getName() == "&&" || parser->getName() == "||" ) )
+                
+            if( parser->getType() == TokenType_OperatorType )
             {
-                Register* reg = Register::popRegister();
-                ifCondition->pushCode("cnd " + reg->name + " != 0 ");
-                Register::UnusedRegister( reg );
+                if( parser->getName() == "&&" || parser->getName() == "||" ) {
+                    Register* reg = Register::popRegister();
+                    ifCondition->pushCode("cmp 0, " + reg->name + " ");
+                    ifCondition->pushCode("gone $" + label_name );
+                    Register::UnusedRegister( reg );
+                } else if ( parser->getName() == "<=" ) ifCondition->pushCode("gog $" + label_name );
+                else if ( parser->getName() == "<" ) ifCondition->pushCode("goge $" + label_name );
+                else if ( parser->getName() == ">=" ) ifCondition->pushCode("gol $" + label_name );
+                else if ( parser->getName() == ">" ) ifCondition->pushCode("gole $" + label_name );
+                else if ( parser->getName() == "==" ) ifCondition->pushCode("gone $" + label_name );
+                else if ( parser->getName() == "!=" ) ifCondition->pushCode("goe $" + label_name );
             }
-            ifCondition->pushCode("gonc $" + label_name);    // When the condition is FALSE
+            // ifCondition->pushCode("gonc $" + label_name);    // When the condition is FALSE
 
             // Make new Stack for Selection Control
             Stack::CreateStack();
@@ -230,19 +248,27 @@ vector<string> ControlStructure::SelectionControlCompiler( vector<Token*> tokens
             ifCondition->pushCode(ifCondition->getNextSelectLabel() + ":");
 
             string label_name = "." + GenerateRandomName();
-            if( Function::current_token != nullptr )
-                label_name += "_" + Function::current_token->getName();
+            if( Function::currentFunction != nullptr )
+                label_name += "_" + Function::currentFunction->getName();
 
             ifCondition->setNextSelectLabel( label_name );
             for(string& str : condition_code_asm)
                 ifCondition->pushCode(str);
-            if( parser->getType() == TokenType_OperatorType && ( parser->getName() == "&&" || parser->getName() == "||" ) )
+
+            if( parser->getType() == TokenType_OperatorType )
             {
-                Register* reg = Register::popRegister();
-                ifCondition->pushCode("cnd " + reg->name + " != 0 ");
-                Register::UnusedRegister( reg );
+                if( parser->getName() == "&&" || parser->getName() == "||" ) {
+                    Register* reg = Register::popRegister();
+                    ifCondition->pushCode("cmp 0, " + reg->name + " ");
+                    ifCondition->pushCode("gone $" + label_name );
+                    Register::UnusedRegister( reg );
+                } else if ( parser->getName() == "<=" ) ifCondition->pushCode("gog $" + label_name );
+                else if ( parser->getName() == "<" ) ifCondition->pushCode("goge $" + label_name );
+                else if ( parser->getName() == ">=" ) ifCondition->pushCode("gol $" + label_name );
+                else if ( parser->getName() == ">" ) ifCondition->pushCode("gole $" + label_name );
+                else if ( parser->getName() == "==" ) ifCondition->pushCode("gone $" + label_name );
+                else if ( parser->getName() == "!=" ) ifCondition->pushCode("goe $" + label_name );
             }
-            ifCondition->pushCode("gonc $" + label_name);
 
             return {};
         }

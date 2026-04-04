@@ -1,4 +1,13 @@
 =region text
+printf:
+    push rp
+    mov rs -> rp
+    mov 3 -> ra
+    int 0x20
+    mov rp -> rs
+    pop rp
+    ret
+
 print:
     push rp
     mov rs -> rp
@@ -11,10 +20,21 @@ print:
 println:
     push rp
     mov rs -> rp
-    lod rp(-8) -> ra
+    lod rp(8) -> ra
     push ra
     call $print
     add 4 -> rs
     pct 10
+    pop rp
+    ret
+
+printc:
+    push rp
+    mov rs -> rp
+
+    lods rp(8) -> ra
+    pct ra
+
+    mov rp -> rs
     pop rp
     ret

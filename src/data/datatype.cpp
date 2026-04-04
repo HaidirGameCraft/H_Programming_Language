@@ -14,7 +14,7 @@ static int datatype_define(const char* text, uint8_t* memory, uint32_t* pc, int 
     uint8_t size_data = 0;
     for(int i = 1; i < match.size(); i++) {
         std::string  __match = match[i].str();
-        char* mtext = (char*) strcpy(__match.c_str(), __match.size() );
+        char* mtext = (char*) __strcpy(__match.c_str(), __match.size() );
         int length = strlen( mtext );
         
         if( i == 1 )
@@ -77,7 +77,7 @@ static int reserved_datatype_define(const char* text, uint8_t* memory, uint32_t*
     uint8_t size_data = 0;
     for(int i = 1; i < match.size(); i++) {
         std::string  __match = match[i].str();
-        char* mtext = (char*) strcpy(__match.c_str(), __match.size() );
+        char* mtext = (char*) __strcpy(__match.c_str(), __match.size() );
         int length = __match.size();
         
         if( i == 1 )

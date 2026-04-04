@@ -56,4 +56,9 @@ void h_openFile( const char* name );
 void h_loadFile( uint8_t* memory );
 void h_closeFile();
 
+// Binary File Format
+void bin_openFile( const char* filename );
+void bin_loadFile( uint8_t* memory );
+void bin_closeFile();
+
 

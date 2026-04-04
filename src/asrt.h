@@ -13,6 +13,8 @@
                     }
 #else
 #define ASSERT(x) __assert_fail(x, __FILE__,  __LINE__, __ASSERT_FUNCTION);
+#define EXITFAIL(expr, x)   if( !(expr) ){ x; exit(EXIT_FAILURE); }
+#define EXITFAILMSG(x) { x; exit(EXIT_FAILURE); }
 #endif
 
 #ifdef __WIN32__

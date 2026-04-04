@@ -23,6 +23,7 @@ struct hbyte_region {
     uint32_t end_addr;
 };
 
+void hbyte_use_binary_format( uint8_t use );
 
 int hbyte_open_file( const char* filename );
 int hbyte_open_file( FILE* file );

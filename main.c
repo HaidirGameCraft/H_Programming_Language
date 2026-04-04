@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <term.h>
 #include <interrupt.h>
+#include "memory.h"
 
 #define MAX_MEMORY_SIZE 0x00100000
 
@@ -16,6 +17,7 @@ int main(int argc, const char** argv) {
     uint8_t* memory = NULL;
     uint32_t memory_size = MAX_MEMORY_SIZE;
     uint8_t save_ram = 0;
+    uint8_t binary_file = 0;
     const char* file = NULL;
     const char* output_file = NULL;
 
@@ -27,6 +29,7 @@ int main(int argc, const char** argv) {
             printf("help: %s -h|--help\n", argv[0] );
             printf("===============================\n");
             printf("[OPTIONS]:\n");
+            printf("-ub     --use-binary    : read Binary File format\n");
             printf("-sr     --show-register : Showing the Output Register\n");
             printf("-h      --help          : help | details \n");
             printf("-save_ram               : save the memory to file\n");
@@ -42,7 +45,12 @@ int main(int argc, const char** argv) {
         } else if ( strcmp(argv[i], "-save_ram") == 0 )
         {
             save_ram = 1;
-        } else if ( strcmp(argv[i], "-sr") == 0 || strcmp(argv[i], "--show-register") == 0 )
+        }
+        else if ( strcmp(argv[i], "-ub") == 0 || strcmp( argv[i], "--use-binary") == 0 )
+        {
+            binary_file = 1;
+        } 
+        else if ( strcmp(argv[i], "-sr") == 0 || strcmp(argv[i], "--show-register") == 0 )
         {
             show_register = true;
         }
@@ -51,11 +59,11 @@ int main(int argc, const char** argv) {
         }
     }
 
-    printf("\x1B[2J\x1B[H");
+    // printf("\x1B[2J\x1B[H");
 
 
-    memory = (uint8_t*) malloc(memory_size);
-    memset( memory, 0, memory_size );
+    //  Creating virtual memory
+    memory = create_memory( memory_size );
 
 //    FILE* binary = fopen(file, "rb+");
 //    fseek(binary, 0, SEEK_END);
@@ -71,9 +79,15 @@ int main(int argc, const char** argv) {
 
 //    fread((char*) memory, 1, size, binary);
 
-    h_openFile( file );
-    h_loadFile( memory );
-    h_closeFile();
+    if( !binary_file ) {
+        h_openFile( file );
+        h_loadFile( memory );
+        h_closeFile();
+    } else {
+        bin_openFile( file );
+        bin_loadFile( memory );
+        bin_closeFile();
+    }
 
     enableRawMode();
     InitInterrupt();
@@ -82,9 +96,9 @@ int main(int argc, const char** argv) {
     int width = 0;
     int height = 0;
     GetSizeTerminal(&width, &height);
-    printf("Terminal Size: %i:%i\n", width, height);
+    // printf("Terminal Size: %i:%i\n", width, height);
 
-    cpu_set_memory(memory, memory_size);
+    cpu_set_memory( get_memory(), memory_size );
     cpu_execute( 0 );
     if( show_register )
         cpu_output();
@@ -95,14 +109,14 @@ int main(int argc, const char** argv) {
         if( !ram )
         {
             perror("Error, Cannot open the file\n");
-            free( memory );
+            clear_memory();
             return EXIT_FAILURE;
         }
 
         fwrite((char*) memory, 1, MAX_MEMORY_SIZE, ram);
     }
 
-    free( memory );
+    clear_memory();
 
     return EXIT_SUCCESS;
 }

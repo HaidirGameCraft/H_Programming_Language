@@ -31,8 +31,7 @@ void InitInterrupt() {
 }
 
 void AddInterrupt( int index, uint64_t address ) {
-
-
+    interrupts[index].handle = address;
 }
 
 void CallInterrupt( int index ) {

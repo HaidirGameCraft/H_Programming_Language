@@ -3,6 +3,7 @@
 #include "Tokenizer.hpp"
 #include "../tools/memory.h"
 #include <string.h>
+#include <asrt.h>
 
 
 namespace HByte {
@@ -68,6 +69,9 @@ vector<Token*> Tokenizer::Extract(string instruction) {
             }
             strs.push_back(__tmp);
             __tmp.clear();
+
+            if( !isSpace(byte[i]) )
+                __tmp += byte[i];
         }
         /* else if ( isOperator(c) ) // Operation Token
         {
@@ -108,6 +112,31 @@ vector<Token*> Tokenizer::Extract(string instruction) {
 
             strs.push_back(__tmp);
             __tmp.clear();
+
+            if( !isSpace(byte[i]) )
+                __tmp += byte[i];
+        }
+        else if ( c == '\'' ) {
+            if( __tmp.size() > 0 )
+            {
+                strs.push_back(__tmp);
+                __tmp.clear();
+            }
+
+            __tmp += '\'';
+            i++;
+            if( byte[i] != '\'' )
+            {
+                EXITFAIL(instruction[i + 1] == '\'', printf("[Syntax Error]: cannot be assign as string on char\n" ) )
+                __tmp += instruction[i];
+            }
+            __tmp += '\'';
+            i++;
+            strs.push_back(__tmp);
+            __tmp.clear();
+
+            if( !isSpace(byte[i]) )
+                __tmp += byte[i];
         }
         else {
             __tmp += c;
@@ -120,7 +149,8 @@ vector<Token*> Tokenizer::Extract(string instruction) {
         __tmp.clear();
     }
 
-    assert(strs.size() > 0);
+    if( strs.size() == 0 )
+        return {};
     vector<Token*> tokens;
     for(int i = 0; i < strs.size(); i++)
     {
@@ -132,7 +162,9 @@ vector<Token*> Tokenizer::Extract(string instruction) {
             token->setType( TokenType_SymbolsType );
         else if ( str[0] == '\"' && str[str.size() - 1 ] == '\"' )
             token->setType( TokenType_StringType );
-        else if ( str == ":" || str == "$" || str == "=")
+        else if ( str[0] == '\'' && str[str.size() - 1] == '\'' )
+            token->setType( TokenType_CharType );
+        else if ( str == ":" || str == "$" || str == "=" || str == "," )
             token->setType( TokenType_SymbolsType );
         else if ( str == "+" || str == "-" || str == "*" || str == "/" )
             token->setType(TokenType_OperationType);
@@ -171,7 +203,7 @@ bool isOperator(char c) {
     return false;
 }
 bool isSymbols( char c ) {
-    const char* symbols = ";:()[]#+-*/<>!=";
+    const char* symbols = ",;:()[]#+-*/<>!=";
     for(int i = 0; i < strlen( symbols ); i++)
         if( symbols[i] == c )
             return true;

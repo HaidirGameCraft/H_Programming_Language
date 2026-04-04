@@ -14,7 +14,10 @@
 #include <tools/memory.h>
 #include <cassert>
 #include <cstring>
+#include <asrt.h>
 
+
+extern "C" const char* instruction_text;
 vector<string> CompileToken( Token* token );
 
 vector<string> Compiler::CompileParser( Token* parser ) {
@@ -44,7 +47,7 @@ vector<string> Compiler::CompileTokens( vector<Token*> tokens ) {
     if( tokens.size() == 0 )
         return {};
 
-    if( tokens.front()->getType() == TokenType_DataType )
+    if( ( tokens[0]->getType() == TokenType_KeyWordType && tokens[0]->getName() == "const" && tokens[1]->getType() == TokenType_DataType) || tokens.front()->getType() == TokenType_DataType )
         return Variable::VariableCompiler(tokens);
     else if ( 
         tokens.front()->getType() == TokenType_KeyWordType &&
@@ -88,16 +91,16 @@ vector<string> CompileToken( Token* token ) {
             Register* reg = Register::popRegister();
             if( left_token->getType() == TokenType_OperatorType && 
                     ( left_token->getName() == "&&" || left_token->getName() == "||" ) )
-                left_cnd.push_back("cnd " + reg->name + " == 0");
-            left_cnd.push_back("goc $" + cnd_label );
+                left_cnd.push_back("cmp 0, " + reg->name);
+            left_cnd.push_back("goe $" + cnd_label );
             Register::UnusedRegister( reg );
 
             vector<string> right_cnd = CompileToken( right_token );
             reg = Register::popRegister();
             if( right_token->getType() == TokenType_OperatorType && 
                     ( right_token->getName() == "&&" || right_token->getName() == "||" ) )
-                left_cnd.push_back("cnd " + reg->name + " == 0");
-            right_cnd.push_back("goc $" + cnd_label );
+                left_cnd.push_back("cmp 0, " + reg->name );
+            right_cnd.push_back("goe $" + cnd_label );
 
             for( string& str : left_cnd ) asm_str.push_back( str );
             for( string& str : right_cnd ) asm_str.push_back( str );
@@ -115,16 +118,16 @@ vector<string> CompileToken( Token* token ) {
             Register* reg = Register::popRegister();
             if( left_token->getType() == TokenType_OperatorType &&
                     ( left_token->getName() == "&&" || left_token->getName() == "||" ))
-                left_cnd.push_back("cnd " + reg->name + " != 0");
-            left_cnd.push_back("goc $" + cnd_label );
+                left_cnd.push_back("cmp 0,  " + reg->name);
+            left_cnd.push_back("gone $" + cnd_label );
             Register::UnusedRegister( reg );
 
             vector<string> right_cnd = CompileToken( right_token );
             reg = Register::popRegister();
             if( right_token->getType() == TokenType_OperatorType &&
                     ( right_token->getName() == "&&" || right_token->getName() == "||" ))
-                right_cnd.push_back("cnd " + reg->name + " != 0");
-            right_cnd.push_back("goc $" + cnd_label );
+                right_cnd.push_back("cmp 0, " + reg->name);
+            right_cnd.push_back("gone $" + cnd_label );
 
             for( string& str : left_cnd ) asm_str.push_back( str );
             for( string& str : right_cnd ) asm_str.push_back( str );
@@ -211,12 +214,11 @@ vector<string> CompileToken( Token* token ) {
         else if( token->getName() == "-" ) asm_str.push_back("sub " + right_reg->name + " -> " + left_reg->name );
         else if( token->getName() == "*" ) asm_str.push_back("mul " + right_reg->name + " -> " + left_reg->name );
         else if( token->getName() == "/" ) asm_str.push_back("div " + right_reg->name + " -> " + left_reg->name );
-        else if( token->getName() == "==" ) asm_str.push_back("cnd " + left_reg->name + " == " + right_reg->name);
-        else if( token->getName() == "!=" ) asm_str.push_back("cnd " + left_reg->name + " != " + right_reg->name);
-        else if( token->getName() == "<" )  asm_str.push_back("cnd " + left_reg->name + " < "  + right_reg->name);
-        else if( token->getName() == ">" )  asm_str.push_back("cnd " + left_reg->name + " > "  + right_reg->name);
-        else if( token->getName() == "<=" ) asm_str.push_back("cnd " + left_reg->name + " <= " + right_reg->name);
-        else if( token->getName() == ">=" ) asm_str.push_back("cnd " + left_reg->name + " >= " + right_reg->name);
+        else if( token->getName() == "%" ) {
+            asm_str.push_back("div " + right_reg->name + ", " + left_reg->name );
+            asm_str.push_back("mov ri, " + left_reg->name );
+        }
+        else asm_str.push_back("cmp " + right_reg->name + ", " + left_reg->name );
 
         Register::UnusedRegister(right_reg);
         Register::pushRegister(left_reg);
@@ -236,7 +238,8 @@ vector<string> CompileToken( Token* token ) {
         if( token->left != nullptr )
         {
             left_var = Stack::getVariable( token->left->getName() );
-            assert( left_var != nullptr );
+            EXITFAIL( left_var != nullptr, printf("[Syntax Error]: \'%s\' is not declare\n", token->left->getName().c_str() ) )
+            EXITFAIL( left_var->isConstant == false, printf("[Syntax Error]: \'%s\' cannot be assign because of it is declare and define as CONSTANT\n", token->left->getName().c_str() ) )
         }
 
         Register* right_reg = Register::popRegister();
@@ -337,7 +340,7 @@ vector<string> CompileToken( Token* token ) {
         Function* func = (Function*) Function::getFunction(token->getName());
         assert( func != nullptr );
         FunctionToken* func_tk = (FunctionToken*) token;
-        //printf("Args Size: %i\n", func_tk->args.size());
+        // printf("Args Size: %i\n", func_tk->args.size());
         for(int __j = func_tk->args.size() - 1; __j >= 0 ; __j-- )
         {
             vector<string> parser = CompileToken(func_tk->args[__j]);
@@ -376,18 +379,48 @@ vector<string> CompileToken( Token* token ) {
         asm_str.push_back("mov $" + genName + " -> " + reg->name );
         Register::pushRegister( reg );
     }
+    else if ( token->getType() == TokenType_CharType )
+    {
+        Register* reg = Register::getAllocRegister();
+        asm_str.push_back("mov " + std::to_string(token->getName()[1]) + " -> " + reg->name );
+        Register::pushRegister( reg );
+    }
     else if ( token->getType() == TokenType_VariableType )
     {
         Variable* var = Stack::getVariable( token->getName() );
-        assert( var != nullptr );
+        EXITFAIL( var != nullptr, printf("[Syntax Error]: Variable Is not Defined\n" ))
 
         Register* reg = Register::getAllocRegister();
         if( var->isGlobal ) {
             Object* data_type = var->getDataType();
-            if(data_type->getName() == "int") asm_str.push_back("lod $" + var->getName() + " -> " + reg->name);
-            else if(data_type->getName() == "short") asm_str.push_back("lodd $" + var->getName() + " -> " + reg->name);
-            else if(data_type->getName() == "char") asm_str.push_back("lods $" + var->getName() + " -> " + reg->name);
-            else if(data_type->getName() == "bool") asm_str.push_back("lods $" + var->getName() + " -> " + reg->name);
+            std::string& name_datatype = data_type->name;
+            if( var->isPointer ) {
+                asm_str.push_back("mov $" + var->getName() + " -> " + reg->name );
+            }
+            else if ( var->isArray )
+            {
+                Token* indexToken = ((VariableToken*) token)->indexToken;
+                for( string __asmCode__ : CompileToken( indexToken ) )
+                    asm_str.push_back( __asmCode__ );
+                Register* old_reg = Register::popRegister();
+
+                // Load value from variable
+                asm_str.push_back("mul " + std::to_string( data_type->getSize() ) + " -> " + old_reg->name );
+                asm_str.push_back("add $" + var->getName() + " -> " + old_reg->name );
+
+                if(name_datatype == "int") asm_str.push_back("lod " + old_reg->name + " -> " + old_reg->name);
+                else if(name_datatype == "short") asm_str.push_back("lodd " + old_reg->name + " -> " + old_reg->name);
+                else if(name_datatype == "char" || name_datatype == "bool") asm_str.push_back("lods " + old_reg->name + " -> " + old_reg->name);
+
+                Register::UnusedRegister( reg );
+                reg = old_reg;
+            }
+            else {
+                if(name_datatype == "int") asm_str.push_back("lod $" + var->getName() + " -> " + reg->name);
+                else if(name_datatype == "short") asm_str.push_back("lodd $" + var->getName() + " -> " + reg->name);
+                else if(name_datatype == "char" || name_datatype == "bool" ) asm_str.push_back("lods $" + var->getName() + " -> " + reg->name);
+                else if(name_datatype == "string") asm_str.push_back("mov $" + var->getName() + " -> " + reg->name);
+            }
         }
         else {
             int stackIdx = Stack::getStackIndex( var->getName() );
@@ -398,17 +431,20 @@ vector<string> CompileToken( Token* token ) {
     }
     else if ( token->getType() == TokenType_PointerType )
     {
-        Variable* var = Variable::findVariable( token->getName() );
-        assert( var != nullptr );
+        Variable* var = Stack::getVariable( token->getName() );
+        EXITFAIL( var != nullptr, printf("[Syntax Error]: %s is not defined\n", token->getName().c_str() ) )
 
         Register* reg = Register::getAllocRegister();
         if( var->isGlobal ) {
             Object* data_type = var->getDataType();
-            asm_str.push_back("mov $" + var->getName() + " -> " + reg->name);
+            asm_str.push_back("mov $" + var->getName() + " -> " + reg->name);   // get the address of variable, set it into register
         }
         else {
-            asm_str.push_back("mov rp -> " + reg->name );
-            int stackIdx = Stack::getStackIndex( var->getName() );
+            asm_str.push_back("mov rp -> " + reg->name );   // get the rp ( register pointer ), set into alloc register
+            int stackIdx = Stack::getStackIndex( var->getName() );  // find the stack index of variable
+
+            // Determine and ADD/SUB the register based on stack_index
+            // if variable is LOCAL -> ADD, otherwise SUB (Global)
             if( var->stack_index > 0 )
                 asm_str.push_back("add " + to_string( stackIdx ) + " -> " + reg->name );
             else

@@ -12,6 +12,8 @@
 #endif
 
 void* __malloc(size_t size);
+size_t __getSize( void* ptr );
+void* __copy(void* ptr );
 void* __realloc(void* ptr, size_t size);
 void* __calloc(size_t nmemb, size_t size);
 void  __free(void *ptr);

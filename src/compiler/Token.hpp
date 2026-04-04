@@ -12,6 +12,7 @@ enum TokenType {
     TokenType_BracketType,
     TokenType_NumberType,
     TokenType_StringType,
+    TokenType_CharType,
 
     TokenType_PointerType,
 
@@ -35,7 +36,6 @@ public:
     TokenType type;
 
     bool hasSet = false;
-    bool isPointer = false;
     Token* left = nullptr;
     Token* right = nullptr;
 
@@ -50,9 +50,17 @@ public:
     void print(int indent);
 };
 
+class VariableToken : public Token {
+public:
+    bool isPointer;
+    bool isArray;
+    Token* indexToken = nullptr;
+};
+
 class DataTypeToken : public Token {
 public:
     int size;
+    bool isPointer = false;
     Object* object;
     DataTypeToken();
 
@@ -68,7 +76,6 @@ public:
 
 class ArrayToken : public Token {
 public:
-    // Inside of array ( logics of math )
     vector<Token*> tokens;
 };
 

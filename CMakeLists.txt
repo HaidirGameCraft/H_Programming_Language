@@ -4,8 +4,10 @@ project(h C CXX)
 set(COMPILER_NAME hc)
 set(HBYTE_NAME hbyte)
 set(LIBRARY_H "h_linker")
+set(VIRTNAME    "virt")
 
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -g")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 #set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address")
 #if( WIN32 )
     #    set(CMAKE_SYSTEM_NAME Windows)
@@ -18,6 +20,7 @@ set(LIBRARY_H "h_linker")
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__DEBUG__=1")
 # endif()
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ./bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ./lib)
 
 file(GLOB C_SOURCES "./src/*.c" 
                     "./src/ins/*.c"
@@ -28,6 +31,7 @@ file(GLOB C_SOURCES "./src/*.c"
 
 file(GLOB HC_CXX_SOURCES    "./src/compiler/*.cpp"
                             "./src/tools/*.cpp"
+                            "./src/tools/*.c"
                             "./src/hbyte/*.cpp"
                             "./src/compiler/objects/*.cpp"
                         )
@@ -35,21 +39,35 @@ file(GLOB HBYTE_CXX_SOURCES "./src/hbyte/*.cpp"
                             "./src/tools/*.cpp")
 file(GLOB DBG_CXX_SOURCES   "./src/debug/*.cpp")
 
-add_executable(${PROJECT_NAME} main.c)
-add_executable(${COMPILER_NAME} hcompiler.cpp ${HC_CXX_SOURCES})
-add_executable(${HBYTE_NAME} hbyte_main.cpp ${HBYTE_CXX_SOURCES})
-add_executable(debug ${DBG_CXX_SOURCES} ${HBYTE_CXX_SOURCES})
+file(GLOB VIRT_CXX_SOURCES   "./src/virt/*.cpp"
+                            "./src/virt/bios/*.cpp"
+                            "./src/virt/driver/*.cpp"
+                            "./src/tools/*.cpp"
+                        )
 
-add_library(${LIBRARY_H} STATIC ${C_SOURCES})
+add_library(${LIBRARY_H} SHARED ${C_SOURCES})
 target_include_directories(${LIBRARY_H} PUBLIC "src/")
+target_compile_definitions(${LIBRARY_H} PUBLIC HVM )
 
+add_executable(${PROJECT_NAME} main.c)
 include_directories(${PROJECT_NAME} PRIVATE "src/")
-include_directories(${COMPILER_NAME} PRIVATE "src/")
-include_directories(${HBYTE_NAME} PRIVATE "src/")
-include_directories(debug PRIVATE "src/")
-
+target_link_directories(${PROJECT_NAME} PRIVATE "lib/")
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBRARY_H})
+
+add_executable(${COMPILER_NAME} hcompiler.cpp ${HC_CXX_SOURCES})
+include_directories(${COMPILER_NAME} PRIVATE "src/")
+
+add_executable(${HBYTE_NAME} hbyte_main.cpp ${HBYTE_CXX_SOURCES})
+include_directories(${HBYTE_NAME} PRIVATE "src/")
+
+add_executable(debug ${DBG_CXX_SOURCES} ${HBYTE_CXX_SOURCES})
+include_directories(debug PRIVATE "src/")
 target_link_libraries(debug PRIVATE ${LIBRARY_H})
+
+add_executable(${VIRTNAME} virtemu.cpp ${VIRT_CXX_SOURCES})
+include_directories(${VIRTNAME} PRIVATE "src/" "include/")
+target_link_directories(${VIRTNAME} PUBLIC "./lib/" )
+target_link_libraries(${VIRTNAME} PUBLIC ${LIBRARY_H} raylib)
 
 if( WIN32 )
     message("[H Programming Language] Compiling With Windows")

@@ -9,7 +9,7 @@
 #include "compiler/Stack.hpp"
 #include <assert.h>
 
-Function* Function::current_token = nullptr;
+Function* Function::currentFunction = nullptr;
 vector<Function*> Function::function_stack;
 void FunctionToken::Init() {
     this->type = TokenType_FunctionType;
@@ -33,18 +33,27 @@ void Function::initParams( vector<Token*> tokens )
         Token* token = tokens[i];
         if( ( token->getType() == TokenType_SymbolsType && token->getName() == ",")  )
         {
-            assert( arg[0]->getType() == TokenType_DataType );
+            assert(
+                (arg[0]->getType() == TokenType_KeyWordType && arg[0]->getName() == "const" && arg[1]->getType() == TokenType_DataType ) ||
+                arg[0]->getType() == TokenType_DataType
+            );
             DataTypeToken* dataType = ( DataTypeToken* ) arg[0];
-            Token* name_token = arg[1];
+            VariableToken* varToken = (VariableToken*) arg[1];
+            bool isConstant = false;
+            if( arg[0]->getName() == "const" )
+            {
+                dataType = ( DataTypeToken* ) arg[1];
+                varToken = ( VariableToken* ) arg[2];
+            }
 
             Variable* var = (Variable*) __malloc( sizeof( Variable ));
-            var->setName( name_token->getName() );
-            var->setSize(4);
-            var->stack_index = stack;
-            stack += 4;
+            var->setName( varToken->getName() );
+            if( varToken->isPointer )
+                var->setSize(4);        // the size of address
+            else
+                var->setSize( dataType->getDataType()->getSize() );
 
             this->parameters.push_back( var );
-            //this->pushVariable( var );
 
             arg.clear();
         } else {
@@ -54,18 +63,27 @@ void Function::initParams( vector<Token*> tokens )
 
     if( arg.size() != 0 )
     {
-        assert( arg[0]->getType() == TokenType_DataType );
+        assert(
+            (arg[0]->getType() == TokenType_KeyWordType && arg[0]->getName() == "const" && arg[1]->getType() == TokenType_DataType ) ||
+            arg[0]->getType() == TokenType_DataType
+        );
         DataTypeToken* dataType = ( DataTypeToken* ) arg[0];
-        Token* name_token = arg[1];
+        VariableToken* varToken = (VariableToken*) arg[1];
+        bool isConstant = false;
+        if( arg[0]->getName() == "const" )
+        {
+            dataType = ( DataTypeToken* ) arg[1];
+            varToken = ( VariableToken* ) arg[2];
+        }
 
         Variable* var = (Variable*) __malloc( sizeof( Variable ));
-        var->setName( name_token->getName() );
-        var->setSize(4);
-        var->stack_index = stack;
-        stack += 4;
+        var->setName( varToken->getName() );
+        if( varToken->isPointer )
+            var->setSize(4);        // the size of address
+        else
+            var->setSize( dataType->getDataType()->getSize() );
 
         this->parameters.push_back( var );
-            //this->pushVariable( var );
 
         arg.clear();
     }
@@ -86,7 +104,7 @@ Variable* Function::getVariable( const string& name ) {
 
 void Function::pushFunction(const string &name, Function *fun) {
     Function::function_stack.push_back( fun );
-    Function::current_token = fun;
+    Function::currentFunction = fun;
 }
 
 Function* Function::getFunction(const string &name) {
@@ -182,7 +200,7 @@ vector<string> Function::FunctionCompile( vector<Token*> tokens ) {
         function->initParams( parameters_args_token );
         function->ret_data = dataTypeToken->getDataType();
         Function::pushFunction( function->getName() , function );
-        Function::current_token = nullptr;
+        Function::currentFunction = nullptr;
         return {};
     }
 
@@ -215,8 +233,8 @@ vector<string> Function::FunctionCompile( vector<Token*> tokens ) {
         //    printf("%s ( %i )\n", arg->getName().c_str(), arg->size);
 
         Function::pushFunction(function->name, function);
-        Function::current_token = function;
-        asm_str = function->asmStart();
+        Function::currentFunction = function;
+        //asm_str = function->asmStart();
         Stack::CreateStack();
     }
     else if ( funcSymbolsToken->getName() == "return") {
@@ -238,20 +256,26 @@ vector<string> Function::FunctionCompile( vector<Token*> tokens ) {
     }
     else if ( funcSymbolsToken->getName() == "endfunc")
     {
-        Function* func = Function::current_token;
+        Function* func = Function::currentFunction;
         assert( func != nullptr );
+
+        asm_str = func->asmStart();
+        int stackSize = Stack::currentStack->getTotalStackSizeVariable();
+        //if( stackSize > 0 )
+        //    asm_str.push_back("sub " + std::to_string( stackSize ) + " -> rs");
+
         for( std::string& code : func->codeSegment )
             asm_str.push_back( code );
 
         func->codeSegment.clear();
-        int stackSize = Stack::currentStack->getTotalStackSizeVariable();
-        asm_str.push_back("add " + std::to_string( stackSize ) + " -> rs");
+        if( stackSize > 0 )
+            asm_str.push_back("add " + std::to_string( stackSize ) + " -> rs");
         asm_str.push_back("mov rp -> rs");
         asm_str.push_back("pop rp");
         asm_str.push_back("ret");
         Stack::RemoveStack();
         //assert( false );
-        Function::current_token = nullptr;
+        Function::currentFunction = nullptr;
     }
 
     for(Token* token : tokens )

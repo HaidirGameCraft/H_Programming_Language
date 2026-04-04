@@ -6,7 +6,12 @@
 
 #define MAX_MEMORY_CACHE    64
 
-uint64_t* __memory = NULL;
+typedef struct {
+    void* ptr;
+    size_t size;
+} allocItems;
+
+allocItems* __memory = NULL;
 int length_memory = 0;
 int max_length_memory = 0;
 int idx_zero_index = 0;
@@ -24,16 +29,17 @@ void* __malloc(size_t size) {
 
     if( __memory == NULL )
     {
-        __memory = (uint64_t*) malloc( MAX_MEMORY_CACHE * sizeof( uint64_t ) );
-        memset(__memory, 0, MAX_MEMORY_CACHE * sizeof( uint64_t ) );
+        __memory = (allocItems*) malloc( MAX_MEMORY_CACHE * sizeof( allocItems ) );
+        memset(__memory, 0, MAX_MEMORY_CACHE * sizeof( allocItems ) );
         max_length_memory = MAX_MEMORY_CACHE;
     }
     
     for( int i = idx_zero_index; i < max_length_memory; i++ )
     {
-        if( __memory[i] == 0 )
+        if( __memory[i].ptr == 0 )
         {
-            __memory[i] = (uint64_t) ptr;
+            __memory[i].ptr = ptr;
+            __memory[i].size = size;
             idx_zero_index = i;
             return ptr;
         }
@@ -41,10 +47,11 @@ void* __malloc(size_t size) {
 
     int __l = max_length_memory;
     max_length_memory += MAX_MEMORY_CACHE;
-    __memory = (uint64_t*) realloc( __memory, max_length_memory * sizeof( uint64_t ) );
-    memset( &__memory[__l], 0, MAX_MEMORY_CACHE * sizeof( uint64_t ) );
+    __memory = (allocItems*) realloc( __memory, max_length_memory * sizeof( allocItems ) );
+    memset( &__memory[__l], 0, MAX_MEMORY_CACHE * sizeof( allocItems ) );
 
-    __memory[__l] = (uint64_t) ptr;
+    __memory[__l].ptr = ptr;
+    __memory[__l].size = size;
     idx_zero_index = __l;
 #ifdef __DEBUG__
     printf("[Memory]: New Memory Address at 0x%.08x with size %i\n", (uint64_t) ptr, size );
@@ -64,10 +71,11 @@ void* __realloc(void* ptr, size_t size) {
     else {
         
         for(int i = 0; i < max_length_memory; i++) {
-            if( __memory[i] == (uint64_t) ptr )
+            if( __memory[i].ptr == ptr )
             {
-                __memory[i] = (uint64_t) realloc(ptr, size);
-                crt_ptr = (void*) __memory[i];
+                __memory[i].ptr = realloc(ptr, size);
+                __memory[i].size = size;
+                crt_ptr = (void*) __memory[i].ptr;
                 break;
             }
         }
@@ -78,8 +86,29 @@ void* __realloc(void* ptr, size_t size) {
     return crt_ptr;
 }
 
+size_t __getSize( void* ptr ) {
+    for( int i = 0; i < max_length_memory; i++)
+    {
+        if( __memory[i].ptr == ptr )
+            return  __memory[i].size;
+    }
+
+    return -1;
+}
+
 void* __calloc(size_t nmemb, size_t size) {
 
+}
+
+void* __copy(void* ptr ) {
+    if( ptr == NULL )
+        return NULL;
+    size_t size = __getSize( ptr );
+    if( size == -1 )
+        return NULL;
+    void* newPtr = __malloc( size );
+    memcpy( newPtr, ptr, size );
+    return newPtr;
 }
 
 void  __free(void *ptr) {
@@ -87,12 +116,13 @@ void  __free(void *ptr) {
         return;
 
     for( int i = 0; i < max_length_memory; i++) {
-        if( __memory[i] == (uint64_t) ptr ) {
+        if( __memory[i].ptr == ptr ) {
 #ifdef __DEBUG__
             printf("[Memory]: Freeing address 0x%.08x\n", __memory[i]);
 #endif
-            free( (void*) __memory[i] );
-            __memory[i] = 0;
+            free( (void*) __memory[i].ptr );
+            __memory[i].ptr = 0;
+            __memory[i].size = 0;
             total_free = total_free + 1;
             if( idx_zero_index > i )
                 idx_zero_index = i;
@@ -104,7 +134,7 @@ void  __free(void *ptr) {
 
 void  __memcheck() {
     for(int i = 0; i < max_length_memory; i++) {
-        if( __memory[i] == 0 )
+        if( __memory[i].ptr == 0 )
             continue;
 
 #ifdef __DEBUG__
@@ -128,13 +158,13 @@ void  __memclear() {
 #endif
 
     for(int i = 0; i < max_length_memory; i++) {
-        if( __memory[i] == 0 )
+        if( __memory[i].ptr == 0 )
             continue;
 #ifdef __DEBUG__
         printf("[Memory]: Freeing the memory 0x%.08x\n", (uint64_t) __memory[i] );
 #endif
-        free( (void*) __memory[i] );
-        __memory[i] = 0;
+        free( (void*) __memory[i].ptr );
+        __memory[i].ptr = 0;
     }
     free( __memory );
     __memory = 0;

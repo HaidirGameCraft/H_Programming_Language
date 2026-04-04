@@ -18,5 +18,6 @@ static const char* KeyWordList[] = {
     "endwhile",
     "extern",
     "global",
-    "class"
+    "class",
+    "const"
 };

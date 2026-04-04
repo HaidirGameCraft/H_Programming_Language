@@ -3,21 +3,32 @@
 #include "sub.h"
 uint8_t instruction_sub_reg_reg(INSTRUCTION_SET_ARGS) {
     VARIABLE_INSTRUCTION
-    REGMEM_DEFINED(memory, pc );
+    VARIABLE_DEFINED(reg, memory, pc)
 
-    sreg = getreg(reg, __register.sreg);
-    dreg = getreg(reg, __register.dreg);
-    *dreg -= *sreg;
+    uint64_t result = *dreg - *sreg;
+    *dreg = result;
+    reg->flags &= ~FLAGS_STATUS_MASK;
+    reg->flags |= FLAGS_ZERO( result == 0 );
+    reg->flags |= FLAGS_CARRY( ( result >> 32 ) > 0 );
+    reg->flags |= FLAGS_OVERFLOW( ( ( *dreg >> 31 & 1) != (*sreg >> 31 & 1) ) && ( (*dreg >> 31 & 1) != (result >> 31 & 1 )) );
+    reg->flags |= FLAGS_SIGN( ( result >> 32 & 1 ) );
+    reg->flags |= FLAGS_EVEN( result & 1);
     return 1;
 }
 
 uint8_t instruction_sub_value_reg(INSTRUCTION_SET_ARGS) {
     VARIABLE_INSTRUCTION
-    REGMEM_DEFINED(memory, pc );
+    VARIABLE_DEFINED(reg, memory, pc)
 
-    dreg = getreg(reg, __register.dreg );
-    value = read32(memory, pc);
-    *dreg -= value;
+    uint64_t result = *dreg - value;
+    *dreg = result;
+    reg->flags &= ~FLAGS_STATUS_MASK;
+    reg->flags |= FLAGS_ZERO( result == 0 );
+    reg->flags |= FLAGS_CARRY( ( result >> 32 ) > 0 );
+    reg->flags |= FLAGS_OVERFLOW( ( ( *dreg >> 31 & 1) != (*sreg >> 31 & 1) ) && ( (*dreg >> 31 & 1) != (result >> 31 & 1 )) );
+    reg->flags |= FLAGS_SIGN( ( result >> 32 & 1 ) );
+    reg->flags |= FLAGS_EVEN( result & 1);
+    
     return 1;
 }
 

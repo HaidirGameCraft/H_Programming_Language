@@ -34,10 +34,12 @@ void String::pushString(string name, string str) {
 
 vector<string> String::codeString() {
     vector<string> data;
+    //data.push_back("=region string");
     for( String* str : String::constant_string )
     {
         data.push_back( str->getName() + ":" );
         data.push_back("=ascii \"" + str->getString() + "\"");
+        data.push_back("=single 0");
     }
     return data;
 }

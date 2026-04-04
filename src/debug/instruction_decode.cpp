@@ -32,7 +32,7 @@ char* instruction_decode( uint8_t* memory, uint32_t pc, uint8_t size ) {
         sprintf( __tmp, "%.08x: %s ERROR to READ", _tpc, opcode_name);
 
     __free( __inside );
-    char* __instruction = (char*) strcpy( __tmp,strlen( __tmp) );
+    char* __instruction = (char*) __strcpy( __tmp,strlen( __tmp) );
     __free( __tmp );
     
     return __instruction;
@@ -162,7 +162,7 @@ char* decode_instruction_opcode_reg_reg      (ARGUMENTS_DECODE_INSTRUCTION) {
    memset(text, 0, 128);
 
    sprintf( text, "%s %s %s", sreg, symbols, dreg);
-   char* ret = (char*) strcpy( text, strlen( text ) );
+   char* ret = (char*) __strcpy( text, strlen( text ) );
    __free( text );
    return ret;
 }
@@ -176,7 +176,7 @@ char* decode_instruction_opcode_regoff_reg   (ARGUMENTS_DECODE_INSTRUCTION){
 
     sprintf(text, "%s(0x%x) -> %s", sreg, offset, dreg);
 
-    char* ret = (char*) strcpy( text, strlen( text) );
+    char* ret = (char*) __strcpy( text, strlen( text) );
     __free( text );
     return ret;
 }
@@ -191,7 +191,7 @@ char* decode_instruction_opcode_reg_regoff   (ARGUMENTS_DECODE_INSTRUCTION){
 
     sprintf(text, "%s -> %s(0x%x)", sreg, dreg, offset);
 
-    char* ret = (char*) strcpy( text, strlen( text) );
+    char* ret = (char*) __strcpy( text, strlen( text) );
     __free( text );
     return ret;
 }
@@ -203,7 +203,7 @@ char* decode_instruction_opcode_value_reg    (ARGUMENTS_DECODE_INSTRUCTION){
     memset( text, 0, 128 );
     sprintf( text, "0x%x %s %s", value, symbols, dreg);
 
-    char* ret = strcpy( text, strlen( text ) );
+    char* ret = __strcpy( text, strlen( text ) );
     __free( text );
 
     return ret;
@@ -216,7 +216,7 @@ char* decode_instruction_opcode_reg_value    (ARGUMENTS_DECODE_INSTRUCTION){
     memset( text, 0, 128 );
     sprintf( text, "%s %s 0x%x", sreg, symbols, value);
 
-    char* ret = strcpy( text, strlen( text ) );
+    char* ret = __strcpy( text, strlen( text ) );
     __free( text );
 
     return ret;
@@ -229,7 +229,7 @@ char* decode_instruction_opcode_valueoff_reg (ARGUMENTS_DECODE_INSTRUCTION){
     memset( text, 0, 128 );
     sprintf( text, "0x%x(0x%x) -> %s", value, offset, dreg);
 
-    char* ret = strcpy( text, strlen( text ) );
+    char* ret = __strcpy( text, strlen( text ) );
     __free( text );
 
     return ret;
@@ -242,7 +242,7 @@ char* decode_instruction_opcode_reg_valueoff (ARGUMENTS_DECODE_INSTRUCTION){
     memset( text, 0, 128 );
     sprintf( text, "%s -> 0x%x(0x%x)", sreg, value, offset);
 
-    char* ret = strcpy( text, strlen( text ) );
+    char* ret = __strcpy( text, strlen( text ) );
     __free( text );
 
     return ret;
@@ -262,7 +262,7 @@ char* decode_instruction_opcode_reg_labeloff (ARGUMENTS_DECODE_INSTRUCTION){
 char* decode_instruction_opcode_reg          (ARGUMENTS_DECODE_INSTRUCTION){
     VARIABLES__
     const char* sreg = decode_register( reg.sreg );
-    char* text = strcpy(sreg, strlen( sreg ) );
+    char* text = __strcpy(sreg, strlen( sreg ) );
     return text;
 }
 char* decode_instruction_opcode_value        (ARGUMENTS_DECODE_INSTRUCTION){
@@ -271,7 +271,7 @@ char* decode_instruction_opcode_value        (ARGUMENTS_DECODE_INSTRUCTION){
     memset( text, 0, 128 );
     sprintf(text, "0x%x", value);
 
-    char* ret = strcpy( text, strlen( text ) );
+    char* ret = __strcpy( text, strlen( text ) );
     __free( text );
     return ret;
 }
@@ -282,7 +282,7 @@ char* decode_instruction_opcode_label        (ARGUMENTS_DECODE_INSTRUCTION){
     memset( text, 0, 128 );
     sprintf(text, "0x%x", value);
 
-    char* ret = strcpy( text, strlen( text ) );
+    char* ret = __strcpy( text, strlen( text ) );
     __free( text );
     return NULL;
 }

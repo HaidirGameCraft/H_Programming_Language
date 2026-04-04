@@ -9,6 +9,7 @@
 #include <inst.h>
 #include <ins/inst.h>
 #include <stdio.h>
+#include "memory.h"
 
 cpu_register_t reg;
 uint8_t* memory;
@@ -18,9 +19,6 @@ void cpu_initialize() {
     memset( &reg, 0, sizeof( cpu_register_t ) );
 }
 
-uint8_t* get_memory() {
-    return memory;
-}
 int get_memory_size() {
     return size_memory;
 }
@@ -65,6 +63,7 @@ void cpu_execute(uint8_t exec_one) {
         status |= sh_instruction_set(ARGS_INSTRUCTION_SET);
         status |= in_instruction_set(ARGS_INSTRUCTION_SET);
         status |= int_instruction_set(ARGS_INSTRUCTION_SET);
+        status |= cmp_instruction_set(ARGS_INSTRUCTION_SET);
 
         if( status == 0 )
             CallInterrupt(UnknownOpcodeExceptionInt);

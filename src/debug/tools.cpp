@@ -1,14 +1,14 @@
 #include <tools/tools.h>
 #include <tools/memory.h>
 
-char*  strcpy(const char* text, size_t length ) {
+char*  __strcpy(const char* text, size_t length ) {
     char* ptr = ( char* ) __malloc( length + 1 );
     memcpy( ptr, text, length );
     ptr[ length ] = 0;
     return ptr;
 }
 
-char*  strtrim( const char* text ) {
+char*  __strtrim( const char* text ) {
     int length = strlen( text );
     int s = 0;
     int e = length;
@@ -22,11 +22,11 @@ char*  strtrim( const char* text ) {
     if( e <= s )
         return NULL;
 
-    char* __tmp = (char*) strcpy( &text[s], e - s );
+    char* __tmp = (char*) __strcpy( &text[s], e - s );
     return __tmp;
 }
 
-char*  strjoin( char* text, const char* text_join ) {
+char*  __strjoin( char* text, const char* text_join ) {
     int _t1 = strlen( text );
     int _t2 = strlen( text_join );
 

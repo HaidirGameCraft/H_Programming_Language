@@ -2,11 +2,13 @@
 #include "Parser.hpp"
 #include "Token.hpp"
 #include "Function.hpp"
+#include "Array.hpp"
 #include <cassert>
 
-#include <execution>
+// #include <execution>
 #include <string>
 #include <tools/memory.h>
+#include <asrt.h>
 
 vector<Token*> parserExpression( vector<Token*> tokens );
 vector<Token*> checkBrackets( vector<Token*> tokens );
@@ -18,17 +20,25 @@ Token* Parser::ParserExp(vector<Token*> tokens) {
     if( tokens.size() == 0 )
         return nullptr;
 
-    int attempts = 100;
+    int attempts = 30;
     int length = tokens.size();
     while( length > 1 )
     {
         tokens = parserExpression(tokens);
         length = tokens.size();
 
-        if( attempts == 0 )
-        {
-            assert( false && "Attempts of Parser are going to Limited, it might have somthing wrong");
-        }
+        EXITFAIL( attempts != 0, {
+            printf("[Parser Error]: Attempts of Parser are going to Limited, it might have something wrong\n");
+            printf("Size of Tokens: %i\n", tokens.size() );
+            for( Token* token : tokens )
+            {
+                if( token ==  nullptr ) {
+                    printf("[Token Null]: Token is NULL");
+                    break;
+                }
+                token->print(0);
+            }
+        })
         attempts = attempts - 1;
     }
 
@@ -63,7 +73,7 @@ vector<Token*> parserExpression( vector<Token*> tokens ) {
     for( int i = 0; i < tokens.size(); i++)
     {
         Token* token = tokens[i];
-        if( token->getType() == TokenType_OperatorType || token->getType() == TokenType_AssignType)
+        if( (token->getType() == TokenType_OperatorType || token->getType() == TokenType_AssignType ) )
         {
             if( token->left != nullptr || token->right != nullptr )
                 continue;
@@ -77,115 +87,127 @@ vector<Token*> parserExpression( vector<Token*> tokens ) {
                 idx_left_token = ( i - 1 < 0 ) ? 0 : i - 1;
                 idx_right_token = ( i + 1 >= tokens.size() ) ? tokens.size() - 1 : i + 1;
 
-                if( i - 1 < 0 )
-                {
-                    printf("TokenError: Could not find left token");
-                    assert(i - 1 >= 0);
-                }
-
-                if( i + 1 >= tokens.size() )
-                {
-                    printf("TokenError: Could not find right token");
-                    assert(i + 1 < tokens.size());
-                }
+                EXITFAIL(i - 1 >= 0, printf("TokenError: Could not find left token") )
+                EXITFAIL(i + 1 < tokens.size(), printf("TokenError: Could not find right token") )
 
             }
-        } else if ( token->getType() == TokenType_FunctionType && ((FunctionToken*) token)->hasSet == false )
+        } else if ( 
+                    token->getType() == TokenType_FunctionType && 
+                    i + 1 < tokens.size() && tokens[i + 1]->getName() == "(" 
+                )
         {
             FunctionToken* func = (FunctionToken*) token;
-            func->hasSet = true;
-            functionToken = func;
 
-            i++;    // skipping the function, get next token
-            assert( tokens[i]->getType() == TokenType_BracketType );
-            BracketToken* bracket_tk = ( BracketToken* ) tokens[i];
+            EXITFAIL( i + 1 < tokens.size() && tokens[i + 1]->getType() == TokenType_BracketType && tokens[i + 1]->getName() == "(", printf("[Syntax Error]: it is not an Function because it doesnt have any '('\n") )
+            BracketToken* bracket_tk = ( BracketToken* ) tokens[i + 1];
 
-            openbracket_idx = i;
+            openbracket_idx = i + 1;
             closebracket_idx = bracket_tk->closeBracket;
 
-            vector<Token*> arguments;
-            for( int __j = openbracket_idx + 1; __j <= closebracket_idx; __j++ ) {
-                Token* __token = (Token*) tokens[__j];
-                __token->print(0);
-                if( __token->getType() == TokenType_BracketType && __token->getName() == "(" )
-                    __j = ((BracketToken*) __token)->closeBracket;
-                else if ( ( __token->getType() == TokenType_BracketType && __token->getName() == ")" ) ||
-                        ( __token->getType() == TokenType_SymbolsType && __token->getName() == ",") ) {
-
-                    Token* parser_arg = Parser::ParserExp( arguments );
-                    func->args.push_back( parser_arg );
-
-                    arguments.clear();
-                    continue;    
-                }
-                else {
-                    arguments.push_back( __token );
-                }
-            }
-            //printf("Size Args: %i\n", func->args.size());
-            openbracket_idx--;
-            break;
-        }
-        else if ( token->getType() == TokenType_ArrayType && !token->hasSet )
-        {
-            arrayToken = (ArrayToken*) token;
-            arrayToken->hasSet = true;
-            openbracket_idx = i;    // next Token
-            assert( tokens[i + 1]->getType() == TokenType_BracketType && tokens[i + 1]->getName() == "[");
-            BracketToken* array_bracket_token = ( BracketToken* ) tokens[i + 1];
-            closebracket_idx = array_bracket_token->closeBracket;
-
-            for(int idx = openbracket_idx + 2; idx < closebracket_idx; idx++) {
-                arrayToken->tokens.push_back( tokens[idx] );
+            
+            for( int _j = openbracket_idx + 1, __start = _j; _j <= closebracket_idx; _j++ ) {
+                if( tokens[_j]->getName() == "," || tokens[_j]->getName() == ")" )
+                {
+                    vector<Token*> __tmp;
+                    for( int  _m = __start; _m < _j; _m++ )
+                        __tmp.push_back( tokens[_m] );
+                    
+                    Token* parser = Parser::ParserExp( __tmp );
+                    func->args.push_back( parser );
+                    __tmp.clear();
+                    
+                    __start = _j + 1;
+                } else if ( tokens[_j]->getName() == "(" )
+                    _j = ((BracketToken*) tokens[_j])->closeBracket;
             }
             break;
         }
-        else if ( token->getType() == TokenType_BracketType )
+        // variable with index
+        else if ( token->getType() == TokenType_VariableType && i + 1 < tokens.size() && tokens[i + 1]->getName() == "[")
         {
-            if( token->left != nullptr || token->right != nullptr )
-                continue;
+            BracketToken* bracket_tk = (BracketToken*) tokens[i + 1];
+            VariableToken* var_token = ( VariableToken* ) token;    
+            openbracket_idx = i + 1; // Open bracket position
+            closebracket_idx = bracket_tk->closeBracket; // Close bracket position
 
-            if( token->getName() != "(" && token->getName() != ")" )
-                continue;
+            std::vector<Token*> array_index_token;
+            int index = openbracket_idx + 1;
+            while( index < closebracket_idx ) {
+                array_index_token.push_back( tokens[index] );
+                index++;
+            }
 
-            BracketToken* bracket_tk = ( BracketToken* ) token;
-            vector<Token*> inside;
-            openbracket_idx = i;
-            i++;    // skipping bracket token
-            while( i < bracket_tk->closeBracket )
+            // parser Index token
+            if( array_index_token.size() > 0 )
             {
-                inside.push_back( tokens[i] );
-                i++;
+                Token* indexToken = Parser::ParserExp( array_index_token );
+                var_token->indexToken = indexToken;
+            }
+            
+            break;
+        }
+        else if ( token->getType() == TokenType_BracketType && token->getName() == "[" ) {
+            // Array Item
+            // Eg: [0, 1, 2, 3, 4], [0]
+            BracketToken* bracket_token = (BracketToken*) token;
+            openbracket_idx = i + 1;
+            closebracket_idx = bracket_token->closeBracket;
+
+            __free( token );
+            ArrayListToken* token = (ArrayListToken*) __malloc( sizeof( ArrayListToken ) );
+            token->setType( TokenType_ArrayType );
+            tokens[i] = token;
+
+            int index = i + 1;
+            vector<Token*> __tmp;
+            while( index <= closebracket_idx )
+            {
+                if( tokens[index]->getName() == "," || tokens[index]->getName() == "]" )
+                {
+                    Token* parser = Parser::ParserExp( __tmp );
+                    token->tokens.push_back( parser );
+                    __tmp.clear();
+                } else {
+                    __tmp.push_back( tokens[index] );
+                }
+                index++;
             }
 
-            bracketToken = Parser::ParserExp(inside);
+            break;
+        }
+        else if ( token->getType() == TokenType_BracketType && token->getName() == "(" )
+        {
+            // if( token->left != nullptr || token->right != nullptr )
+            //     continue;
+
+            BracketToken* bracket_tk = (BracketToken*) token;
+            std::vector<Token*> __tmp;
+            openbracket_idx = i + 1;
             closebracket_idx = bracket_tk->closeBracket;
+
+            int index = i + 1;
+            while( index < closebracket_idx )
+            {
+                __tmp.push_back( tokens[index] );
+                index++;
+            }
+
+
+            __free( token );
+            tokens[openbracket_idx - 1] = Parser::ParserExp( __tmp );
+            __tmp.clear();
+
             break;
         }
     }
 
     vector<Token*> new_tokens;
     for(int i = 0; i < tokens.size(); i++) {
-        if( i >= openbracket_idx && i <= closebracket_idx )
+        if( i == openbracket_idx )
         {
-            if(bracketToken != nullptr) {
-                new_tokens.push_back( bracketToken );
-                bracketToken = nullptr;
-            }
-            else if ( functionToken != nullptr )
-            {
-                new_tokens.push_back( functionToken );
-                functionToken = nullptr;
-            }
-            else if ( arrayToken != nullptr ) {
-                new_tokens.push_back( arrayToken );
-                arrayToken = nullptr;
-            }
-        } else if ( i >= idx_left_token && i <= idx_right_token && 
-                    bracketToken == nullptr && 
-                    functionToken == nullptr &&
-                    arrayToken == nullptr
-                )
+            // Skip/Ignore
+            i = closebracket_idx;
+        } else if ( i >= idx_left_token && i <= idx_right_token )
         {
             if( i == idx_token )
             {
@@ -252,8 +274,6 @@ vector<Token*> parserExpression( vector<Token*> tokens ) {
 }
 
 vector<Token*> checkBrackets( vector<Token*> tokens ) {
-    //for( Token* token : tokens )
-    //    token->print(0);
 
     vector<BracketToken*> bracket_idx;
     for( int i = 0; i < tokens.size(); i++ )
@@ -293,7 +313,6 @@ void checkCondition( Token* parser ) {
    {
        if( parser->getName() == "&&" )
        {
-           parser->print(0);
             if( parser->left != nullptr && parser->left->getType() == TokenType_OperatorType ) { 
                 if ( parser->left->getName() == "==" ) parser->left->setName("!=");
                 else if ( parser->left->getName() == "<"  ) parser->left->setName( ">");

@@ -19,10 +19,8 @@ SIGN_INSTRUCTION_SET(div) {
 
 __instruction_opcode_reg_reg( div ) {
     VARIABLE_INSTRUCTION
-    REGMEM_DEFINED(memory, pc );
+    VARIABLE_DEFINED(reg, memory, pc)
 
-    sreg = getreg( reg, __register.sreg );
-    dreg = getreg( reg, __register.dreg );
     uint32_t tmp = *dreg;
     if( *sreg == 0 ) {
         CallInterrupt(DivideZeroExceptionInt);
@@ -38,10 +36,8 @@ __instruction_opcode_reg_reg( div ) {
 
 __instruction_opcode_value_reg(div) {
     VARIABLE_INSTRUCTION
-    REGMEM_DEFINED(memory, pc );
+    VARIABLE_DEFINED(reg, memory, pc)
 
-    value = read32( memory, pc );
-    dreg = getreg( reg, __register.dreg );
     uint32_t tmp = *dreg;
     if( value == 0 ) {
         CallInterrupt(DivideZeroExceptionInt);

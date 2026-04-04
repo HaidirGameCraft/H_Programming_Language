@@ -6,9 +6,20 @@
 
 #include <stdint.h>
 
-#define flags_condition 1 << 2
 
-#define FLAGS_CONDITION 1 << 2
+#define FLAGS_ZERO_BIT              0
+#define FLAGS_EVEN_BIT              1
+#define FLAGS_SIGN_BIT              2
+#define FLAGS_CARRY_BIT             3
+#define FLAGS_OVERFLOW_BIT          5
+
+#define FLAGS_ZERO(x)       ( (x) << FLAGS_ZERO_BIT )
+#define FLAGS_EVEN(x)       ( (x) << FLAGS_EVEN_BIT )
+#define FLAGS_SIGN(x)       ( (x) << FLAGS_SIGN_BIT )
+#define FLAGS_CARRY(x)      ( (x) << FLAGS_CARRY_BIT )
+#define FLAGS_OVERFLOW(x)   ( (x) << FLAGS_OVERFLOW_BIT )
+
+#define FLAGS_STATUS_MASK   ( FLAGS_ZERO(1) | FLAGS_EVEN(1) | FLAGS_SIGN(1) | FLAGS_CARRY(1) | FLAGS_OVERFLOW(1) )
 
 typedef struct {
     uint32_t ra;
@@ -60,3 +71,4 @@ EXTR int get_memory_size();
 EXTR void cpu_set_memory(uint8_t* memory, uint64_t size);
 EXTR void cpu_execute(uint8_t exec_one );
 EXTR void cpu_output();
+
